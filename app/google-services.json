@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "273093234844",
+    "firebase_url": "https://twice-d6f21.firebaseio.com",
+    "project_id": "twice-d6f21",
+    "storage_bucket": "twice-d6f21.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:273093234844:android:0590b0a6df385d3c",
+        "android_client_info": {
+          "package_name": "sysproj.seonjoon.twice"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "273093234844-2ludhbnikogb2akeeu2o5vrab4mgbr62.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sysproj.seonjoon.twice",
+            "certificate_hash": "c871abbea6bc7b2baffade2eac57ad45992f1f05"
+          }
+        },
+        {
+          "client_id": "273093234844-gmtld07uo5s1j9h92rvhb1kpda85r0bd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAaGkzpe7hcOXnWznpWa1veHzKwBLtEjiI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "273093234844-gmtld07uo5s1j9h92rvhb1kpda85r0bd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

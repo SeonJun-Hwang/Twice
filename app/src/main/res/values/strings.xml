@@ -1,0 +1,50 @@
+<resources>
+    <string name="app_name">Twice</string>
+    <string name="CONSUMER_KEY">H3qNM38a3TzDXpWz6yY1hknFy</string>
+    <string name="CONSUMER_SECRET">GU4uxItEP3ZM926o1NcUP2gGbBoivm4cWge9dzxsvpJFLHLzRe</string>
+    <string name="facebook_app_id">2143546422379391</string>
+    <string name="fb_login_protocol_scheme">fb2143546422379391</string>
+    <string name="title_activity_login">Sign in</string>
+
+    <!-- Layout related more than 2  -->
+    <string name="share_id_tag">ID</string>
+    <string name="share_password_tag">Password</string>
+    <string name="share_email_tag">E-mail</string>
+    <string name="share_next_tag">다음</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">ID</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="login_button_register">Register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="login_button_save_id">Save ID</string>
+    <string name="login_button_auto_Login">Auto Login</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+    <string name="register_dialog_able_message">is usable, Do you use this ID?</string>
+    <string name="register_dialog_able_message_negative">No</string>
+    <string name="register_dialog_able_message_positive">Yes</string>
+    <string name="register_dialog_ok">OK</string>
+    <string name="register_id_check">확인</string>
+
+    <!-- String related to Fragments -->
+    <string name="consent_form_head">이용 약관 동의</string>
+    <string name="consent_form_personal">개인정보 이용 동의서</string>
+    <string name="consent_form_facebook">Facebook 정보 사용 동의서</string>
+    <string name="consent_form_instagram">Instagram 정보 사용 동의서</string>
+    <string name="consent_form_twitter">Twitter 정보 사용 동의서</string>
+    <string name="twice_form_head">사용자 정보 입력</string>
+    <string name="sns_form_head">SNS 계정 연동</string>
+    <string name="sns_form_complete">가입</string>
+
+    <!-- String related to Main Activity -->
+    <string name="drawer_open">Open Drawer</string>
+    <string name="drawer_close">Close Drawer</string>
+    <string name="main_dialog_logout_message">로그아웃 하시겠습니까?</string>
+    <string name="main_dialog_logout_positive">로그아웃</string>
+
+</resources>

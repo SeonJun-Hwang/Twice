@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/sns_form_head_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/registFragmentHeadBack"
+        android:gravity="center"
+        android:textColor="@color/registFragmentHeadFore"
+        android:textSize="@dimen/regist_font_size"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
+
+    <LinearLayout
+        android:id="@+id/register_linearlayout_sns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:padding="5dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/sns_form_complete"
+        app:layout_constraintTop_toBottomOf="@+id/sns_form_head_text"
+        tools:layout_editor_absoluteX="0dp">
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/sns_form_facebook"
+            android:layout_width="300dp"
+            android:layout_height="100dp"
+            android:layout_margin="5dp" />
+
+        <com.twitter.sdk.android.core.identity.TwitterLoginButton
+            android:id="@+id/sns_form_twitter"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_margin="5dp" />
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/sns_form_complete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:padding="3dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</android.support.constraint.ConstraintLayout>
