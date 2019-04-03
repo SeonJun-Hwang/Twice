@@ -5,18 +5,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -24,12 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONObject;
 
@@ -37,11 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
-import sysproj.seonjoon.twice.Loader.DataLoader;
-import sysproj.seonjoon.twice.Loader.FacebookLoader;
-import sysproj.seonjoon.twice.Loader.TwitterLoader;
+import sysproj.seonjoon.twice.loader.DataLoader;
+import sysproj.seonjoon.twice.loader.FacebookLoader;
+import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.R;
-import sysproj.seonjoon.twice.entity.TimeLineItem;
+import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.manager.LoginManager;
 import sysproj.seonjoon.twice.parser.FacebookParser;
 import sysproj.seonjoon.twice.parser.SNSParser;
@@ -56,7 +47,7 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private TimelineRecyclerAdapter timelineAdapater;
-    private ArrayList<TimeLineItem> contents;
+    private ArrayList<Post> contents;
 
     private DrawerLayout personDrawer;
     private NavigationView personNavigation;
@@ -185,7 +176,7 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
                     public void Complete(boolean isSuccess, JSONObject result) {
                         if (isSuccess) {
                             SNSParser snsParser = new FacebookParser();
-                            List<TimeLineItem> facebookTimeline = snsParser.parseItem((JSONObject) result);
+                            List<Post> facebookTimeline = snsParser.parseItem((JSONObject) result);
 
                             if (!facebookTimeline.isEmpty())
                                 contents.addAll(facebookTimeline);
@@ -204,7 +195,7 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
                     public void Complete(boolean isSuccess, JSONObject result) {
                         if (isSuccess) {
                             SNSParser snsParser = new TwitterParser();
-                            List<TimeLineItem> twitterTimeline = snsParser.parseItem(result);
+                            List<Post> twitterTimeline = snsParser.parseItem(result);
 
                             if (!twitterTimeline.isEmpty())
                                 contents.addAll(twitterTimeline);

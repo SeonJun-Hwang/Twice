@@ -13,13 +13,11 @@ import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.staticdata.UserSession;
-import sysproj.seonjoon.twice.view.RegisterActivity;
 
 public class FragmentTwiceForm extends Fragment {
 
@@ -53,9 +51,7 @@ public class FragmentTwiceForm extends Fragment {
 
     private boolean checkEnableId() {
         String id = idEdit.getText().toString();
-        boolean isMatch = id.matches("^[a-z0-9_]*$");
-        Log.e("IsMatch", id + " - " + isMatch);
-        return isMatch;
+        return id.matches("^[a-z0-9_]*$");
     }
 
     private boolean checkPassword() {

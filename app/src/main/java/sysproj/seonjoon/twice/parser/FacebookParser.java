@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +18,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import sysproj.seonjoon.twice.entity.TimeLineItem;
+import sysproj.seonjoon.twice.entity.Post;
+import sysproj.seonjoon.twice.entity.PostRFS;
 import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
@@ -33,7 +33,7 @@ public class FacebookParser implements SNSParser {
     }
 
     @Override
-    public List<TimeLineItem> parseItem(JSONObject object) {
+    public List<Post> parseItem(JSONObject object) {
 
         if (object == null)
             return null;
@@ -44,7 +44,7 @@ public class FacebookParser implements SNSParser {
             e.printStackTrace();
         }
 
-        List<TimeLineItem> resultList = new ArrayList<>();
+        List<Post> resultList = new ArrayList<>();
 
         try {
             JSONArray dataArray = object.getJSONArray("data");
@@ -66,36 +66,17 @@ public class FacebookParser implements SNSParser {
                 if (uName == null || uName.isEmpty())
                     uName = "Unknown";
 
-                resultList.add(new TimeLineItem(SNSTag.Facebook, uName, message, null ,null));
+                resultList.add(new Post(SNSTag.Facebook, uName, message, null,"NONE", new PostRFS(),null));
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        resultList.add(new TimeLineItem(SNSTag.Facebook, "윤기재", "Hello Facebook",null, null));
-        resultList.add(new TimeLineItem(SNSTag.Instagram, "홍승표", "Hello Instagram",null, null));
-        resultList.add(new TimeLineItem(SNSTag.Twitter, "서동환", "Hello Twitter",null, null));
+        resultList.add(new Post(SNSTag.Facebook, "윤기재", "Hello Facebook",null,"NONE",new PostRFS(), null));
+        resultList.add(new Post(SNSTag.Instagram, "홍승표", "Hello Instagram",null,"NONE",new PostRFS(), null));
+        resultList.add(new Post(SNSTag.Twitter, "서동환", "Hello Twitter",null,"NONE",new PostRFS(), null));
 
         return resultList;
-    }
-
-    private class readImage extends AsyncTask<String, Void, Void> {
-        @Override
-        protected Void doInBackground(String... strings) {
-            try {
-                URL url = new URL(strings[0]);
-                HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
-
-                imageList.add(BitmapFactory.decodeFile("./yoongijae"));
-
-            } catch (MalformedURLException e) {
-                Log.e("readImage", "readImage MalformedURLException");
-            } catch (IOException e) {
-                Log.e("readImage", "readImage IOException");
-            }
-
-            return null;
-        }
     }
 }

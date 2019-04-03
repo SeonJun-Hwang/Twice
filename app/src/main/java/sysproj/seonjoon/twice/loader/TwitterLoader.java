@@ -1,7 +1,6 @@
-package sysproj.seonjoon.twice.Loader;
+package sysproj.seonjoon.twice.loader;
 
 import android.content.Context;
-import android.util.Base64;
 import android.util.Log;
 
 import com.twitter.sdk.android.core.Twitter;
@@ -13,22 +12,17 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
-import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.UUID;
 
-import javax.annotation.Nullable;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;

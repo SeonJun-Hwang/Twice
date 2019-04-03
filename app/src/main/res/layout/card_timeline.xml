@@ -17,6 +17,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
+            <!-- Title Field -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -25,55 +26,95 @@
                     android:id="@+id/card_title_logo"
                     android:layout_width="@dimen/time_line_image_size"
                     android:layout_height="@dimen/time_line_image_size"
+                    android:layout_alignParentTop="true"
                     android:layout_alignParentRight="true"
                     android:padding="2dp"
                     android:scaleType="centerInside" />
 
                 <ImageButton
                     android:id="@+id/card_profile_image"
-                    android:layout_width="@dimen/time_line_image_size"
-                    android:layout_height="@dimen/time_line_image_size"
+                    android:layout_width="@dimen/time_line_profile_size"
+                    android:layout_height="@dimen/time_line_profile_size"
                     android:layout_alignParentLeft="true"
-                    android:padding="2dp"
+                    android:padding="@dimen/time_line_profile_item_padding"
                     android:scaleType="fitXY" />
 
                 <TextView
                     android:id="@+id/card_title_text"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/time_line_image_size"
+                    android:layout_alignParentTop="true"
                     android:layout_toRightOf="@id/card_profile_image"
                     android:gravity="center_vertical"
                     android:paddingLeft="3dp"
                     android:textSize="17dp" />
 
+                <TextView
+                    android:id="@+id/card_title_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/time_line_time_text_size"
+                    android:layout_below="@id/card_title_text"
+                    android:layout_toRightOf="@+id/card_profile_image"
+                    android:paddingLeft="3dp" />
+
             </RelativeLayout>
 
-            <!-- Need Separator -->
-
-            <TextView
-                android:id="@+id/card_content_text"
+            <!-- Content Field -->
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="15dp"
-                android:padding="2dp"/>
+                android:layout_marginTop="3dp">
 
-            <ImageView
-                android:id="@+id/card_content_image"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:scaleType="fitCenter" />
+                <TextView
+                    android:id="@+id/card_content_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:textSize="15dp" />
 
+                <sysproj.seonjoon.twice.view.TimelineImagePager
+                    android:id="@+id/card_content_image_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/card_content_text"
+                    android:padding="2dp" />
+
+                <TextView
+                    android:id="@+id/card_content_image_count_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/card_content_image_view"
+                    android:layout_alignRight="@+id/card_content_image_view"
+                    android:layout_margin="3dp"
+                    android:background="@color/timelineCardImageCountBack"
+                    android:foreground="@color/timelineCardImageCountFont"
+                    android:padding="5dp" />
+
+            </RelativeLayout>
+
+            <!-- Comment Field -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
                 <Button
+                    android:id="@+id/card_reply"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp" />
+
+                <Button
                     android:id="@+id/card_thumbs_up"
                     android:layout_width="wrap_content"
                     android:layout_height="20dp" />
 
+                <Button
+                    android:id="@+id/card_share"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp" />
+
             </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 

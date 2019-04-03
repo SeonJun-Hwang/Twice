@@ -9,7 +9,8 @@
     <color name="timelineThemaBackWhite">#ffffff</color>
     <color name="timelineSeparatorBlack">#000000</color>
     <color name="timelineCardUnderBack">#c2c2c2</color>
-
+    <color name="timelineCardImageCountBack">#C4BBBBBB</color>
+    <color name="timelineCardImageCountFont">#C4FFFFFF</color>
 
     <!-- Content BackGround Color -->
 

@@ -1,4 +1,4 @@
-package sysproj.seonjoon.twice.Loader;
+package sysproj.seonjoon.twice.loader;
 
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 

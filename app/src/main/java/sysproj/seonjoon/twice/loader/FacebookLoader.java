@@ -1,4 +1,4 @@
-package sysproj.seonjoon.twice.Loader;
+package sysproj.seonjoon.twice.loader;
 
 import android.support.annotation.Nullable;
 import android.util.Log;

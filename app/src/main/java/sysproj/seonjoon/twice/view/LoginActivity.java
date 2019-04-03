@@ -6,7 +6,6 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.app.LoaderManager.LoaderCallbacks;
@@ -35,7 +34,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -45,27 +43,13 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 
-import sysproj.seonjoon.twice.DBAccessResultCallback;
-import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.R;
-import sysproj.seonjoon.twice.manager.DBManager;
 import sysproj.seonjoon.twice.manager.LoginManager;
 import sysproj.seonjoon.twice.manager.PreferenceManager;
-import sysproj.seonjoon.twice.parser.FacebookTokenParser;
-import sysproj.seonjoon.twice.parser.TokenParser;
-import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.StaticAppData;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 

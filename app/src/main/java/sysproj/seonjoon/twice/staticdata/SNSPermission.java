@@ -1,8 +1,5 @@
 package sysproj.seonjoon.twice.staticdata;
 
-import com.facebook.login.DefaultAudience;
-import com.facebook.login.widget.LoginButton;
-
 import java.util.ArrayList;
 import java.util.List;
 

@@ -56,7 +56,7 @@ public class LoginManager {
             Log.e(TAG, "Facebook Login Success");
         else
             Log.e(TAG, "Facebook Login Failure");
-        return true;
+        return loginResult;
     }
 
     public boolean TwitterLogin(String uid) {
@@ -84,7 +84,7 @@ public class LoginManager {
             e.printStackTrace();
         }
 
-        return true;
+        return loginResult;
     }
 
     public boolean TwiceLogin(Activity activity, String id, String password) {
