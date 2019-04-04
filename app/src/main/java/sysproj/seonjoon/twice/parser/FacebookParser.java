@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import sysproj.seonjoon.twice.entity.FacebookPost;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostRFS;
 import sysproj.seonjoon.twice.staticdata.SNSTag;
@@ -33,18 +34,17 @@ public class FacebookParser implements SNSParser {
     }
 
     @Override
-    public List<Post> parseItem(JSONObject object) {
-
+    public ArrayList<Post> parseItem(JSONObject object) {
         if (object == null)
             return null;
 
-        try {
-            Log.e(TAG, object.toString(2));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Log.e(TAG, object.toString(2));
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
 
-        List<Post> resultList = new ArrayList<>();
+        ArrayList<Post> resultList = new ArrayList<>();
 
         try {
             JSONArray dataArray = object.getJSONArray("data");
@@ -54,11 +54,8 @@ public class FacebookParser implements SNSParser {
 
                 String uid = jsonObject.getString("id").split("_")[0];
                 String message = null;
-
-                String uName = GraphRequest.newGraphPathRequest(
-                        UserSession.FacebookToken,
-                        "/" + uid + "/",
-                        null).executeAndWait().getJSONObject().getString("name");
+                String createdTime = jsonObject.getString("created_time");
+                String uName = uid;
 
                 if (!jsonObject.isNull("message"))
                     message = jsonObject.getString("message");
@@ -66,16 +63,12 @@ public class FacebookParser implements SNSParser {
                 if (uName == null || uName.isEmpty())
                     uName = "Unknown";
 
-                resultList.add(new Post(SNSTag.Facebook, uName, message, null,"NONE", new PostRFS(),null));
+                resultList.add(new FacebookPost(SNSTag.Facebook, uName, message, null, createdTime, new PostRFS(), null, null));
             }
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-        resultList.add(new Post(SNSTag.Facebook, "윤기재", "Hello Facebook",null,"NONE",new PostRFS(), null));
-        resultList.add(new Post(SNSTag.Instagram, "홍승표", "Hello Instagram",null,"NONE",new PostRFS(), null));
-        resultList.add(new Post(SNSTag.Twitter, "서동환", "Hello Twitter",null,"NONE",new PostRFS(), null));
 
         return resultList;
     }

@@ -1,11 +1,12 @@
 package sysproj.seonjoon.twice.parser;
 
 import org.json.JSONObject;
-import java.util.List;
+
+import java.util.ArrayList;
 
 import sysproj.seonjoon.twice.entity.Post;
 
 public interface SNSParser {
 
-    List<Post> parseItem(JSONObject object);
+    ArrayList<Post> parseItem(JSONObject object);
 }

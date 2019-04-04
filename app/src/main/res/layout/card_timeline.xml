@@ -37,6 +37,7 @@
                     android:layout_height="@dimen/time_line_profile_size"
                     android:layout_alignParentLeft="true"
                     android:padding="@dimen/time_line_profile_item_padding"
+                    android:background="@null"
                     android:scaleType="fitXY" />
 
                 <TextView
@@ -96,22 +97,30 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="2dp"
+                android:weightSum="1">
 
                 <Button
                     android:id="@+id/card_reply"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:background="@null" />
 
                 <Button
                     android:id="@+id/card_thumbs_up"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:background="@null" />
 
                 <Button
                     android:id="@+id/card_share"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp" />
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.33"
+                    android:background="@null" />
 
             </LinearLayout>
 

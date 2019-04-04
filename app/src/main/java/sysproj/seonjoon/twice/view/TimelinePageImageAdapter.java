@@ -10,20 +10,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.ArrayList;
 
 import sysproj.seonjoon.twice.R;
+import sysproj.seonjoon.twice.entity.PostMedia;
 
 public class TimelinePageImageAdapter extends PagerAdapter {
 
     private Context context;
-    private ArrayList<String> imageList;
+    private ArrayList<PostMedia> imageList;
 
     public TimelinePageImageAdapter() {
     }
 
-    public TimelinePageImageAdapter(Context context, ArrayList<String> imageList){
+    public TimelinePageImageAdapter(Context context, ArrayList<PostMedia> imageList){
         this.context = context;
         this.imageList = imageList;
     }
@@ -44,7 +46,7 @@ public class TimelinePageImageAdapter extends PagerAdapter {
             view = inflater.inflate(R.layout.timeline_image_viewer, container, false);
 
             ImageView item = (ImageView) view.findViewById(R.id.timeline_image_viewer_image);
-            Glide.with(context).load(imageList.get(position)).into(item);
+            Glide.with(context).load(imageList.get(position).getMediaURL()).diskCacheStrategy(DiskCacheStrategy.ALL).fitCenter().into(item);
         }
 
         container.addView(view);

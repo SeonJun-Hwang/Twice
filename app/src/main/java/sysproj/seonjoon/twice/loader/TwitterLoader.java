@@ -60,7 +60,6 @@ public class TwitterLoader implements DataLoader {
         // Construct the signature base.
         final String baseUrl = uri.getScheme() + "://" + uri.getHost() + uri.getPath();
 
-        Log.e(TAG, baseUrl);
         final StringBuilder sb = new StringBuilder()
                 .append("GET")
                 .append('&')
@@ -119,7 +118,7 @@ public class TwitterLoader implements DataLoader {
         return String.valueOf(System.nanoTime()) + String.valueOf(Math.abs(RAND.nextLong()));
     }
 
-    String constructAuthorizationHeader(String nonce, String timestamp, String signature) {
+    private String constructAuthorizationHeader(String nonce, String timestamp, String signature) {
         final StringBuilder sb = new StringBuilder("OAuth");
         appendParameter(sb, OAuthConstants.PARAM_CALLBACK, null);
         appendParameter(sb, OAuthConstants.PARAM_CONSUMER_KEY, "H3qNM38a3TzDXpWz6yY1hknFy");

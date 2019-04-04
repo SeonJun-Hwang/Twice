@@ -1,10 +1,11 @@
 package sysproj.seonjoon.twice.entity;
 
 import android.support.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Date;
 
-public class Post {
+public abstract class Post {
 
     private int snsTag;
     private Date createDate;
@@ -12,23 +13,35 @@ public class Post {
     private String contentText;
     private String profileImage;
     private PostRFS postRFS;
-    private ArrayList<String> imageList;
+    private ArrayList<PostMedia> imageList;
+    private ArrayList<PostExtendInfo> extendInfo;
 
-    public Post(int snsTag, String user, String contentText, @Nullable String profileImage, String createdTime, PostRFS postRFS, @Nullable ArrayList<String> imageList) {
+    public Post(int snsTag, String user, String contentText, @Nullable String profileImage, String createdTime, PostRFS postRFS, @Nullable ArrayList<PostMedia> imageList, @Nullable ArrayList<PostExtendInfo> extendInfos) {
         this.snsTag = snsTag;
-        this.user = user;
-        this.contentText = contentText;
+        this.user = convertUser(user);
+        this.contentText = convertText(contentText);
         this.imageList = imageList;
-        this.profileImage = profileImage;
+        this.profileImage = convertProfileImageUrl(profileImage);
         this.postRFS = postRFS;
-        this.createDate = new Date(Date.parse(createdTime));
-        try {
-            this.createDate = new Date(Date.parse(createdTime));
-        } catch (Exception e) {
-            this.createDate = new Date();
-        }
+        this.createDate = convertDate(createdTime);
+        this.extendInfo = extendInfos;
     }
 
+    private String convertUser(String str) {
+        return str;
+    }
+
+    private String convertText(String str) {
+        return str;
+    }
+
+    private String convertProfileImageUrl(String str) {
+        return str;
+    }
+
+    abstract Date convertDate(String str);
+
+    // Getters
     public String getUser() {
         return user;
     }
@@ -37,7 +50,7 @@ public class Post {
         return contentText;
     }
 
-    public ArrayList<String> getImageList() {
+    public ArrayList<PostMedia> getImageList() {
         return imageList;
     }
 
@@ -53,7 +66,16 @@ public class Post {
         return createDate;
     }
 
-    public PostRFS getRFS(){
+    public PostRFS getRFS() {
         return postRFS;
+    }
+
+    public ArrayList<PostExtendInfo> getExtendInfo() {
+        return extendInfo;
+    }
+
+    // Method
+    public int getViewType() {
+        return imageList == null ? 1 : 2;
     }
 }

@@ -83,6 +83,9 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
         recyclerView.setLayoutManager(recyclerLayoutManager);
         timelineAdapater = new TimelineRecyclerAdapter(mContext, contents);
         recyclerView.setAdapter(timelineAdapater);
+        recyclerView.setItemViewCacheSize(20);
+        recyclerView.setDrawingCacheEnabled(true);
+        recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         // User Drawer Layout Set
         personDrawer = (DrawerLayout) findViewById(R.id.main_drawer_user);
@@ -162,6 +165,10 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
     }
 
     private class MakeTimeLineAsync extends AsyncTask<Void, Void, Void> {
+
+        private ArrayList<Post> facebookTimeline;
+        private ArrayList<Post> twitterTimeline;
+
         @Override
         protected Void doInBackground(Void... voids) {
 
@@ -176,10 +183,7 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
                     public void Complete(boolean isSuccess, JSONObject result) {
                         if (isSuccess) {
                             SNSParser snsParser = new FacebookParser();
-                            List<Post> facebookTimeline = snsParser.parseItem((JSONObject) result);
-
-                            if (!facebookTimeline.isEmpty())
-                                contents.addAll(facebookTimeline);
+                            facebookTimeline = snsParser.parseItem((JSONObject) result);
                         }
                     }
                 });
@@ -195,15 +199,14 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
                     public void Complete(boolean isSuccess, JSONObject result) {
                         if (isSuccess) {
                             SNSParser snsParser = new TwitterParser();
-                            List<Post> twitterTimeline = snsParser.parseItem(result);
-
-                            if (!twitterTimeline.isEmpty())
-                                contents.addAll(twitterTimeline);
+                            twitterTimeline = snsParser.parseItem(result);
                         }
                     }
                 });
             } else
                 Log.e(TAG, "Twitter Session is Null");
+
+            contents.addAll(mergePost(facebookTimeline, twitterTimeline));
 
             Log.e("Main", "Contents Size : " + contents.size());
             return null;
@@ -214,6 +217,41 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
             super.onPostExecute(aVoid);
 
             timelineAdapater.notifyDataSetChanged();
+        }
+
+        private ArrayList<Post> mergePost(ArrayList<Post> src1, ArrayList<Post> src2) {
+
+            if (src1 == null && src2 == null)
+                return null;
+            else if (src1 == null)
+                return src2;
+            else if (src2 == null)
+                return src1;
+
+            ArrayList<Post> result = new ArrayList<>();
+            int leftPivot = 0, rightPivot = 0;
+            int leftLength = src1.size(), rightLength = src2.size();
+
+            while (leftPivot < leftLength && rightPivot < rightLength) {
+                Post left = src1.get(leftPivot);
+                Post right = src2.get(rightPivot);
+
+                if (left.getCreateDate().compareTo(right.getCreateDate()) > 0) {
+                    result.add(left);
+                    leftPivot++;
+                } else {
+                    result.add(right);
+                    rightPivot++;
+                }
+            }
+
+            while (leftPivot < leftLength)
+                result.add(src1.get(leftPivot++));
+
+            while (rightPivot < rightLength)
+                result.add(src2.get(rightPivot++));
+
+            return result;
         }
     }
 }
