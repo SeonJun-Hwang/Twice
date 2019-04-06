@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/time_line_height"
+        android:background="@color/timelineHeadBack">
+
+        <ImageButton
+            android:id="@+id/search_back_button"
+            android:layout_width="@dimen/time_line_height"
+            android:layout_height="@dimen/time_line_height"
+            android:background="@null" />
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/main_profile_setting"
+            android:background="@color/timelineSearchBack">
+
+            <AutoCompleteTextView
+                android:id="@+id/search_search_post"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/timelineHeadBack"
+                android:paddingBottom="1dp" />
+
+        </android.support.design.widget.TextInputLayout>
+
+    </LinearLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/search_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+</LinearLayout>

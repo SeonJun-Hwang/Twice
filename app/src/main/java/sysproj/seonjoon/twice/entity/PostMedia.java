@@ -5,7 +5,7 @@ import android.util.Pair;
 public class PostMedia {
 
     public static final int PHOTO = 1;
-    public static final int VEDIO = 2;
+    public static final int VIDEO = 2;
 
     private String keyword;
     private String mediaURL;

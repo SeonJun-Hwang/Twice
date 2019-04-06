@@ -66,7 +66,7 @@ public class TwitterParser implements SNSParser {
                 String mediaURL = mediaObject.getString("media_url");
                 String keyword = mediaObject.getString("url");
 
-                imageList.add(new PostMedia(tag.contentEquals("video") ? PostMedia.VEDIO : PostMedia.PHOTO , keyword, mediaURL));
+                imageList.add(new PostMedia(tag.contentEquals("video") ? PostMedia.VIDEO : PostMedia.PHOTO , keyword, mediaURL));
             }
 
         } catch (Exception e) {

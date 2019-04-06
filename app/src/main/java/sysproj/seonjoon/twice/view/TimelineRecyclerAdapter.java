@@ -1,6 +1,7 @@
 package sysproj.seonjoon.twice.view;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
@@ -22,6 +23,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -39,6 +41,7 @@ import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.StaticAppData;
 
 public class TimelineRecyclerAdapter extends RecyclerView.Adapter<TimelineRecyclerAdapter.ViewHolder> {
+
     private static final String TAG = "TimeRecyclerAdapter";
     private Context context;
     private ArrayList<Post> items;
@@ -69,7 +72,7 @@ public class TimelineRecyclerAdapter extends RecyclerView.Adapter<TimelineRecycl
         // Log.e("Post", post.getUser() + " , " + post.getContentText()); // For Debug
 
         viewHolder.linearLayout.setBackgroundColor(getColor(post.getSnsTag()));
-        viewHolder.innerLinearLayout.setBackgroundColor(context.getColor(R.color.timelineThemaBackWhite));
+        viewHolder.innerLinearLayout.setBackgroundColor(context.getColor(R.color.timelineThemeBackWhite));
         viewHolder.logoButton.setImageDrawable(getLogo(post.getSnsTag()));
         viewHolder.contentTime.setText(calTime(post.getCreateDate()));
         viewHolder.titleText.setText(post.getUser());
@@ -158,6 +161,8 @@ public class TimelineRecyclerAdapter extends RecyclerView.Adapter<TimelineRecycl
                     return "";
                 }
             };
+
+
 
             for (PostExtendInfo item : post){
                 Pattern pattern = Pattern.compile(item.getKeyword());
