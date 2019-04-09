@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     android:layout_gravity="center_vertical">
 
-    <Button
-        android:id="@+id/sns_form_complete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentBottom="true"
-        android:layout_marginEnd="0dp"
-        android:layout_marginBottom="0dp"
-        android:padding="3dp" />
-
     <TextView
         android:id="@+id/sns_form_head_text"
         android:layout_width="match_parent"
@@ -39,10 +29,11 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_marginStart="0dp"
-        android:layout_marginTop="36dp"
+        android:layout_marginTop="33dp"
         android:padding="10dp"
         android:text="1개이상 등록해주셔야 다음으로 넘어갈 수 있습니다\n사용하실 SNS계정을 등록해주세요"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+
 
     <ScrollView
         android:layout_width="match_parent"
@@ -58,22 +49,35 @@
             android:orientation="vertical">
 
 
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:text="각 계정은 개인정보 동의사항에 동의한 후에 연동할 수 있습니다. \n아래의 버튼을 눌러 SNS계정과 연동할수 있습니다." />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:background="#aaaaaa" />
 
             <Button
-                android:id="@+id/textView2"
+                android:id="@+id/facebookinfobtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ededff"
                 android:clickable="true"
                 android:text="Facebook의 계정을 연결하시려면 여기를 눌러주세요"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:onClick="facebookinfoBtn"/>
 
             <TextView
-                android:id="@+id/facebookinto"
+                android:id="@+id/facebookinfo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="10dp"
@@ -88,7 +92,8 @@
                     - 예약게시글 작성 기능\n
                     \n\n 귀하의 개인정보는 원칙적으로 개인정보 수집 및 이용목적이 달성이 되면 지체없이 파기합니다.\n
                     \n\n 동의를 거부하실수 있으나, 위의 기능은 facebook과 관련된 기능을 제공하는데 필수적인 기능이므로, 동의를 거부할 시에 해당기능을 사용하지 못하실 수 있습니다.\n
-                    \n동의 하신다면 아래의 버튼의 동의를 눌러주세요" />
+                    \n동의 하신다면 아래의 버튼의 동의를 눌러주세요"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -104,13 +109,17 @@
                     android:id="@+id/sns_form_facebook"
                     android:layout_width="300dp"
                     android:layout_height="100dp"
-                    android:layout_margin="5dp" />
+                    android:layout_margin="5dp"
+                    android:enabled="false"
+                    android:visibility="gone" />
 
                 <Button
-                    android:id="@+id/F_Auth_AgreeBtn"
+                    android:id="@+id/facebook_Auth_AgreeBtn"
                     android:layout_width="match_parent"
                     android:layout_height="40dp"
-                    android:text="동의" />
+                    android:onClick="facebookAgreeBtn"
+                    android:text="동의"
+                    android:visibility="gone" />
             </LinearLayout>
 
             <Button
@@ -123,13 +132,32 @@
 
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
+            <TextView
+                android:id="@+id/instargraminfo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:text="twice는 서비스제공을 위해 instargram으로부터 아래와 같은 권한을 필요로 합니다.\n
+                    - 사용자의 id 및 프로필 정보(이름,email등)\n
+                    - 어플리케이션을 이용하기 위한 사용자 토큰\n
+                    - 기타 어플리케이션을 이용하기 위한 정보\n
+                      \n\n instargram에서 수집한 정보를 사용하여 Twice는 다음과 같은 기능을 제공해드립니다.\n
+                    - facebook 글 쓰기, 조회, 삭제 및 수정 기능\n
+                    - 댓글 작성, 삭제 및 수정 기능\n
+                    - 사용자의 타임라인을 종합한 통합 게시글 기능\n
+                    - 예약게시글 작성 기능\n
+                    \n\n 귀하의 개인정보는 원칙적으로 개인정보 수집 및 이용목적이 달성이 되면 지체없이 파기합니다.\n
+                    \n\n 동의를 거부하실수 있으나, 위의 기능은 instargram과 관련된 기능을 제공하는데 필수적인 기능이므로, 동의를 거부할 시에 해당기능을 사용하지 못하실 수 있습니다.\n
+                    \n동의 하신다면 아래의 버튼의 동의를 눌러주세요"
+                android:visibility="gone"/>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2px"
                 android:background="#aaaaaa" />
 
             <Button
-                android:id="@+id/textView4"
+                android:id="@+id/twitterinfobtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#ededff"
@@ -142,16 +170,78 @@
                 android:layout_height="2px"
                 android:background="#aaaaaa" />
 
-            <com.twitter.sdk.android.core.identity.TwitterLoginButton
-                android:id="@+id/sns_form_twitter"
-                android:layout_width="300dp"
-                android:layout_height="30dp"
-                android:layout_margin="5dp" />
+            <TextView
+                android:id="@+id/twitterinfo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:text="twice는 서비스제공을 위해 twitter으로부터 아래와 같은 권한을 필요로 합니다.\n
+                    - 사용자의 id 및 프로필 정보(이름,email등)\n
+                    - 어플리케이션을 이용하기 위한 사용자 토큰\n
+                    - 기타 어플리케이션을 이용하기 위한 정보\n
+                      \n\n twitter에서 수집한 정보를 사용하여 Twice는 다음과 같은 기능을 제공해드립니다.\n
+                    - twitter 글 쓰기, 조회, 삭제 및 수정 기능\n
+                    - 댓글 작성, 삭제 및 수정 기능\n
+                    - 사용자의 타임라인을 종합한 통합 게시글 기능\n
+                    - 예약게시글 작성 기능\n
+                    \n\n 귀하의 개인정보는 원칙적으로 개인정보 수집 및 이용목적이 달성이 되면 지체없이 파기합니다.\n
+                    \n\n 동의를 거부하실수 있으나, 위의 기능은 twitter과 관련된 기능을 제공하는데 필수적인 기능이므로, 동의를 거부할 시에 해당기능을 사용하지 못하실 수 있습니다.\n
+                    \n동의 하신다면 아래의 버튼의 동의를 눌러주세요"
+                android:visibility="gone"/>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:gravity="center_vertical|center_horizontal"
+                android:orientation="horizontal">
+
+                <com.twitter.sdk.android.core.identity.TwitterLoginButton
+                    android:id="@+id/sns_form_twitter"
+                    android:layout_width="300dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="5dp"
+                    android:visibility="gone"
+                    android:enabled="false"
+                    />
+
+                <Button
+                    android:id="@+id/twitter_Auth_AgreeBtn"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"
+                    android:onClick="twitterAgreeBtn"
+                    android:text="동의"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="\n\n\n\n\n\n" />
 
         </LinearLayout>
     </ScrollView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
 
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="0dp"
+        android:layout_marginBottom="0dp"
+        android:gravity="right"
+        android:background="#ffffff">
 
-
+        <Button
+            android:id="@+id/sns_form_complete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="3dp" />
+    </LinearLayout>
 
 </RelativeLayout>
