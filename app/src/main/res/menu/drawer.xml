@@ -1,14 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <item
-        android:id="@+id/drawer_link"
-        android:title="Linkage"
-        />
+    <group
+        android:id="@+id/drawer_menu_related_user"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/drawer_link"
+            android:title="Linkage" />
 
-    <item
-        android:id="@+id/drawer_logout"
-        android:title="Logout"
-        />
+        <item
+            android:id="@+id/drawer_logout"
+            android:title="Logout" />
+    </group>
 
+    <group android:id="@+id/drawer_menu_related_app">
+
+        <item
+            android:id="@+id/drawer_app_setting"
+            android:title="Setting" />
+
+        <item
+            android:id="@+id/drawer_app_developers"
+            android:title="About Twice" />
+
+    </group>
 </menu>

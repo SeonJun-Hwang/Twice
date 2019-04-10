@@ -12,8 +12,8 @@ public class UserSession {
     public static TwitterSession TwitterToken = null;
 
     public static String UserFileName = "AuthFile";
-    public static String UserIDTag = "AuthUID" ;
-    public static String UserPasswordTag = "AuthPassword";
+    public static final String UserIDTag = "AuthUID" ;
+    public static final String UserPasswordTag = "AuthPassword";
 
-    public static int MIN_PASSWORD_LENGTH = 8;
+    public static final int MIN_PASSWORD_LENGTH = 8;
 }

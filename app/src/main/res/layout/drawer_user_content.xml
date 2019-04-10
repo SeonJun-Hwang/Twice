@@ -1,38 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
+    <!-- Top -->
     <RelativeLayout
+        android:id="@+id/main_top"
         android:layout_width="match_parent"
         android:layout_height="@dimen/time_line_height"
         android:background="@color/timelineHeadBack"
+        android:elevation="10dp"
         android:padding="@dimen/time_line_padding">
 
         <ImageView
             android:id="@+id/main_profile_setting"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/time_line_height"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_menu_button" />
+            android:scaleType="fitXY"
+            android:src="@drawable/list" />
 
-        <ImageView
-            android:id="@+id/main_setting"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/main_top_home_text"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_setting_button" />
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/main_profile_setting"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:padding="2dp"
+            android:text="Home"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/main_top_search_edit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/main_profile_setting"
+            android:background="@drawable/edittext_background"
+            android:hint="Search"
+            android:imeOptions="actionSearch"
+            android:paddingHorizontal="10sp"
+            android:singleLine="true"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/main_time_line_recycler"
+    <!-- Content Fragment -->
+    <FrameLayout
+        android:id="@+id/main_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/timelineCardUnderBack">
+        android:layout_above="@id/main_bottom"
+        android:layout_below="@id/main_top" />
 
-    </android.support.v7.widget.RecyclerView>
+    <!-- Fragment Move Button Layout -->
+    <LinearLayout
+        android:id="@+id/main_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/timelineThemeBackWhite"
+        android:elevation="10dp"
+        android:orientation="horizontal"
+        android:padding="3dp"
+        android:weightSum="2">
 
-</LinearLayout>
+        <RadioGroup
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/main_bottom_home_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/home_selector"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center" />
+
+            <RadioButton
+                android:id="@+id/main_bottom_search_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/search_selector"
+                android:button="@null"
+                android:gravity="center" />
+
+        </RadioGroup>
+
+    </LinearLayout>
+
+</RelativeLayout>

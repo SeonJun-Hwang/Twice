@@ -4,9 +4,7 @@
     android:versionCode="1"
     android:versionName="0.0.0.0">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
-    <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -19,6 +17,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".view.SearchActivity"></activity>
+        <activity
+            android:name=".view.SettingsActivity"
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".view.InitActivity"
             android:theme="@style/SplashTheme">
@@ -49,15 +51,18 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.MainActivity" />
+        <activity
+            android:name=".view.MainActivity"
+            android:configChanges="screenSize|orientation|keyboardHidden" />
         <activity
             android:name=".view.LoginActivity"
             android:label="@string/title_activity_login" />
         <activity
             android:name=".view.RegisterActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".view.UserAddActivity"
-            android:theme="@style/NoDisplay"/>
+        <activity
+            android:name=".view.UserAddActivity"
+            android:theme="@style/NoDisplay" />
     </application>
 
 </manifest>

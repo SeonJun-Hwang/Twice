@@ -7,16 +7,12 @@ import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.widget.Toast;
-
-import com.google.firebase.auth.FirebaseAuth;
 
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.UserInformation;
 import sysproj.seonjoon.twice.manager.LoginManager;
 import sysproj.seonjoon.twice.staticdata.StaticAppData;
-import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class RegisterActivity extends FragmentActivity {
 

@@ -23,6 +23,4 @@
         <item name="android:windowAnimationStyle">@android:style/Animation</item>
         <item name="android:windowFullscreen">true</item>
     </style>
-
-
 </resources>

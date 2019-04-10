@@ -38,7 +38,6 @@ public class FragmentSNSForm extends Fragment {
 
     private static final String TAG = "SNSFrag";
     private static final int userAddReq = 10001;
-    private static final int facebookReq = -1;
 
     private TextView headText;
     private Button completeButton;

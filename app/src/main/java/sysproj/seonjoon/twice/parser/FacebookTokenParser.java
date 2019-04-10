@@ -12,7 +12,6 @@ import java.util.Set;
 
 import sysproj.seonjoon.twice.staticdata.SNSTag;
 
-
 public class FacebookTokenParser implements TokenParser {
 
     private AccessTokenSource string2TokenSource(@Nullable String str) {
