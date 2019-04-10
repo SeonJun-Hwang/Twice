@@ -27,6 +27,8 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import org.w3c.dom.Text;
+
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.UserInformation;
 import sysproj.seonjoon.twice.staticdata.SNSPermission;
@@ -45,6 +47,24 @@ public class FragmentSNSForm extends Fragment {
     private LoginButton facebookLoginButton;
     private CallbackManager facebookCallback;
 
+
+    private Button facebookinfobtn; // facebook 개인정보 동의 확인서를 보여주기 위한 버튼
+    private TextView facebookinfo; // facebook 개인정보 동의 확인서 내용 text
+    private Button facebookAgreeBtn; //facebook 개인정보 동의버튼
+    private int facebookinfoison = 0;
+
+    private Button twitterinfobtn;
+    private TextView twitterinfo;
+    private Button twitterAgreeBtn;
+    private int twitterinfoison = 0;
+
+    private Button instargraminfobtn;
+    private TextView instargraminfo;
+    private Button instargramAgreeBtn;
+    private int instargraminfoison = 0;
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment_sns_regist, container, false);
@@ -58,11 +78,26 @@ public class FragmentSNSForm extends Fragment {
         headText.setText(getString(R.string.sns_form_head));
         completeButton.setText(getString(R.string.sns_form_complete));
 
+
+        facebookinfobtn = (Button)root.findViewById(R.id.facebookinfobtn);
+        facebookinfo = (TextView)root.findViewById(R.id.facebookinfo);
+        facebookAgreeBtn = (Button)root.findViewById(R.id.facebook_Auth_AgreeBtn);
+        /*instargraminfobtn = (Button)root.findViewById(R.id.instargraminfobtn);
+        instargraminfo = (TextView)root.findViewById(R.id.instargraminfo);
+        instargramAgreeBtn = (Button)root.findViewById(R.id.instargram_Auth_AgreeBtn);*/
+        twitterinfobtn = (Button)root.findViewById(R.id.twitterinfobtn);
+        twitterinfo = (TextView)root.findViewById(R.id.twitterinfo);
+        twitterAgreeBtn = (Button)root.findViewById(R.id.twitter_Auth_AgreeBtn);
+
+
+
+        setButtonState();
         setCallBack();
         setListener();
 
         return root;
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -102,7 +137,12 @@ public class FragmentSNSForm extends Fragment {
         Log.e(TAG, "Activity Result " + requestCode);
     }
 
+    private void setButtonState(){
+        facebookLoginButton.setEnabled(false);
+        facebookAgreeBtn.setEnabled(true);
+    }
     private void setListener() {
+
         completeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -121,6 +161,58 @@ public class FragmentSNSForm extends Fragment {
 
                 AlertDialog dialog = builder.create();
                 dialog.show();
+            }
+        });
+
+
+        //facebook info button을 눌렀을때 개인정보 동의 확인서가 뜨게 하는것
+        facebookinfobtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (facebookinfoison == 0) {
+                    facebookinfo.setVisibility(View.VISIBLE);
+                    facebookLoginButton.setVisibility(View.VISIBLE);
+                    facebookAgreeBtn.setVisibility(View.VISIBLE);
+                    facebookinfoison = 1;
+                }else{
+                    facebookinfo.setVisibility(View.GONE);
+                    facebookLoginButton.setVisibility(View.GONE);
+                    facebookAgreeBtn.setVisibility(View.GONE);
+                    facebookinfoison = 0;
+                }
+            }
+        });
+        //동의시 로그인 버튼 활성화
+        facebookAgreeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                facebookLoginButton.setEnabled(true);
+                facebookAgreeBtn.setEnabled(false);
+            }
+        });
+
+        //twitter
+        twitterinfobtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (twitterinfoison == 0) {
+                    twitterinfo.setVisibility(View.VISIBLE);
+                    twitterLoginButton.setVisibility(View.VISIBLE);
+                    twitterAgreeBtn.setVisibility(View.VISIBLE);
+                    twitterinfoison = 1;
+                }else{
+                    twitterinfo.setVisibility(View.GONE);
+                    twitterLoginButton.setVisibility(View.GONE);
+                    twitterAgreeBtn.setVisibility(View.GONE);
+                    twitterinfoison = 0;
+                }
+            }
+        });
+        twitterAgreeBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                twitterLoginButton.setEnabled(true);
+                twitterAgreeBtn.setEnabled(false);
             }
         });
     }
