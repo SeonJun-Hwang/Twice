@@ -267,10 +267,9 @@ public class TimelineRecyclerAdapter extends RecyclerView.Adapter<TimelineRecycl
             thumbsUp = (Button) itemView.findViewById(R.id.card_thumbs_up);
             share = (Button) itemView.findViewById(R.id.card_share);
 
-            if (StaticAppData.TimeLineHeight == 0) {
-                LinearLayout timeLineLinear = (LinearLayout) itemView.findViewById(R.id.card_inner_linear);
-                StaticAppData.TimeLineHeight = (int) (timeLineLinear.getHeight() * 0.8);
-            }
+            if (StaticAppData.TimeLineHeight == 0)
+                StaticAppData.TimeLineHeight = (int) (innerLinearLayout.getHeight() * 0.8);
+
         }
     }
 

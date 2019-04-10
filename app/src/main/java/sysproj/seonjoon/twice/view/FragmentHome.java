@@ -36,6 +36,7 @@ public class FragmentHome extends Fragment{
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private TimelineRecyclerAdapter timelineAdapter;
     private ArrayList<Post> contents;
+    private MakeTimeLineAsync timeLineAsync;
 
     @Nullable
     @Override
@@ -57,14 +58,19 @@ public class FragmentHome extends Fragment{
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         setListener();
-
-        MakeTimeLineAsync makeTimeLineAsync = new MakeTimeLineAsync();
-        makeTimeLineAsync.execute();
+        loadTimeline();
 
         return root;
     }
 
     private void setListener() {
+    }
+
+    private void loadTimeline(){
+        if (timeLineAsync == null){
+            timeLineAsync = new MakeTimeLineAsync();
+            timeLineAsync.execute();
+        }
     }
 
     private class MakeTimeLineAsync extends AsyncTask<Void, Void, Void> {
@@ -123,8 +129,9 @@ public class FragmentHome extends Fragment{
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-
             timelineAdapter.notifyDataSetChanged();
+
+            timeLineAsync = null;
         }
     }
 }

@@ -65,8 +65,10 @@ public class FragmentSearch extends Fragment {
     }
 
     public void startSearch(String search) {
-        searchAsync = new SearchAsync();
-        searchAsync.execute(search);
+        if (searchAsync == null) {
+            searchAsync = new SearchAsync();
+            searchAsync.execute(search);
+        }
     }
 
     @Override
@@ -146,6 +148,8 @@ public class FragmentSearch extends Fragment {
             Log.e("Main", "Contents Size : " + contents.size());
 
             timelineAdapter.notifyDataSetChanged();
+
+            searchAsync = null;
         }
     }
 }
