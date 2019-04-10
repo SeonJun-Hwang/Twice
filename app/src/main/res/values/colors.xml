@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="registFragmentHeadBack">#dea0c6</color>
+    <color name="registFragmentHeadBack">#fc71ed</color>
     <color name="registFragmentHeadFore">#3e0f2d</color>
     <color name="timelineHeadBack">#EC48B3</color>
     <color name="timelineSearchBack">#E67FB4</color>
