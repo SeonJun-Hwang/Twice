@@ -1,7 +1,5 @@
 package sysproj.seonjoon.twice.entity;
 
-import android.util.Pair;
-
 public class PostMedia {
 
     public static final int PHOTO = 1;
@@ -11,9 +9,9 @@ public class PostMedia {
     private String mediaURL;
     private int mediaTag;
 
-    public PostMedia(int mediaTag, String keword, String mediaURL) {
+    public PostMedia(int mediaTag, String keyword, String mediaURL) {
         this.mediaTag = mediaTag;
-        this.keyword = keword;
+        this.keyword = keyword;
         this.mediaURL = mediaURL;
     }
 

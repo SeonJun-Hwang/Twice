@@ -7,20 +7,32 @@ import java.util.Date;
 
 public class TwitterPost extends Post {
 
-    public TwitterPost(int snsTag, String user, String contentText, @Nullable String profileImage, String createdTime, PostRFS postRFS, @Nullable ArrayList<PostMedia> imageList, @Nullable ArrayList<PostExtendInfo> extendInfo) {
-        super(snsTag, user, contentText, profileImage, createdTime, postRFS, imageList, extendInfo);
+    protected TwitterPost(Post.Builder b) {
+        super(b);
     }
 
-    @Override
-    Date convertDate(String str) {
-        Date res = null;
+    public static class Builder extends Post.Builder {
 
-        try{
-            res = new Date(Date.parse(str));
-        } catch (Exception e){
-            res = new Date();
+        public Builder(String user, String contentText, String createTime, PostRFS postRFS) {
+            super(user, contentText, createTime, postRFS);
         }
 
-        return res;
+        @Override
+        protected Date convertDate(String str) {
+            Date res = null;
+
+            try {
+                res = new Date(Date.parse(str));
+            } catch (Exception e) {
+                res = new Date();
+            }
+
+            return res;
+        }
+
+        @Override
+        public Post build() {
+            return new TwitterPost(this);
+        }
     }
 }

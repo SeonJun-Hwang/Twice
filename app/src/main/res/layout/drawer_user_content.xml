@@ -21,20 +21,31 @@
             android:scaleType="fitXY"
             android:src="@drawable/list" />
 
-        <android.support.design.widget.TextInputLayout
+        <TextView
+            android:id="@+id/main_top_home_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/main_profile_setting"
-            android:background="@color/timelineSearchBack">
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:padding="2dp"
+            android:text="Home"
+            android:textColor="#FFFFFF"
+            android:textSize="24sp" />
 
-            <AutoCompleteTextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/timelineHeadBack"
-                android:paddingBottom="1dp" />
-
-        </android.support.design.widget.TextInputLayout>
+        <EditText
+            android:id="@+id/main_top_search_edit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="5dp"
+            android:layout_toRightOf="@id/main_profile_setting"
+            android:background="@drawable/edittext_background"
+            android:hint="Search"
+            android:imeOptions="actionSearch"
+            android:paddingHorizontal="10sp"
+            android:singleLine="true"
+            android:visibility="gone" />
 
     </RelativeLayout>
 
@@ -43,10 +54,12 @@
         android:id="@+id/main_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/main_bottom"
         android:layout_below="@id/main_top" />
 
     <!-- Fragment Move Button Layout -->
     <LinearLayout
+        android:id="@+id/main_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"

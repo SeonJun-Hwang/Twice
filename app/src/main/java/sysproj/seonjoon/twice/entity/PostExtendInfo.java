@@ -2,6 +2,11 @@ package sysproj.seonjoon.twice.entity;
 
 public class PostExtendInfo {
 
+    public static final int HASH_TAG = 1;
+    public static final int MENTION = 2;
+    public static final int URLS = 3;
+
+    private int postTag;
     private String keyword;
     private int start;
     private int end;
@@ -11,7 +16,8 @@ public class PostExtendInfo {
 
     }
 
-    public PostExtendInfo(int start, int end, String keyword, String linkURL) {
+    public PostExtendInfo(int postTag, int start, int end, String keyword, String linkURL) {
+        this.postTag = postTag;
         this.start = start;
         this.end = end;
         this.keyword = keyword;
@@ -32,5 +38,9 @@ public class PostExtendInfo {
 
     public String getLinkURL() {
         return linkURL;
+    }
+
+    public int getPostTag() {
+        return postTag;
     }
 }

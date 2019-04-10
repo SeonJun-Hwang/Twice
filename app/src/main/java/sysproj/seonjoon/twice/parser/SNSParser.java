@@ -8,5 +8,6 @@ import sysproj.seonjoon.twice.entity.Post;
 
 public interface SNSParser {
 
-    ArrayList<Post> parseItem(JSONObject object);
+    ArrayList<Post> parseTimeline(JSONObject object);
+    ArrayList<Post> parseSearch(JSONObject object);
 }

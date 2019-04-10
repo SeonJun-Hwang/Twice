@@ -4,5 +4,7 @@ import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 
 public interface DataLoader {
 
-    void LoadTimeLineData(DataLoadCompleteCallback callbacks);
+    void LoadTimeLineData(DataLoadCompleteCallback callback);
+
+    void LoadSearchData(String searchTag, DataLoadCompleteCallback callback);
 }

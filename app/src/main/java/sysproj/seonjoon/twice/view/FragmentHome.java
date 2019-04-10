@@ -1,28 +1,16 @@
 package sysproj.seonjoon.twice.view;
 
-import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-
-import com.google.firebase.auth.FirebaseAuth;
 
 import org.json.JSONObject;
 
@@ -37,6 +25,7 @@ import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.parser.FacebookParser;
 import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TwitterParser;
+import sysproj.seonjoon.twice.staticdata.LastUpadteTime;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class FragmentHome extends Fragment{
@@ -45,7 +34,7 @@ public class FragmentHome extends Fragment{
     private static final String TAG = "FRAGMENT_HOME";
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager recyclerLayoutManager;
-    private TimelineRecyclerAdapter timelineAdapater;
+    private TimelineRecyclerAdapter timelineAdapter;
     private ArrayList<Post> contents;
 
     @Nullable
@@ -61,8 +50,8 @@ public class FragmentHome extends Fragment{
         recyclerView.setHasFixedSize(true);
         recyclerLayoutManager = new LinearLayoutManager(mContext);
         recyclerView.setLayoutManager(recyclerLayoutManager);
-        timelineAdapater = new TimelineRecyclerAdapter(mContext, contents);
-        recyclerView.setAdapter(timelineAdapater);
+        timelineAdapter = new TimelineRecyclerAdapter(mContext, contents);
+        recyclerView.setAdapter(timelineAdapter);
         recyclerView.setItemViewCacheSize(20);
         recyclerView.setDrawingCacheEnabled(true);
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
@@ -84,8 +73,13 @@ public class FragmentHome extends Fragment{
         private ArrayList<Post> twitterTimeline;
 
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected void onPreExecute() {
+            super.onPreExecute();
+            LastUpadteTime.updateTime(MainActivity.getShowingFragmentNumber());
+        }
 
+        @Override
+        protected Void doInBackground(Void... voids) {
             // Data Load
             if (UserSession.FacebookToken != null) {
                 Log.e(TAG, "Start Facebook Async");
@@ -97,7 +91,7 @@ public class FragmentHome extends Fragment{
                     public void Complete(boolean isSuccess, JSONObject result) {
                         if (isSuccess) {
                             SNSParser snsParser = new FacebookParser();
-                            facebookTimeline = snsParser.parseItem((JSONObject) result);
+                            facebookTimeline = snsParser.parseTimeline(result);
                         }
                     }
                 });
@@ -113,14 +107,14 @@ public class FragmentHome extends Fragment{
                     public void Complete(boolean isSuccess, JSONObject result) {
                         if (isSuccess) {
                             SNSParser snsParser = new TwitterParser();
-                            twitterTimeline = snsParser.parseItem(result);
+                            twitterTimeline = snsParser.parseTimeline(result);
                         }
                     }
                 });
             } else
                 Log.e(TAG, "Twitter Session is Null");
 
-            contents.addAll(mergePost(facebookTimeline, twitterTimeline));
+            contents.addAll(Post.mergePost(facebookTimeline, twitterTimeline));
 
             Log.e("Main", "Contents Size : " + contents.size());
             return null;
@@ -130,42 +124,7 @@ public class FragmentHome extends Fragment{
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
 
-            timelineAdapater.notifyDataSetChanged();
-        }
-
-        private ArrayList<Post> mergePost(ArrayList<Post> src1, ArrayList<Post> src2) {
-
-            if (src1 == null && src2 == null)
-                return null;
-            else if (src1 == null)
-                return src2;
-            else if (src2 == null)
-                return src1;
-
-            ArrayList<Post> result = new ArrayList<>();
-            int leftPivot = 0, rightPivot = 0;
-            int leftLength = src1.size(), rightLength = src2.size();
-
-            while (leftPivot < leftLength && rightPivot < rightLength) {
-                Post left = src1.get(leftPivot);
-                Post right = src2.get(rightPivot);
-
-                if (left.getCreateDate().compareTo(right.getCreateDate()) > 0) {
-                    result.add(left);
-                    leftPivot++;
-                } else {
-                    result.add(right);
-                    rightPivot++;
-                }
-            }
-
-            while (leftPivot < leftLength)
-                result.add(src1.get(leftPivot++));
-
-            while (rightPivot < rightLength)
-                result.add(src2.get(rightPivot++));
-
-            return result;
+            timelineAdapter.notifyDataSetChanged();
         }
     }
 }

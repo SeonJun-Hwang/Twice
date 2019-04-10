@@ -15,7 +15,7 @@ public class FacebookLoader implements DataLoader {
 
     /* Load Data */
     @Override
-    public void LoadTimeLineData(@Nullable DataLoadCompleteCallback callbacks) {
+    public void LoadTimeLineData(@Nullable DataLoadCompleteCallback callback) {
         Log.e(TAG, "Start Facebook Loading");
 
         GraphRequest request = GraphRequest.newGraphPathRequest(
@@ -26,10 +26,17 @@ public class FacebookLoader implements DataLoader {
         GraphResponse response = request.executeAndWait();
 
         if (response != null)
-            callbacks.Complete(true, response.getJSONObject());
+            callback.Complete(true, response.getJSONObject());
         else
-            callbacks.Complete(false, null);
+            callback.Complete(false, null);
 
         Log.e(TAG, "End Facebook Loading");
     }
+
+    @Override
+    public void LoadSearchData(String searchTag, DataLoadCompleteCallback callback) {
+        callback.Complete(true, null);
+    }
+
+
 }
