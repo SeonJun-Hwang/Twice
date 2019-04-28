@@ -155,7 +155,7 @@ public class FragmentSNSForm extends Fragment {
                 URL = new URL("http://100.24.24.64:3366/twitter");
 
                 fconnection = (HttpURLConnection)URL.openConnection();
-                fconnection.setRequestMethod("POST");
+                // fconnection.setRequestMethod("POST");
                 fconnection.setDoOutput(true);
                 fconnection.setDoInput(true);
 
