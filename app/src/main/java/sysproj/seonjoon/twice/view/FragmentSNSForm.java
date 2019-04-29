@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -27,7 +28,19 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import org.json.JSONObject;
 import org.w3c.dom.Text;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.Buffer;
+import java.util.Map;
 
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.UserInformation;
@@ -58,8 +71,8 @@ public class FragmentSNSForm extends Fragment {
     private Button twitterAgreeBtn;
     private int twitterinfoison = 0;
 
-    private Button instargraminfobtn;
     private TextView instargraminfo;
+    private Button instargraminfobtn;
     private Button instargramAgreeBtn;
     private int instargraminfoison = 0;
 
@@ -90,7 +103,7 @@ public class FragmentSNSForm extends Fragment {
         twitterAgreeBtn = (Button)root.findViewById(R.id.twitter_Auth_AgreeBtn);
 
 
-
+        setAuthText();
         setButtonState();
         setCallBack();
         setListener();
@@ -98,6 +111,69 @@ public class FragmentSNSForm extends Fragment {
         return root;
     }
 
+    private void setAuthText(){
+        new facebookNetworkThread().execute();
+        new twitterNetworkThread().execute();
+    }
+
+
+    class facebookNetworkThread extends AsyncTask<Void,String,Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+            URL facebookauthURL = null;
+            HttpURLConnection fconnection = null;
+            try {
+                facebookauthURL = new URL("http://100.24.24.64:3366/facebook");
+
+                fconnection = (HttpURLConnection)facebookauthURL.openConnection();
+                fconnection.setRequestMethod("POST");
+                fconnection.setDoOutput(true);
+                fconnection.setDoInput(true);
+
+                InputStream is = fconnection.getInputStream();
+                StringBuilder sb = new StringBuilder();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+                String result;
+                while((result = br.readLine())!=null){
+                    sb.append(result+"\r\n");
+                }
+                facebookinfo.setText(sb);
+            } catch (java.io.IOException e) {
+            }finally {
+                fconnection.disconnect();
+            }
+            return null;
+        }
+    }
+
+    class twitterNetworkThread extends AsyncTask<Void,String,Void>{
+        @Override
+        protected Void doInBackground(Void... voids) {
+            URL URL = null;
+            HttpURLConnection fconnection = null;
+            try {
+                URL = new URL("http://100.24.24.64:3366/twitter");
+
+                fconnection = (HttpURLConnection)URL.openConnection();
+                // fconnection.setRequestMethod("POST");
+                fconnection.setDoOutput(true);
+                fconnection.setDoInput(true);
+
+                InputStream is = fconnection.getInputStream();
+                StringBuilder sb = new StringBuilder();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+                String result;
+                while((result = br.readLine())!=null){
+                    sb.append(result+"\r\n");
+                }
+                twitterinfo.setText(sb);
+            } catch (java.io.IOException e) {
+            }finally {
+                fconnection.disconnect();
+            }
+            return null;
+        }
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
