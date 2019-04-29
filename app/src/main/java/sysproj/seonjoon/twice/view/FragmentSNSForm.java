@@ -117,32 +117,43 @@ public class FragmentSNSForm extends Fragment {
     }
 
 
-    class facebookNetworkThread extends AsyncTask<Void,String,Void>{
+    class facebookNetworkThread extends AsyncTask<Void,String,String>{
         @Override
-        protected Void doInBackground(Void... voids) {
+        protected String doInBackground(Void... voids) {
             URL facebookauthURL = null;
             HttpURLConnection fconnection = null;
+            StringBuilder sb = new StringBuilder();
             try {
                 facebookauthURL = new URL("http://100.24.24.64:3366/facebook");
 
                 fconnection = (HttpURLConnection)facebookauthURL.openConnection();
-                fconnection.setRequestMethod("POST");
-                fconnection.setDoOutput(true);
-                fconnection.setDoInput(true);
+                fconnection.setRequestMethod("GET");
+                fconnection.setReadTimeout(3000);
+                fconnection.setConnectTimeout(3000);
+                //fconnection.setDoOutput(true);
+                //fconnection.setDoInput(true);
+
+                Log.e(TAG, fconnection.getResponseCode() + " - " + fconnection.getURL().toString());
 
                 InputStream is = fconnection.getInputStream();
-                StringBuilder sb = new StringBuilder();
+
                 BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
                 String result;
                 while((result = br.readLine())!=null){
                     sb.append(result+"\r\n");
                 }
-                facebookinfo.setText(sb);
+
             } catch (java.io.IOException e) {
             }finally {
                 fconnection.disconnect();
             }
-            return null;
+            return sb.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            facebookinfo.setText(s);
         }
     }
 
@@ -155,9 +166,13 @@ public class FragmentSNSForm extends Fragment {
                 URL = new URL("http://100.24.24.64:3366/twitter");
 
                 fconnection = (HttpURLConnection)URL.openConnection();
-                // fconnection.setRequestMethod("POST");
-                fconnection.setDoOutput(true);
-                fconnection.setDoInput(true);
+                fconnection.setRequestMethod("GET");
+
+                fconnection.setReadTimeout(3000);
+                fconnection.setConnectTimeout(3000);
+
+                //fconnection.setDoOutput(true);
+                //fconnection.setDoInput(true);
 
                 InputStream is = fconnection.getInputStream();
                 StringBuilder sb = new StringBuilder();
@@ -173,6 +188,7 @@ public class FragmentSNSForm extends Fragment {
             }
             return null;
         }
+
     }
 
     @Override
