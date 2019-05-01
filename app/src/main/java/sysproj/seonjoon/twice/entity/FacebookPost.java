@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import sysproj.seonjoon.twice.entity.Post.Builder;
+import sysproj.seonjoon.twice.staticdata.SNSTag;
 
 public class FacebookPost extends Post{
 
@@ -22,8 +23,8 @@ public class FacebookPost extends Post{
 
     public static class Builder extends Post.Builder{
 
-        public Builder(String user, String contentText, String createTime, PostRFS postRFS) {
-            super(user, contentText, createTime, postRFS);
+        public Builder(int type,UserProfile user, String contentText, String createTime, PostRFS postRFS) {
+            super(type, user, contentText, createTime, postRFS);
         }
 
         @Override

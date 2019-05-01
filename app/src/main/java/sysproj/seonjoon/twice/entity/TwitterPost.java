@@ -1,20 +1,30 @@
 package sysproj.seonjoon.twice.entity;
 
-import android.support.annotation.Nullable;
-
-import java.util.ArrayList;
 import java.util.Date;
 
 public class TwitterPost extends Post {
 
-    protected TwitterPost(Post.Builder b) {
+    private UserProfile retweetUser;
+
+    protected TwitterPost(Builder b) {
         super(b);
+
+        this.retweetUser = b.retweetUser;
     }
+
+    public UserProfile getRetweetUser() { return retweetUser ;}
 
     public static class Builder extends Post.Builder {
 
-        public Builder(String user, String contentText, String createTime, PostRFS postRFS) {
-            super(user, contentText, createTime, postRFS);
+        private UserProfile retweetUser;
+
+        public Builder(int type,UserProfile user, String contentText, String createTime, PostRFS postRFS) {
+            super(type, user, contentText, createTime, postRFS);
+        }
+
+        public Builder retweetUser(UserProfile retweetUser){
+            this.retweetUser = retweetUser;
+            return this;
         }
 
         @Override

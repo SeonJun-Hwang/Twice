@@ -2,9 +2,19 @@ package sysproj.seonjoon.twice.staticdata;
 
 public class SNSTag {
 
+    public static final int None = 0;
+    public static final int Origin = 1;
+    public static final int Image = 2;
+    public static final int Video = 3;
+    public static final int Extend = 10;
+
     public static final int Facebook = 1;
     public static final int Instagram = 2;
     public static final int Twitter = 3;
+
+    public static final int Platform = 100;
+    public static final int Extension = 10;
+    public static final int Content = 1;
 
     // Facebook Tag
     public static final String FacebookDocTag = "Facebook";

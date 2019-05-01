@@ -30,6 +30,7 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import okio.ByteString;
+import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.staticdata.SNSTag;
@@ -117,13 +118,13 @@ public class TwitterLoader implements DataLoader {
 
     private String generateNonce() {
         SecureRandom RAND = new SecureRandom();
-        return String.valueOf(System.nanoTime()) + String.valueOf(Math.abs(RAND.nextLong()));
+        return System.nanoTime() + String.valueOf(Math.abs(RAND.nextLong()));
     }
 
     private String constructAuthorizationHeader(String nonce, String timestamp, String signature) {
         final StringBuilder sb = new StringBuilder("OAuth");
         appendParameter(sb, OAuthConstants.PARAM_CALLBACK, null);
-        appendParameter(sb, OAuthConstants.PARAM_CONSUMER_KEY, "H3qNM38a3TzDXpWz6yY1hknFy");
+        appendParameter(sb, OAuthConstants.PARAM_CONSUMER_KEY, BuildConfig.TwitterAPI);
         appendParameter(sb, OAuthConstants.PARAM_NONCE, nonce);
         appendParameter(sb, OAuthConstants.PARAM_SIGNATURE, signature);
         appendParameter(sb, OAuthConstants.PARAM_SIGNATURE_METHOD, SIGNATURE_METHOD);
@@ -159,7 +160,7 @@ public class TwitterLoader implements DataLoader {
             // Make Oauth Token
             String Oauth = constructAuthorizationHeader(nonce, timestamp, signature);
 
-            Log.e(TAG, "Oauth : " + Oauth);
+            //Log.e(TAG, "Oauth : " + Oauth);
 
             // TODO : Make Resizable MaxItemRequest
             URL url = null;
@@ -171,7 +172,7 @@ public class TwitterLoader implements DataLoader {
             conn.setRequestProperty("User-Agent", USER_AGENT);
             conn.setRequestProperty("Authorization", Oauth);
 
-            Log.e(TAG, "Timeline ResponseCode " + conn.getResponseCode());
+            //Log.e(TAG, "Timeline ResponseCode " + conn.getResponseCode());
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -191,6 +192,7 @@ public class TwitterLoader implements DataLoader {
                 callback.Complete(false, null);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             Log.e(TAG, e.toString());
         }
     }

@@ -13,8 +13,10 @@ import sysproj.seonjoon.twice.entity.PostExtendInfo;
 import sysproj.seonjoon.twice.entity.PostMedia;
 import sysproj.seonjoon.twice.entity.PostRFS;
 import sysproj.seonjoon.twice.entity.TwitterPost;
+import sysproj.seonjoon.twice.entity.UserProfile;
+import sysproj.seonjoon.twice.staticdata.SNSTag;
 
-public class TwitterParser implements SNSParser {
+public class TwitterParser extends SNSParser {
 
     private static final String TAG = "TwitterParser";
 
@@ -27,23 +29,44 @@ public class TwitterParser implements SNSParser {
 
             for (int i = 0; i < requestData.length(); i++) {
                 JSONObject item = requestData.getJSONObject(i);
-                JSONObject userObject = item.getJSONObject("user");
-                JSONObject entities = item.getJSONObject("entities");
+                String text = parseContextText(item);
+                UserProfile userProfile = parseUserProfile(item);
+                UserProfile retweetUserProfile = null;
 
-                String text = item.getString("text");
-                String userName = userObject.getString("name");
-                String profileUrl = userObject.getString("profile_image_url");
-                String createDate = item.getString("created_at");
-                int retweetCount = item.getInt("retweet_count");
-                int favoriteCount = item.getInt("favorite_count");
+                if (isRetweetedTweet(text)) {
+                    JSONObject retweetObject = parseRetweetStatus(item);
+
+                    retweetUserProfile = parseUserProfile(retweetObject);
+                    Log.e(TAG, (i+1) + " : " +  retweetUserProfile.getName());
+                    item = retweetObject;
+                }
+
+                text = parseContextText(item);
+                String createDate = parseCreatedDate(item);
+                int retweetCount = parseRetweetCount(item);
+                int favoriteCount = parseFavoriteCount(item);
+                JSONObject entities = parseEntities(item);
 
                 ArrayList<PostMedia> imageList = parseMediaInfo(entities);
                 ArrayList<PostExtendInfo> extendList = parseExtendInfo(entities);
 
-                Post post = new TwitterPost.Builder(userName, text, createDate, new PostRFS(0, favoriteCount, retweetCount))
-                        .profileImage(profileUrl)
-                        .extendInfo(extendList)
-                        .imageList(imageList).build();
+                int type = (SNSTag.Twitter * SNSTag.Platform)
+                        + (imageList == null ? SNSTag.Origin : SNSTag.Image);
+
+                Post post = null;
+
+                if (retweetUserProfile == null) {
+                    post = new TwitterPost.Builder(type, userProfile , text, createDate, new PostRFS(0, favoriteCount, retweetCount))
+                            .extendInfo(extendList)
+                            .imageList(imageList).build();
+                }
+                else
+                {
+                    post = new TwitterPost.Builder(type, retweetUserProfile , text, createDate, new PostRFS(0, favoriteCount, retweetCount))
+                            .retweetUser(userProfile)
+                            .extendInfo(extendList)
+                            .imageList(imageList).build();
+                }
 
                 result.add(post);
             }
@@ -65,24 +88,41 @@ public class TwitterParser implements SNSParser {
 
             for (int i = 0; i < requestData.length(); i++) {
                 JSONObject item = requestData.getJSONObject(i);
-                JSONObject userObject = item.getJSONObject("user");
-                JSONObject entities = item.getJSONObject("entities");
+                String text = parseContextText(item);
+                UserProfile userProfile = parseUserProfile(item);
+                UserProfile retweetUserProfile = null;
 
-                String text = item.getString("text");
-                String userName = userObject.getString("name");
-                String profileUrl = userObject.getString("profile_image_url");
-                String createDate = item.getString("created_at");
-                int retweetCount = item.getInt("retweet_count");
-                int favoriteCount = item.getInt("favorite_count");
+                if (isRetweetedTweet(text)) {
+                    JSONObject retweetObject = parseRetweetStatus(item);
+                    retweetUserProfile = parseUserProfile(retweetObject);
+                    item = retweetObject;
+                }
+
+                String createDate = parseCreatedDate(item);
+                int retweetCount = parseRetweetCount(item);
+                int favoriteCount = parseFavoriteCount(item);
+                JSONObject entities = parseEntities(item);
 
                 ArrayList<PostMedia> imageList = parseMediaInfo(entities);
                 ArrayList<PostExtendInfo> extendList = parseExtendInfo(entities);
 
-                Post post = new TwitterPost.Builder(userName, text, createDate, new PostRFS(0, favoriteCount, retweetCount))
-                        .profileImage(profileUrl)
-                        .extendInfo(extendList)
-                        .imageList(imageList)
-                        .build();
+                int type = (SNSTag.Twitter * SNSTag.Platform)
+                        + (imageList == null ? SNSTag.Origin : SNSTag.Image);
+
+                Post post = null;
+
+                if (retweetUserProfile == null) {
+                    post = new TwitterPost.Builder(type, userProfile , text, createDate, new PostRFS(0, favoriteCount, retweetCount))
+                            .extendInfo(extendList)
+                            .imageList(imageList).build();
+                }
+                else
+                {
+                    post = new TwitterPost.Builder(type, retweetUserProfile , text, createDate, new PostRFS(0, favoriteCount, retweetCount))
+                            .retweetUser(userProfile)
+                            .extendInfo(extendList)
+                            .imageList(imageList).build();
+                }
 
                 result.add(post);
             }
@@ -97,7 +137,7 @@ public class TwitterParser implements SNSParser {
         ArrayList imageList = null;
 
         try {
-            JSONArray medias = entities.getJSONArray("media");
+            JSONArray medias = entities.getJSONArray("extended_entities");
 
             imageList = new ArrayList<PostMedia>();
 
@@ -159,4 +199,40 @@ public class TwitterParser implements SNSParser {
 
         return extendInfo;
     }
+
+    private JSONObject parseRetweetStatus(JSONObject object) throws JSONException{
+        return object.getJSONObject("retweeted_status");
+    }
+
+    private JSONObject parseEntities(JSONObject object) throws JSONException {
+        return object.getJSONObject("entities");
+    }
+
+    private String parseContextText(JSONObject jsonObject) throws JSONException {
+        return jsonObject.getString("text");
+    }
+
+    @Override
+    protected UserProfile parseUserProfile(JSONObject jsonObject) throws JSONException {
+        JSONObject userObject = jsonObject.getJSONObject("user");
+        return new UserProfile.Builder(userObject.getString("name")).profileImage(userObject.getString("profile_image_url")).build();
+    }
+
+    @Override
+    protected String parseCreatedDate(JSONObject jsonObject) throws JSONException {
+        return jsonObject.getString("created_at");
+    }
+
+    private int parseRetweetCount(JSONObject jsonObject) throws JSONException {
+        return jsonObject.getInt("retweet_count");
+    }
+
+    private int parseFavoriteCount(JSONObject jsonObject) throws JSONException {
+        return jsonObject.getInt("favorite_count");
+    }
+
+    private boolean isRetweetedTweet(String text){
+        return text.substring(0, 3).contains("RT");
+    }
+
 }

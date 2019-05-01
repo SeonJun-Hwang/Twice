@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.CountDownLatch;
 
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.R;
