@@ -113,11 +113,11 @@ public class FragmentSNSForm extends Fragment {
 
     private void setAuthText(){
         new facebookNetworkThread().execute();
-        new twitterNetworkThread().execute();
+        //new twitterNetworkThread().doInBackground();
     }
 
 
-    class facebookNetworkThread extends AsyncTask<Void,String,String>{
+    class facebookNetworkThread extends AsyncTask<Void,Void,String>{
         @Override
         protected String doInBackground(Void... voids) {
             URL facebookauthURL = null;
@@ -128,10 +128,12 @@ public class FragmentSNSForm extends Fragment {
 
                 fconnection = (HttpURLConnection)facebookauthURL.openConnection();
                 fconnection.setRequestMethod("GET");
+                fconnection.setDoOutput(true);
+
                 fconnection.setReadTimeout(3000);
-                fconnection.setConnectTimeout(3000);
-                //fconnection.setDoOutput(true);
+                //fconnection.setConnectTimeout(3000);
                 //fconnection.setDoInput(true);
+                fconnection.connect();
 
                 Log.e(TAG, fconnection.getResponseCode() + " - " + fconnection.getURL().toString());
 
@@ -142,8 +144,11 @@ public class FragmentSNSForm extends Fragment {
                 while((result = br.readLine())!=null){
                     sb.append(result+"\r\n");
                 }
+                Log.e("hello",sb.toString());
+
 
             } catch (java.io.IOException e) {
+                Log.e("helloworld",e.toString());
             }finally {
                 fconnection.disconnect();
             }
@@ -153,7 +158,10 @@ public class FragmentSNSForm extends Fragment {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            facebookinfo.setText(s);
+            if(s != null)
+                facebookinfo.setText(s);
+            else
+                Log.e("null error","null error");
         }
     }
 
