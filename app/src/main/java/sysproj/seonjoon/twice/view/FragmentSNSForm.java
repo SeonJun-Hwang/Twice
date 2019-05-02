@@ -128,25 +128,23 @@ public class FragmentSNSForm extends Fragment {
 
                 fconnection = (HttpURLConnection)facebookauthURL.openConnection();
                 fconnection.setRequestMethod("GET");
-                fconnection.setDoOutput(true);
+                //fconnection.setDoOutput(true);
 
-                fconnection.setReadTimeout(3000);
+                //fconnection.setReadTimeout(3000);
                 //fconnection.setConnectTimeout(3000);
                 //fconnection.setDoInput(true);
                 fconnection.connect();
 
-                Log.e(TAG, fconnection.getResponseCode() + " - " + fconnection.getURL().toString());
+                //Log.e(TAG, fconnection.getResponseCode() + " - " + fconnection.getURL().toString());
 
                 InputStream is = fconnection.getInputStream();
 
                 BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
                 String result;
                 while((result = br.readLine())!=null){
-                    sb.append(result+"\r\n");
+                    sb.append(result+"\n");
                 }
                 Log.e("hello",sb.toString());
-
-
             } catch (java.io.IOException e) {
                 Log.e("helloworld",e.toString());
             }finally {
