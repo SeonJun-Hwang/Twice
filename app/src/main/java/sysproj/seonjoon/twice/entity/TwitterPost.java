@@ -12,17 +12,19 @@ public class TwitterPost extends Post {
         this.retweetUser = b.retweetUser;
     }
 
-    public UserProfile getRetweetUser() { return retweetUser ;}
+    public UserProfile getRetweetUser() {
+        return retweetUser;
+    }
 
     public static class Builder extends Post.Builder {
 
         private UserProfile retweetUser;
 
-        public Builder(int type,UserProfile user, String contentText, String createTime, PostRFS postRFS) {
-            super(type, user, contentText, createTime, postRFS);
+        public Builder(long id, int type, UserProfile user, String contentText, String createTime, PostRFS postRFS) {
+            super(id, type, user, contentText, createTime, postRFS);
         }
 
-        public Builder retweetUser(UserProfile retweetUser){
+        public Builder retweetUser(UserProfile retweetUser) {
             this.retweetUser = retweetUser;
             return this;
         }

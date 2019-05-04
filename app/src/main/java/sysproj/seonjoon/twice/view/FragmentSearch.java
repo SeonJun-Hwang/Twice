@@ -25,7 +25,7 @@ import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.parser.FacebookParser;
 import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TwitterParser;
-import sysproj.seonjoon.twice.staticdata.LastUpadteTime;
+import sysproj.seonjoon.twice.staticdata.LastUpdate;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class FragmentSearch extends Fragment {
@@ -91,7 +91,7 @@ public class FragmentSearch extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            LastUpadteTime.updateTime(MainActivity.getShowingFragmentNumber());
+            LastUpdate.updateTime(MainActivity.getShowingFragmentNumber());
         }
 
         @Override

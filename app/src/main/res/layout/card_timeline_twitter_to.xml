@@ -1,94 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_timeline_twitter_card"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/timeline_card_vertical_margin">
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-
-        <!-- Retweet Sataus Field -->
-        <TextView
-            android:id="@+id/card_retweet_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/card_profile_image" />
-
-        <!-- Title Field Start -->
 
         <ImageView
             android:id="@+id/card_profile_image"
             android:layout_width="@dimen/timeline_profile_size"
             android:layout_height="@dimen/timeline_profile_size"
-            android:layout_below="@id/card_retweet_status"
-            android:layout_alignParentStart="true"
             android:background="@null"
             android:padding="@dimen/timeline_profile_item_padding"
-            android:scaleType="fitXY" />
+            android:scaleType="fitXY"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <RelativeLayout
-            android:id="@+id/card_timeline_top"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/card_retweet_status"
-            android:layout_toEndOf="@id/card_profile_image">
+        <ImageView
+            android:id="@+id/card_title_logo"
+            android:layout_width="@dimen/timeline_image_size"
+            android:layout_height="@dimen/timeline_image_size"
+            android:padding="2dp"
+            android:scaleType="centerInside"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/card_title_logo"
-                android:layout_width="@dimen/timeline_image_size"
-                android:layout_height="@dimen/timeline_image_size"
-                android:layout_alignParentTop="true"
-                android:layout_alignParentEnd="true"
-                android:padding="2dp"
-                android:scaleType="centerInside" />
+        <TextView
+            android:id="@+id/card_title_text"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/timeline_image_size"
+            android:gravity="center_vertical"
+            android:paddingLeft="3dp"
+            android:textSize="17dp"
+            app:layout_constraintLeft_toRightOf="@id/card_profile_image"
+            app:layout_constraintRight_toLeftOf="@id/card_title_logo"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/card_title_text"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/timeline_image_size"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:gravity="center_vertical"
-                android:paddingLeft="3dp"
-                android:textSize="17dp" />
-
-            <TextView
-                android:id="@+id/card_title_time"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/timeline_time_text_size"
-                android:layout_below="@id/card_title_text"
-                android:layout_alignParentStart="true"
-                android:paddingLeft="3dp" />
-
-        </RelativeLayout>
-
-        <!-- Title Field End -->
-
-        <!-- Content Field Start -->
+        <TextView
+            android:id="@+id/card_title_time"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/timeline_time_text_size"
+            android:paddingLeft="3dp"
+            app:layout_constraintLeft_toRightOf="@id/card_profile_image"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_title_text" />
 
         <TextView
             android:id="@+id/card_content_text"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/card_timeline_top"
-            android:layout_alignStart="@id/card_timeline_top"
             android:padding="2dp"
-            android:textSize="15dp" />
-
-        <!-- Content Field End -->
-
-        <!-- Comment Field Start -->
+            android:textSize="15dp"
+            app:layout_constraintLeft_toRightOf="@id/card_profile_image"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_title_time" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:id="@+id/timeline_comment_linear"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_below="@id/card_content_text"
-            android:layout_toEndOf="@id/card_profile_image"
             android:orientation="horizontal"
             android:padding="2dp"
-            android:weightSum="1">
+            android:weightSum="1"
+            app:layout_constraintLeft_toRightOf="@id/card_profile_image"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_content_text">
 
             <Button
                 android:id="@+id/card_reply"
@@ -113,11 +93,7 @@
                 android:layout_weight="0.33"
                 android:background="@null"
                 android:textSize="@dimen/timeline_comment_text_size" />
-
         </LinearLayout>
-
-        <!-- Comment Field End -->
-
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

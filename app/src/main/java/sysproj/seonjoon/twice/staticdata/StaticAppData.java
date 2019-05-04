@@ -4,6 +4,7 @@ public class StaticAppData {
     public static final int GoogleRequestCode = 7183;
     public static final int ConsentFormPageCount = 3;
     public static final int ConsentFormItemCount = 4;
+    public static final int SNS_PLATFORM_COUNT = 3;
 
     public static int TimeLineHeight = 0;
 

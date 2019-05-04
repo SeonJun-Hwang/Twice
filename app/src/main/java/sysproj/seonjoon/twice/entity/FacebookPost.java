@@ -13,18 +13,18 @@ import java.util.Date;
 import sysproj.seonjoon.twice.entity.Post.Builder;
 import sysproj.seonjoon.twice.staticdata.SNSTag;
 
-public class FacebookPost extends Post{
+public class FacebookPost extends Post {
 
     private final static String TAG = "FacebookPost";
 
-    private FacebookPost(Builder b){
+    private FacebookPost(Builder b) {
         super(b);
     }
 
-    public static class Builder extends Post.Builder{
+    public static class Builder extends Post.Builder {
 
-        public Builder(int type,UserProfile user, String contentText, String createTime, PostRFS postRFS) {
-            super(type, user, contentText, createTime, postRFS);
+        public Builder(long id, int type, UserProfile user, String contentText, String createTime, PostRFS postRFS) {
+            super(id, type, user, contentText, createTime, postRFS);
         }
 
         @Override

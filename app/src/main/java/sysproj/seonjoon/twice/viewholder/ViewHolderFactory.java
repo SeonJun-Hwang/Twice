@@ -21,18 +21,12 @@ public class ViewHolderFactory {
                     res = R.layout.card_timeline_twitter_to;
                 else if (content == SNSTag.Image)
                     res = R.layout.card_timeline_twitter_tii;
-            } else if (extension == SNSTag.Origin) {
+            }
+            else {
                 if (content == SNSTag.Origin)
-                    res = R.layout.card_timeline_twitter_eto_to;
-                else if (content == SNSTag.Video)
-                    res = R.layout.card_timeline_twitter_eto_tii;
-            } else if (extension == SNSTag.Image) {
-                if (content == SNSTag.Origin)
-                    res = R.layout.card_timeline_twitter_etii_to;
-                else if (content == SNSTag.Video)
-                    res = R.layout.card_timeline_twitter_etii_tii;
-            } else if (extension == SNSTag.Video) {
-                res = R.layout.card_timeline;
+                    res = R.layout.card_timeline_twitter_to_rt;
+                else if (content == SNSTag.Image)
+                    res = R.layout.card_timeline_twitter_tii_rt;
             }
         } else
             res = R.layout.card_timeline;
@@ -42,30 +36,29 @@ public class ViewHolderFactory {
 
     public static BaseViewHolder getViewHolder(View view, int type) {
         BaseViewHolder res = new FOViewHolder(view);
-        ;
+
         int platform = Post.calPlatformType(type);
         int extension = Post.calExtensionType(type);
         int content = Post.calContentType(type);
 
         if (platform == SNSTag.Facebook)
             res = new FOViewHolder(view);
-        else if (platform == SNSTag.Twitter)
+        else if (platform == SNSTag.Twitter) {
             if (extension == SNSTag.None) {
                 if (content == SNSTag.Origin)
                     res = new TOViewHolder(view);
                 else if (content == SNSTag.Image)
                     res = new TIIViewHolder(view);
-            } else if (extension == SNSTag.Origin) {
-                if (content == SNSTag.Origin)
-                    res = new ETOTOViewHolder(view);
-                else if (content == SNSTag.Video)
-                    res = new ETOTIIViewHolder(view);
-            } else if (extension == SNSTag.Image) {
-                if (content == SNSTag.Origin)
-                    res = new ETIITOViewHolder(view);
-                else if (content == SNSTag.Video)
-                    res = new ETIITIIViewHolder(view);
             }
+            else {
+                if ( content == SNSTag.Origin )
+                    res = new RTOViewHodler(view);
+                else if ( content == SNSTag.Image)
+                    res = new RTIIViewHoler(view);
+            }
+        }
+        else
+            res = new TOViewHolder(view);
 
         return res;
     }

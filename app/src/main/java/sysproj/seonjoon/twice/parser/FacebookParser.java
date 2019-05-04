@@ -50,6 +50,7 @@ public class FacebookParser extends SNSParser {
                 String message = null;
                 String createdTime = parseCreatedDate(jsonObject);
                 UserProfile userProfile = parseUserProfile(jsonObject);
+                long id = parseID(jsonObject);
 
                 if (!jsonObject.isNull("message"))
                     message = jsonObject.getString("message");
@@ -57,7 +58,7 @@ public class FacebookParser extends SNSParser {
                 if (userProfile.getName() == null || userProfile.getName().isEmpty())
                     userProfile = new UserProfile.Builder("Unknown").build();
 
-                Post post = new FacebookPost.Builder( SNSTag.Facebook * SNSTag.Platform + SNSTag.Origin,  userProfile, message, createdTime, new PostRFS()).build();
+                Post post = new FacebookPost.Builder( id,SNSTag.Facebook * SNSTag.Platform + SNSTag.Origin,  userProfile, message, createdTime, new PostRFS()).build();
 
                 resultList.add(post);
             }
@@ -85,6 +86,7 @@ public class FacebookParser extends SNSParser {
                 String message = null;
                 String createdTime = parseCreatedDate(jsonObject);
                 UserProfile userProfile = parseUserProfile(jsonObject);
+                long id = parseID(jsonObject);
 
                 if (!jsonObject.isNull("message"))
                     message = jsonObject.getString("message");
@@ -92,7 +94,7 @@ public class FacebookParser extends SNSParser {
                 if (userProfile.getName() == null || userProfile.getName().isEmpty())
                     userProfile = new UserProfile.Builder("Unknown").build();
 
-                Post post = new FacebookPost.Builder( SNSTag.Facebook * SNSTag.Platform + SNSTag.Origin,  userProfile, message, createdTime, new PostRFS()).build();
+                Post post = new FacebookPost.Builder( id, SNSTag.Facebook * SNSTag.Platform + SNSTag.Origin,  userProfile, message, createdTime, new PostRFS()).build();
 
                 resultList.add(post);
             }
@@ -112,5 +114,10 @@ public class FacebookParser extends SNSParser {
     @Override
     protected String parseCreatedDate(JSONObject jsonObject) throws JSONException {
         return jsonObject.getString("created_time");
+    }
+
+    @Override
+    protected long parseID(JSONObject jsonObject) throws JSONException {
+        return Long.parseLong(jsonObject.getString("id").split("_")[1]);
     }
 }

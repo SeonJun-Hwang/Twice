@@ -31,7 +31,6 @@ public class TimelineRecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder
     public BaseViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // TODO : Viewholder Connect
 
-        //Log.e(TAG, "ViewType : " + viewType);
         int resId = ViewHolderFactory.getLayoutResId(viewType);
         LayoutInflater inflater = LayoutInflater.from(context);
         View view = inflater.inflate(resId, parent, false);
@@ -47,6 +46,9 @@ public class TimelineRecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder viewHolder, int position) {
+        //Log.e(TAG, (position+1) + " - " + items.get(position).getUser().getProfileImage());
+        Log.e(TAG, (position + 1) + " - " + items.get(position).getType());
+        //Log.e(TAG, "https://upload.wikimedia.org/wikipedia/ko/c/cb/Unification_flag_of_Korea_%28Cropped%29.PNG");
         viewHolder.bind(items.get(position));
     }
 

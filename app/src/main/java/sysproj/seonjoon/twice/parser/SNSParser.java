@@ -10,9 +10,11 @@ import sysproj.seonjoon.twice.entity.UserProfile;
 
 public abstract class SNSParser {
 
+
     public abstract ArrayList<Post> parseTimeline(JSONObject object);
     public abstract ArrayList<Post> parseSearch(JSONObject object);
 
     protected abstract UserProfile parseUserProfile(JSONObject jsonObject) throws JSONException;
     protected abstract String parseCreatedDate(JSONObject jsonObject) throws JSONException;
+    protected abstract long parseID(JSONObject jsonObject) throws JSONException;
 }

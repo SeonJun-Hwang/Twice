@@ -4,18 +4,20 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.concurrent.CountDownLatch;
 
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.R;
@@ -26,17 +28,20 @@ import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.parser.FacebookParser;
 import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TwitterParser;
-import sysproj.seonjoon.twice.staticdata.LastUpadteTime;
+import sysproj.seonjoon.twice.staticdata.LastUpdate;
+import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
-public class FragmentHome extends Fragment{
+public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private Context mContext;
     private static final String TAG = "FRAGMENT_HOME";
     private RecyclerView recyclerView;
+    private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private TimelineRecyclerAdapter timelineAdapter;
     private ArrayList<Post> contents;
+    private MakeTimeLineAsync makeTimeLineAsync;
 
     @Nullable
     @Override
@@ -47,6 +52,7 @@ public class FragmentHome extends Fragment{
         contents = new ArrayList<>();
 
         // Recycler Set
+        swipeRefreshLayout = (SwipeRefreshLayout) root.findViewById(R.id.main_time_line_swipe_layout);
         recyclerView = (RecyclerView) root.findViewById(R.id.main_time_line_recycler);
         recyclerView.setHasFixedSize(true);
         recyclerLayoutManager = new LinearLayoutManager(mContext);
@@ -58,14 +64,39 @@ public class FragmentHome extends Fragment{
         recyclerView.setDrawingCacheQuality(View.DRAWING_CACHE_QUALITY_HIGH);
 
         setListener();
-
-        MakeTimeLineAsync makeTimeLineAsync = new MakeTimeLineAsync();
-        makeTimeLineAsync.execute();
+        refreshTimeline();
 
         return root;
     }
 
     private void setListener() {
+
+        swipeRefreshLayout.setOnRefreshListener(this);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getIntArray(R.array.swipe_colors));
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerLayoutManager;
+            }
+        });
+
+    }
+
+    @Override
+    public void onRefresh() {
+        if (makeTimeLineAsync != null) {
+            Toast.makeText(getContext(), "Refreshing, Please Wait ", Toast.LENGTH_SHORT).show();
+        }
+        else
+            refreshTimeline();
+    }
+
+    private void refreshTimeline() {
+        makeTimeLineAsync = new MakeTimeLineAsync();
+        makeTimeLineAsync.execute();
     }
 
     private class MakeTimeLineAsync extends AsyncTask<Void, Void, Void> {
@@ -76,28 +107,11 @@ public class FragmentHome extends Fragment{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            LastUpadteTime.updateTime(MainActivity.getShowingFragmentNumber());
+            LastUpdate.updateTime(MainActivity.getShowingFragmentNumber());
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            // Data Load
-            if (UserSession.FacebookToken != null) {
-                Log.e(TAG, "Start Facebook Async");
-
-                // TODO : Make Time Line Loader
-                DataLoader loader = new FacebookLoader();
-                loader.LoadTimeLineData(new DataLoadCompleteCallback() {
-                    @Override
-                    public void Complete(boolean isSuccess, JSONObject result) {
-                        if (isSuccess) {
-                            SNSParser snsParser = new FacebookParser();
-                            facebookTimeline = snsParser.parseTimeline(result);
-                        }
-                    }
-                });
-            } else
-                Log.e(TAG, "Facebook Token is Null");
 
             if (UserSession.TwitterToken != null) {
                 Log.e(TAG, "Start Twitter Async");
@@ -115,7 +129,22 @@ public class FragmentHome extends Fragment{
             } else
                 Log.e(TAG, "Twitter Session is Null");
 
-            contents.addAll(Post.mergePost(facebookTimeline, twitterTimeline));
+            if (UserSession.FacebookToken != null) {
+                Log.e(TAG, "Start Facebook Async");
+
+                // TODO : Make Time Line Loader
+                DataLoader loader = new FacebookLoader();
+                loader.LoadTimeLineData(new DataLoadCompleteCallback() {
+                    @Override
+                    public void Complete(boolean isSuccess, JSONObject result) {
+                        if (isSuccess) {
+                            SNSParser snsParser = new FacebookParser();
+                            facebookTimeline = snsParser.parseTimeline(result);
+                        }
+                    }
+                });
+            } else
+                Log.e(TAG, "Facebook Token is Null");
 
             Log.e("Main", "Contents Size : " + contents.size());
             return null;
@@ -124,6 +153,16 @@ public class FragmentHome extends Fragment{
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
+            makeTimeLineAsync = null;
+            if ( swipeRefreshLayout.isRefreshing() )
+                swipeRefreshLayout.setRefreshing(false);
+
+            if (!contents.isEmpty()) {
+                contents.clear();
+                timelineAdapter.notifyDataSetChanged();
+            }
+
+            contents.addAll(Post.mergePost(facebookTimeline, twitterTimeline));
 
             timelineAdapter.notifyDataSetChanged();
         }

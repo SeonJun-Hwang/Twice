@@ -33,7 +33,7 @@ import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostExtendInfo;
 import sysproj.seonjoon.twice.entity.PostRFS;
 import sysproj.seonjoon.twice.entity.TwitterPost;
-import sysproj.seonjoon.twice.staticdata.LastUpadteTime;
+import sysproj.seonjoon.twice.staticdata.LastUpdate;
 import sysproj.seonjoon.twice.view.MainActivity;
 
 public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
@@ -94,7 +94,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
     }
 
     private String calTime(Date time) {
-        Date curTime = LastUpadteTime.getTime(MainActivity.getShowingFragmentNumber());
+        Date curTime = LastUpdate.getTime(MainActivity.getShowingFragmentNumber());
         long diff = (curTime.getTime() - time.getTime()) / 1000;
 
 //        Log.e("TimelineRecycler", diff + " / " + curTime.toString() + " / " + time.toString());
@@ -170,6 +170,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
     private void setProfileImage(Post post){
         if (post.getUser().getProfileImage() != null)
             Glide.with(context).load(post.getUser().getProfileImage()).into(profileImage);
+            //Glide.with(context).load("https://upload.wikimedia.org/wikipedia/ko/c/cb/Unification_flag_of_Korea_%28Cropped%29.PNG").into(profileImage);
         else
             Glide.with(context).load(R.drawable.default_user).into(profileImage);
     }

@@ -7,6 +7,7 @@ import sysproj.seonjoon.twice.staticdata.SNSTag;
 
 public abstract class Post {
 
+    private long id;
     private int type;
     private Date createDate;
     private UserProfile user;
@@ -17,6 +18,7 @@ public abstract class Post {
     private Post extendPost;
 
     protected Post(Builder b) {
+        this.id = b.id;
         this.type = b.type;
         this.createDate = b.createDate;
         this.user = b.user;
@@ -56,16 +58,26 @@ public abstract class Post {
         return extendPost;
     }
 
-    public UserProfile getUser(){ return user ;}
+    public UserProfile getUser() {
+        return user;
+    }
 
     // Method
-    public int getType() { return type ; }
+    public int getType() {
+        return type;
+    }
 
-    public static int calPlatformType(int type) { return type / SNSTag.Platform; }
+    public static int calPlatformType(int type) {
+        return type / SNSTag.Platform;
+    }
 
-    public static int calExtensionType(int type) { return (type % SNSTag.Platform) / SNSTag.Extension ; }
+    public static int calExtensionType(int type) {
+        return (type % SNSTag.Platform) / SNSTag.Extension;
+    }
 
-    public static int calContentType(int type) { return type % SNSTag.Extension ; }
+    public static int calContentType(int type) {
+        return type % SNSTag.Extension;
+    }
 
     public static ArrayList<Post> mergePost(ArrayList<Post> src1, ArrayList<Post> src2) {
 
@@ -104,6 +116,7 @@ public abstract class Post {
     }
 
     public abstract static class Builder {
+        private long id;
         private int type;
         private Date createDate;
         private UserProfile user;
@@ -114,7 +127,8 @@ public abstract class Post {
         private ArrayList<PostExtendInfo> extendInfo = null;
         private Post extendPost = null;
 
-        public Builder(int type, UserProfile user, String contentText, String createTime, PostRFS postRFS) {
+        public Builder(long id, int type, UserProfile user, String contentText, String createTime, PostRFS postRFS) {
+            this.id = id;
             this.user = user;
             this.contentText = convertText(contentText);
             this.createDate = convertDate(createTime);
