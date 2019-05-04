@@ -1,5 +1,6 @@
 package sysproj.seonjoon.twice.parser;
 
+import android.os.Build;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -155,7 +156,7 @@ public class TwitterParser extends SNSParser {
             for (int i = 0; i < medias.length(); i++) {
                 JSONObject mediaObject = medias.getJSONObject(i);
                 String tag = mediaObject.getString("type");
-                String mediaURL = mediaObject.getString("media_url_https");
+                String mediaURL = parseMediaUrl(mediaObject);
                 String keyword = mediaObject.getString("url");
 
                 imageList.add(new PostMedia(tag.contentEquals("video") ? PostMedia.VIDEO : PostMedia.PHOTO, keyword, mediaURL));
@@ -224,9 +225,17 @@ public class TwitterParser extends SNSParser {
         return jsonObject.getString("text");
     }
 
+    private String parseMediaUrl(JSONObject mediaObject) throws JSONException{
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
+            return mediaObject.getString("media_url");
+        return mediaObject.getString("media_url_https");
+    }
+
     @Override
     protected UserProfile parseUserProfile(JSONObject jsonObject) throws JSONException {
         JSONObject userObject = jsonObject.getJSONObject("user");
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
+            return new UserProfile.Builder(userObject.getString("name")).profileImage(userObject.getString("profile_image_url")).build();
         return new UserProfile.Builder(userObject.getString("name")).profileImage(userObject.getString("profile_image_url_https")).build();
     }
 

@@ -14,14 +14,14 @@ import sysproj.seonjoon.twice.entity.TwitterPost;
 import sysproj.seonjoon.twice.entity.UserProfile;
 import sysproj.seonjoon.twice.view.TimelinePageImageAdapter;
 
-public class RTIIViewHoler extends BaseViewHolder {
+public class RTIIViewHolder extends BaseViewHolder {
 
     private TextView retweetText;
     private ViewPager timelineImagePager;
 
     private static final String TAG = "RTIIHolder";
 
-    public RTIIViewHoler(View itemView) {
+    public RTIIViewHolder(View itemView) {
         super(itemView);
 
         timelineImagePager = (ViewPager) itemView.findViewById(R.id.card_content_image_view);
