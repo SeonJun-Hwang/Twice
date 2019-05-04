@@ -54,7 +54,7 @@ public class ViewHolderFactory {
                 if ( content == SNSTag.Origin )
                     res = new RTOViewHodler(view);
                 else if ( content == SNSTag.Image)
-                    res = new RTIIViewHoler(view);
+                    res = new RTIIViewHolder(view);
             }
         }
         else
