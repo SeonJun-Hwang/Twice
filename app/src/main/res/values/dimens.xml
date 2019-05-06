@@ -20,5 +20,7 @@
     <dimen name="timeline_profile_item_padding">2dp</dimen>
     <dimen name="timeline_comment_text_size">10sp</dimen>
 
+    <!-- main navigation drawer item -->
+    <dimen name="drawer_image_size">30dp</dimen>
 
 </resources>

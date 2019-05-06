@@ -33,7 +33,7 @@ public class TwitterParser extends SNSParser {
             for (int i = 0; i < requestData.length(); i++) {
                 JSONObject item = requestData.getJSONObject(i);
                 String text = parseContextText(item);
-                UserProfile userProfile = parseUserProfile(item);
+                UserProfile userProfile = parseUserProfile(parserUserObject(item));
                 long id = parseID(item);
                 UserProfile retweetUserProfile = null;
 
@@ -42,7 +42,7 @@ public class TwitterParser extends SNSParser {
                 if (isRetweetedTweet(text)) {
                     JSONObject retweetObject = parseRetweetStatus(item);
 
-                    retweetUserProfile = parseUserProfile(retweetObject);
+                    retweetUserProfile = parseUserProfile(parserUserObject(retweetObject));
                     Log.e(TAG, (i+1) + " : " +  retweetUserProfile.getName());
                     item = retweetObject;
                 }
@@ -100,13 +100,13 @@ public class TwitterParser extends SNSParser {
             for (int i = 0; i < requestData.length(); i++) {
                 JSONObject item = requestData.getJSONObject(i);
                 String text = parseContextText(item);
-                UserProfile userProfile = parseUserProfile(item);
+                UserProfile userProfile = parseUserProfile(parserUserObject(item));
                 long id = parseID(item);
                 UserProfile retweetUserProfile = null;
 
                 if (isRetweetedTweet(text)) {
                     JSONObject retweetObject = parseRetweetStatus(item);
-                    retweetUserProfile = parseUserProfile(retweetObject);
+                    retweetUserProfile = parseUserProfile(parserUserObject(retweetObject));
                     item = retweetObject;
                 }
 
@@ -231,12 +231,15 @@ public class TwitterParser extends SNSParser {
         return mediaObject.getString("media_url_https");
     }
 
+    private JSONObject parserUserObject(JSONObject jsonObject) throws JSONException{
+        return jsonObject.getJSONObject("user");
+    }
+
     @Override
-    protected UserProfile parseUserProfile(JSONObject jsonObject) throws JSONException {
-        JSONObject userObject = jsonObject.getJSONObject("user");
+    public UserProfile parseUserProfile(JSONObject jsonObject) throws JSONException {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
-            return new UserProfile.Builder(userObject.getString("name")).profileImage(userObject.getString("profile_image_url")).build();
-        return new UserProfile.Builder(userObject.getString("name")).profileImage(userObject.getString("profile_image_url_https")).build();
+            return new UserProfile.Builder(jsonObject.getString("name")).profileImage(jsonObject.getString("profile_image_url")).build();
+        return new UserProfile.Builder(jsonObject.getString("name")).profileImage(jsonObject.getString("profile_image_url_https")).build();
     }
 
     @Override

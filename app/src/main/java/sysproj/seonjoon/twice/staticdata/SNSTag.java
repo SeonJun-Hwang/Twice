@@ -31,6 +31,7 @@ public class SNSTag {
     public static final String TWITTER_BASE_URL = "https://api.twitter.com/1.1";
     public static final String TWITTER_URL_TIMELINE = "/statuses/home_timeline.json";
     public static final String TWITTER_URL_SEARCH = "/search/tweets.json";
+    public static final String TWITTER_URL_USER_INFO= "/account/verify_credentials.json";
     public static final String TwitterDocTag = "Twitter";
     public static final String TwitterTokenTag = "TwTk";
     public static final String TwitterTokenSecretTag = "TwTkScrt";

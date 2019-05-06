@@ -15,6 +15,14 @@ public class UserProfile {
     public String getName () { return name ; }
     public String getProfileImage() {return profileImage ; }
 
+    @Override
+    public String toString() {
+        return "UserProfile{" +
+                "name='" + name + '\'' +
+                ", profileImage='" + profileImage + '\'' +
+                '}';
+    }
+
     public static class Builder{
 
         private String name;

@@ -13,6 +13,11 @@ public class FacebookLoader implements DataLoader {
 
     private final String TAG = "FACEBOOK_LOADER";
 
+    @Override
+    public void LoadUserProfileData(DataLoadCompleteCallback callback) {
+
+    }
+
     /* Load Data */
     @Override
     public void LoadTimeLineData(@Nullable DataLoadCompleteCallback callback) {
