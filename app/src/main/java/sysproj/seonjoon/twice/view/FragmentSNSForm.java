@@ -113,7 +113,7 @@ public class FragmentSNSForm extends Fragment {
 
     private void setAuthText(){
         new facebookNetworkThread().execute();
-        //new twitterNetworkThread().doInBackground();
+        new twitterNetworkThread().execute();
     }
 
 
@@ -163,39 +163,52 @@ public class FragmentSNSForm extends Fragment {
         }
     }
 
-    class twitterNetworkThread extends AsyncTask<Void,String,Void>{
+    class twitterNetworkThread extends AsyncTask<Void,Void,String>{
         @Override
-        protected Void doInBackground(Void... voids) {
-            URL URL = null;
-            HttpURLConnection fconnection = null;
+        protected String doInBackground(Void... voids) {
+            URL tauthURL = null;
+            HttpURLConnection tconnection = null;
+            StringBuilder sb = new StringBuilder();
             try {
-                URL = new URL("http://100.24.24.64:3366/twitter");
+                tauthURL = new URL("http://100.24.24.64:3366/twitter");
 
-                fconnection = (HttpURLConnection)URL.openConnection();
-                fconnection.setRequestMethod("GET");
-
-                fconnection.setReadTimeout(3000);
-                fconnection.setConnectTimeout(3000);
-
+                tconnection = (HttpURLConnection)tauthURL.openConnection();
+                tconnection.setRequestMethod("GET");
                 //fconnection.setDoOutput(true);
-                //fconnection.setDoInput(true);
 
-                InputStream is = fconnection.getInputStream();
-                StringBuilder sb = new StringBuilder();
+                //fconnection.setReadTimeout(3000);
+                //fconnection.setConnectTimeout(3000);
+                //fconnection.setDoInput(true);
+                tconnection.connect();
+
+                //Log.e(TAG, fconnection.getResponseCode() + " - " + fconnection.getURL().toString());
+
+                InputStream is = tconnection.getInputStream();
+
                 BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
                 String result;
                 while((result = br.readLine())!=null){
-                    sb.append(result+"\r\n");
+                    sb.append(result+"\n");
                 }
-                twitterinfo.setText(sb);
+                Log.e("hello",sb.toString());
             } catch (java.io.IOException e) {
+                Log.e("helloworld",e.toString());
             }finally {
-                fconnection.disconnect();
+                tconnection.disconnect();
             }
-            return null;
+            return sb.toString();
         }
 
+        @Override
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            if(s != null)
+                facebookinfo.setText(s);
+            else
+                Log.e("null error","null error");
+        }
     }
+    //http://100.24.24.64:3366/twitter
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
