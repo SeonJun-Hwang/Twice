@@ -21,10 +21,11 @@ import java.util.List;
 import sysproj.seonjoon.twice.entity.FacebookPost;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostRFS;
+import sysproj.seonjoon.twice.entity.UserProfile;
 import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
-public class FacebookParser implements SNSParser {
+public class FacebookParser extends SNSParser {
 
     private final static String TAG = "FacebookParser";
     private ArrayList<Bitmap> imageList;
@@ -46,18 +47,18 @@ public class FacebookParser implements SNSParser {
             for (int i = 0; i < dataArray.length(); i++) {
                 JSONObject jsonObject = dataArray.getJSONObject(i);
 
-                String uid = jsonObject.getString("id").split("_")[0];
                 String message = null;
-                String createdTime = jsonObject.getString("created_time");
-                String uName = uid;
+                String createdTime = parseCreatedDate(jsonObject);
+                UserProfile userProfile = parseUserProfile(jsonObject);
+                long id = parseID(jsonObject);
 
                 if (!jsonObject.isNull("message"))
                     message = jsonObject.getString("message");
 
-                if (uName == null || uName.isEmpty())
-                    uName = "Unknown";
+                if (userProfile.getName() == null || userProfile.getName().isEmpty())
+                    userProfile = new UserProfile.Builder("Unknown").build();
 
-                Post post = new FacebookPost.Builder(uName, message, createdTime, new PostRFS()).build();
+                Post post = new FacebookPost.Builder( id,SNSTag.Facebook * SNSTag.Platform + SNSTag.Origin,  userProfile, message, createdTime, new PostRFS()).build();
 
                 resultList.add(post);
             }
@@ -82,18 +83,18 @@ public class FacebookParser implements SNSParser {
             for (int i = 0; i < dataArray.length(); i++) {
                 JSONObject jsonObject = dataArray.getJSONObject(i);
 
-                String uid = jsonObject.getString("id").split("_")[0];
                 String message = null;
-                String createdTime = jsonObject.getString("created_time");
-                String uName = uid;
+                String createdTime = parseCreatedDate(jsonObject);
+                UserProfile userProfile = parseUserProfile(jsonObject);
+                long id = parseID(jsonObject);
 
                 if (!jsonObject.isNull("message"))
                     message = jsonObject.getString("message");
 
-                if (uName == null || uName.isEmpty())
-                    uName = "Unknown";
+                if (userProfile.getName() == null || userProfile.getName().isEmpty())
+                    userProfile = new UserProfile.Builder("Unknown").build();
 
-                Post post = new FacebookPost.Builder(uName, message, createdTime, new PostRFS()).build();
+                Post post = new FacebookPost.Builder( id, SNSTag.Facebook * SNSTag.Platform + SNSTag.Origin,  userProfile, message, createdTime, new PostRFS()).build();
 
                 resultList.add(post);
             }
@@ -103,5 +104,20 @@ public class FacebookParser implements SNSParser {
         }
 
         return resultList;
+    }
+
+    @Override
+    protected UserProfile parseUserProfile(JSONObject jsonObject) throws JSONException {
+        return new UserProfile.Builder(jsonObject.getString("id").split("_")[0]).build();
+    }
+
+    @Override
+    protected String parseCreatedDate(JSONObject jsonObject) throws JSONException {
+        return jsonObject.getString("created_time");
+    }
+
+    @Override
+    protected long parseID(JSONObject jsonObject) throws JSONException {
+        return Long.parseLong(jsonObject.getString("id").split("_")[1]);
     }
 }

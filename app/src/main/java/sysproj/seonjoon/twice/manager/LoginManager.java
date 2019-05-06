@@ -29,62 +29,21 @@ public class LoginManager {
     private LoginManager() {
     }
 
-    public boolean FacebookLogin(String uid) {
+    public void FacebookLogin(String uid, DBLoadSuccessCallback callback) {
         Log.e(TAG, "Facebook Login Start");
 
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-        DBManager.getInstance().getDB(uid, SNSTag.FacebookDocTag, new DBLoadSuccessCallback() {
-            @Override
-            public void LoadDataCallback(boolean isSuccess, Map<String, Object> result) {
-                if (isSuccess) {
-                    TokenParser tokenParser = new FacebookTokenParser();
-                    UserSession.FacebookToken = (AccessToken) tokenParser.map2Token(result);
-                }
-                loginResult = isSuccess;
-                countDownLatch.countDown();
-            }
-        });
-
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        DBManager.getInstance().getDB(uid, SNSTag.FacebookDocTag, callback);
 
         if (loginResult)
             Log.e(TAG, "Facebook Login Success");
         else
             Log.e(TAG, "Facebook Login Failure");
-        return loginResult;
     }
 
-    public boolean TwitterLogin(String uid) {
+    public void TwitterLogin(String uid, DBLoadSuccessCallback callback) {
         Log.e(TAG, "Twitter Login Start");
 
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-        DBManager.getInstance().getDB(uid, SNSTag.TwitterDocTag, new DBLoadSuccessCallback() {
-            @Override
-            public void LoadDataCallback(boolean isSuccess, Map<String, Object> result) {
-                if (isSuccess) {
-                    TokenParser tokenParser = new TwitterTokenParser();
-                    UserSession.TwitterToken = (TwitterSession) tokenParser.map2Token(result);
-
-                    TwitterCore.getInstance().getSessionManager().setActiveSession(UserSession.TwitterToken);
-                }
-                loginResult = isSuccess;
-                countDownLatch.countDown();
-            }
-        });
-
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return loginResult;
+        DBManager.getInstance().getDB(uid, SNSTag.TwitterDocTag, callback);
     }
 
     public boolean TwiceLogin(Activity activity, String id, String password) {

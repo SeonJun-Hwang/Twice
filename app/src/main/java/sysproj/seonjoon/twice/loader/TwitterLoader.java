@@ -30,8 +30,10 @@ import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
 import okio.ByteString;
+import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.R;
+import sysproj.seonjoon.twice.staticdata.LastUpdate;
 import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
@@ -117,13 +119,13 @@ public class TwitterLoader implements DataLoader {
 
     private String generateNonce() {
         SecureRandom RAND = new SecureRandom();
-        return String.valueOf(System.nanoTime()) + String.valueOf(Math.abs(RAND.nextLong()));
+        return System.nanoTime() + String.valueOf(Math.abs(RAND.nextLong()));
     }
 
     private String constructAuthorizationHeader(String nonce, String timestamp, String signature) {
         final StringBuilder sb = new StringBuilder("OAuth");
         appendParameter(sb, OAuthConstants.PARAM_CALLBACK, null);
-        appendParameter(sb, OAuthConstants.PARAM_CONSUMER_KEY, "H3qNM38a3TzDXpWz6yY1hknFy");
+        appendParameter(sb, OAuthConstants.PARAM_CONSUMER_KEY, BuildConfig.TwitterAPI);
         appendParameter(sb, OAuthConstants.PARAM_NONCE, nonce);
         appendParameter(sb, OAuthConstants.PARAM_SIGNATURE, signature);
         appendParameter(sb, OAuthConstants.PARAM_SIGNATURE_METHOD, SIGNATURE_METHOD);
@@ -150,7 +152,9 @@ public class TwitterLoader implements DataLoader {
     public void LoadTimeLineData(DataLoadCompleteCallback callback) {
 
         try {
-            String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_TIMELINE + "?count=10";
+            String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_TIMELINE
+                    + "?count=" + UserSession.TwitterPerOnce;
+
             String nonce = generateNonce();
             String timestamp = Long.toString(System.currentTimeMillis() / 1000);
             String signatureBase = constructSignatureBase(restURL, nonce, timestamp);
@@ -159,7 +163,7 @@ public class TwitterLoader implements DataLoader {
             // Make Oauth Token
             String Oauth = constructAuthorizationHeader(nonce, timestamp, signature);
 
-            Log.e(TAG, "Oauth : " + Oauth);
+            //Log.e(TAG, "Oauth : " + Oauth);
 
             // TODO : Make Resizable MaxItemRequest
             URL url = null;
@@ -171,7 +175,7 @@ public class TwitterLoader implements DataLoader {
             conn.setRequestProperty("User-Agent", USER_AGENT);
             conn.setRequestProperty("Authorization", Oauth);
 
-            Log.e(TAG, "Timeline ResponseCode " + conn.getResponseCode());
+            //Log.e(TAG, "Timeline ResponseCode " + conn.getResponseCode());
 
             if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
@@ -191,6 +195,60 @@ public class TwitterLoader implements DataLoader {
                 callback.Complete(false, null);
             }
         } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, e.toString());
+        }
+    }
+
+    @Override
+    public void LoadTimeLineData(DataLoadCompleteCallback callback, long maxId) {
+        try {
+            String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_TIMELINE
+                    + "?count=" + UserSession.TwitterPerOnce;
+            if (LastUpdate.getMaxIds(SNSTag.Twitter) != LastUpdate.NONE)
+                restURL += "&max_id=" + maxId;
+
+            String nonce = generateNonce();
+            String timestamp = Long.toString(System.currentTimeMillis() / 1000);
+            String signatureBase = constructSignatureBase(restURL, nonce, timestamp);
+            String signature = generateSignature(signatureBase);
+
+            // Make Oauth Token
+            String Oauth = constructAuthorizationHeader(nonce, timestamp, signature);
+
+            //Log.e(TAG, "Oauth : " + Oauth);
+
+            // TODO : Make Resizable MaxItemRequest
+            URL url = null;
+
+            url = new URL(restURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(3000);
+            conn.setRequestProperty("User-Agent", USER_AGENT);
+            conn.setRequestProperty("Authorization", Oauth);
+
+            //Log.e(TAG, "Timeline ResponseCode " + conn.getResponseCode());
+
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String line = br.readLine();
+
+                JSONObject result = new JSONObject();
+                result.accumulate("result", new JSONArray(line));
+
+                callback.Complete(true, result);
+
+                br.close();
+            } else {
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                String line = br.readLine();
+
+                Log.e(TAG,line);
+                callback.Complete(false, null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             Log.e(TAG, e.toString());
         }
     }
@@ -198,7 +256,7 @@ public class TwitterLoader implements DataLoader {
     @Override
     public void LoadSearchData(String searchTag, DataLoadCompleteCallback callback) {
         try {
-            String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_SEARCH + "?count=10&q=" + searchTag;
+            String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_SEARCH + "?count=30&q=" + searchTag;
 
             String nonce = generateNonce();
             String timestamp = Long.toString(System.currentTimeMillis() / 1000);

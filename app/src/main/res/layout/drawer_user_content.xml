@@ -8,14 +8,14 @@
     <RelativeLayout
         android:id="@+id/main_top"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/time_line_height"
+        android:layout_height="@dimen/timeline_height"
         android:background="@color/timelineHeadBack"
         android:elevation="10dp"
-        android:padding="@dimen/time_line_padding">
+        android:padding="@dimen/timeline_padding">
 
         <ImageView
             android:id="@+id/main_profile_setting"
-            android:layout_width="@dimen/time_line_height"
+            android:layout_width="@dimen/timeline_height"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:scaleType="fitXY"

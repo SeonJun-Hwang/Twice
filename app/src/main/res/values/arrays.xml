@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <integer-array name="swipe_colors">
+        <item>@color/com_facebook_blue</item>
+        <item>@color/tw__blue_default</item>
+        <item>@color/colorInstagram</item>
+
+    </integer-array>
+    
+    
+    
+</resources>

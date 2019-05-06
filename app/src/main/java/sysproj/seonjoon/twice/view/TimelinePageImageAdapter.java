@@ -3,6 +3,7 @@ package sysproj.seonjoon.twice.view;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +20,7 @@ import sysproj.seonjoon.twice.entity.PostMedia;
 
 public class TimelinePageImageAdapter extends PagerAdapter {
 
+    private static final String TAG = "TimelinePageImageAdapter";
     private Context context;
     private ArrayList<PostMedia> imageList;
 
@@ -28,6 +30,8 @@ public class TimelinePageImageAdapter extends PagerAdapter {
     public TimelinePageImageAdapter(Context context, ArrayList<PostMedia> imageList){
         this.context = context;
         this.imageList = imageList;
+
+        Log.e(TAG, "Count : "  + imageList.size());
     }
 
     @Override
@@ -39,6 +43,8 @@ public class TimelinePageImageAdapter extends PagerAdapter {
     @Override
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View view = null;
+
+        Log.e(TAG, "Context" + context.toString());
 
         if (context != null)
         {

@@ -25,6 +25,7 @@ import com.twitter.sdk.android.core.TwitterConfig;
 
 import java.util.Map;
 
+import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DBAccessResultCallback;
 import sysproj.seonjoon.twice.manager.DBManager;
 import sysproj.seonjoon.twice.manager.LoginManager;
@@ -84,7 +85,7 @@ public class InitActivity extends AppCompatActivity {
     private void twitterInitialize() {
         TwitterConfig config = new TwitterConfig.Builder(this)
                 .logger(new DefaultLogger(Log.DEBUG))
-                .twitterAuthConfig(new TwitterAuthConfig(UserSession.TwitterAPI, UserSession.TwitterAPISecret))
+                .twitterAuthConfig(new TwitterAuthConfig(BuildConfig.TwitterAPI, BuildConfig.TwitterAPISecret))
                 .debug(true)
                 .build();
         Twitter.initialize(config);

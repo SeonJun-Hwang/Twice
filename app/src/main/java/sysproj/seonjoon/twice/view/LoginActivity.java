@@ -34,6 +34,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -43,13 +44,21 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.twitter.sdk.android.core.TwitterCore;
+import com.twitter.sdk.android.core.TwitterSession;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
 
+import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.manager.LoginManager;
 import sysproj.seonjoon.twice.manager.PreferenceManager;
+import sysproj.seonjoon.twice.parser.FacebookTokenParser;
+import sysproj.seonjoon.twice.parser.TokenParser;
+import sysproj.seonjoon.twice.parser.TwitterTokenParser;
 import sysproj.seonjoon.twice.staticdata.StaticAppData;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
@@ -174,8 +183,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mAutoLoginCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean changedVal) {
-                    mSaveIDCheck.setChecked(changedVal);
-                    mSaveIDCheck.setEnabled(!changedVal);
+                mSaveIDCheck.setChecked(changedVal);
+                mSaveIDCheck.setEnabled(!changedVal);
             }
         });
     }
@@ -387,8 +396,37 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 if (user == null)
                     login = false;
                 else {
-                    LoginManager.getInstance().FacebookLogin(user.getUid());
-                    LoginManager.getInstance().TwitterLogin(user.getUid());
+                    final CountDownLatch countDownLatch = new CountDownLatch(2);
+
+                    LoginManager.getInstance().FacebookLogin(user.getUid(), new DBLoadSuccessCallback() {
+                        @Override
+                        public void LoadDataCallback(boolean isSuccess, Map<String, Object> result) {
+                            if (isSuccess) {
+                                TokenParser tokenParser = new FacebookTokenParser();
+                                UserSession.FacebookToken = (AccessToken) tokenParser.map2Token(result);
+                            }
+                            countDownLatch.countDown();
+                        }
+                    });
+
+                    LoginManager.getInstance().TwitterLogin(user.getUid(), new DBLoadSuccessCallback() {
+                        @Override
+                        public void LoadDataCallback(boolean isSuccess, Map<String, Object> result) {
+                            if (isSuccess) {
+                                TokenParser tokenParser = new TwitterTokenParser();
+                                UserSession.TwitterToken = (TwitterSession) tokenParser.map2Token(result);
+
+                                TwitterCore.getInstance().getSessionManager().setActiveSession(UserSession.TwitterToken);
+                            }
+                            countDownLatch.countDown();
+                        }
+                    });
+
+                    try{
+                        countDownLatch.await();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             } else
                 Log.e(TAG, "Failure Login");

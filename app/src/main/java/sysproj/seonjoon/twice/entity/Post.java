@@ -3,28 +3,34 @@ package sysproj.seonjoon.twice.entity;
 import java.util.ArrayList;
 import java.util.Date;
 
-public abstract class Post{
+import sysproj.seonjoon.twice.staticdata.SNSTag;
 
+public abstract class Post {
+
+    private long id;
+    private int type;
     private Date createDate;
-    private String user;
+    private UserProfile user;
     private String contentText;
-    private String profileImage;
     private PostRFS postRFS;
     private ArrayList<PostMedia> imageList;
     private ArrayList<PostExtendInfo> extendInfo;
+    private Post extendPost;
 
-    protected Post(Builder b){
+    protected Post(Builder b) {
+        this.id = b.id;
+        this.type = b.type;
         this.createDate = b.createDate;
         this.user = b.user;
-        this.contentText = b. contentText;
-        this.profileImage = b.profileImage;
+        this.contentText = b.contentText;
         this.postRFS = b.postRFS;
         this.imageList = b.imageList;
         this.extendInfo = b.extendInfo;
+        this.extendPost = b.extendPost;
     }
 
     // Getters
-    public String getUser() {
+    public UserProfile getUserProfile() {
         return user;
     }
 
@@ -34,10 +40,6 @@ public abstract class Post{
 
     public ArrayList<PostMedia> getImageList() {
         return imageList;
-    }
-
-    public String getProfileImage() {
-        return profileImage;
     }
 
     public Date getCreateDate() {
@@ -52,17 +54,36 @@ public abstract class Post{
         return extendInfo;
     }
 
+    public Post getExtendPost() {
+        return extendPost;
+    }
+
+    public UserProfile getUser() {
+        return user;
+    }
+
     // Method
-    public int getViewType() {
-        return imageList == null ? 1 : 2;
+    public int getType() {
+        return type;
+    }
+
+    public static int calPlatformType(int type) {
+        return type / SNSTag.Platform;
+    }
+
+    public static int calExtensionType(int type) {
+        return (type % SNSTag.Platform) / SNSTag.Extension;
+    }
+
+    public static int calContentType(int type) {
+        return type % SNSTag.Extension;
     }
 
     public static ArrayList<Post> mergePost(ArrayList<Post> src1, ArrayList<Post> src2) {
 
         ArrayList<Post> result = new ArrayList<>();
 
-        if (src1 != null || src2 != null)
-        {
+        if (src1 != null || src2 != null) {
             if (src1 == null)
                 return src2;
             else if (src2 == null)
@@ -95,38 +116,44 @@ public abstract class Post{
     }
 
     public abstract static class Builder {
+        private long id;
+        private int type;
         private Date createDate;
-        private String user;
+        private UserProfile user;
         private String contentText;
         private String profileImage = null;
         private PostRFS postRFS;
         private ArrayList<PostMedia> imageList = null;
         private ArrayList<PostExtendInfo> extendInfo = null;
+        private Post extendPost = null;
 
-        public Builder(String user, String contentText, String createTime, PostRFS postRFS){
-            this.user = convertUser(user);
+        public Builder(long id, int type, UserProfile user, String contentText, String createTime, PostRFS postRFS) {
+            this.id = id;
+            this.user = user;
             this.contentText = convertText(contentText);
             this.createDate = convertDate(createTime);
             this.postRFS = postRFS;
+            this.type = type;
         }
 
-        public Builder profileImage(String str){
+        public Builder profileImage(String str) {
             profileImage = convertProfileImageUrl(str);
             return this;
         }
 
-        public Builder imageList(ArrayList imageList){
+        public Builder imageList(ArrayList imageList) {
             this.imageList = imageList;
             return this;
         }
 
-        public Builder extendInfo(ArrayList extendInfo){
+        public Builder extendInfo(ArrayList extendInfo) {
             this.extendInfo = extendInfo;
             return this;
         }
 
-        private String convertUser(String str) {
-            return str;
+        public Builder extendPost(Post extendPost) {
+            this.extendPost = extendPost;
+            return this;
         }
 
         private String convertText(String str) {

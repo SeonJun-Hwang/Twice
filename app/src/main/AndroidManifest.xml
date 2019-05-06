@@ -18,8 +18,8 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/AppTheme"> <!-- androidpermission intentnet - usesCleartextTraffic -->
-        <activity android:name=".view.SearchActivity"></activity>
-        <activity0
+
+        <activity
             android:name=".view.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
