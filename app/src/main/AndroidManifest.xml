@@ -17,16 +17,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/AppTheme"> <!-- androidpermission intentnet - usesCleartextTraffic -->
+        android:theme="@style/AppTheme"
+        > <!-- androidpermission intentnet - usesCleartextTraffic -->
 
         <activity
             android:name=".view.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
-            android:name=".view.InitActivity">
-<!--
+            android:name=".view.InitActivity"
             android:theme="@style/SplashTheme">
--->
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
