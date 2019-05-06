@@ -58,7 +58,9 @@
             android:configChanges="screenSize|orientation|keyboardHidden" />
         <activity
             android:name=".view.LoginActivity"
-            android:label="@string/title_activity_login" />
+            android:label="@string/title_activity_login"
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".view.RegisterActivity"
             android:screenOrientation="portrait" />

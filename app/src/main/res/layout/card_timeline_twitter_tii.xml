@@ -14,6 +14,7 @@
             android:id="@+id/card_profile_image"
             android:layout_width="@dimen/timeline_profile_size"
             android:layout_height="@dimen/timeline_profile_size"
+            android:adjustViewBounds="true"
             android:background="@null"
             android:padding="@dimen/timeline_profile_item_padding"
             android:scaleType="fitXY"

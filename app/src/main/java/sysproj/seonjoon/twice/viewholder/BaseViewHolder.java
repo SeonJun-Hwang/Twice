@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ import sysproj.seonjoon.twice.entity.TwitterPost;
 import sysproj.seonjoon.twice.staticdata.LastUpdate;
 import sysproj.seonjoon.twice.view.MainActivity;
 
-public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
+public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     protected Context context;
     protected ImageView snsLogo;
@@ -65,7 +66,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
         share = (Button) itemView.findViewById(R.id.card_share);
     }
 
-    public void bind(Post item){
+    public void bind(Post item) {
         //innerLinearLayout.setBackgroundColor(context.getColor(R.color.timelineThemeBackWhite));
 
         snsLogo.setImageDrawable(getLogo(item));
@@ -167,12 +168,12 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder{
         }
     }
 
-    private void setProfileImage(Post post){
+    private void setProfileImage(Post post) {
         if (post.getUser().getProfileImage() != null)
-            Glide.with(context).load(post.getUser().getProfileImage()).into(profileImage);
+            Glide.with(context).applyDefaultRequestOptions(RequestOptions.circleCropTransform()).load(post.getUser().getProfileImage()).into(profileImage);
             //Glide.with(context).load("https://upload.wikimedia.org/wikipedia/ko/c/cb/Unification_flag_of_Korea_%28Cropped%29.PNG").into(profileImage);
         else
-            Glide.with(context).load(R.drawable.default_user).into(profileImage);
+            Glide.with(context).applyDefaultRequestOptions(RequestOptions.circleCropTransform()).load(R.drawable.default_user).into(profileImage);
     }
 
     protected abstract void setImageContent(Post post);

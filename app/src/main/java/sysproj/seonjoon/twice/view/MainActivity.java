@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -26,11 +27,25 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.concurrent.CountDownLatch;
+
+import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.OnHashtagClickListener;
 import sysproj.seonjoon.twice.R;
+import sysproj.seonjoon.twice.entity.UserProfile;
+import sysproj.seonjoon.twice.loader.DataLoader;
+import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
+import sysproj.seonjoon.twice.parser.SNSParser;
+import sysproj.seonjoon.twice.parser.TwitterParser;
+import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class MainActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener, OnHashtagClickListener {
 
@@ -51,8 +66,16 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     private Fragment[] fragments = new Fragment[]{null, null};
     private String[] fragmentsTags = new String[]{"Home", "Search"};
 
+    private ImageView repreProfileImage;
+    private TextView repreName;
+    private TextView repreEmail;
+    private ImageView facebookStatus;
+    private ImageView instagramStatus;
+    private ImageView twitterStatus;
+
     private long parsedTime = 0;
     private static int showingFragment;
+    private LoadProfileAsync loadProfileAsync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +87,10 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
         setLayout();
         setListener();
-
         showHomeFragment();
+
+        loadProfileAsync = new LoadProfileAsync();
+        loadProfileAsync.execute();
     }
 
     @Override
@@ -134,6 +159,16 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
         homeButton = (RadioButton) findViewById(R.id.main_bottom_home_button);
         searchButton = (RadioButton) findViewById(R.id.main_bottom_search_button);
+
+        View headerView = personNavigation.getHeaderView(0);
+
+        repreProfileImage = (ImageView) headerView.findViewById(R.id.drawer_profile_image);
+        repreName = (TextView) headerView.findViewById(R.id.drawer_user_head_name);
+        repreEmail = (TextView) headerView.findViewById(R.id.drawer_user_head_email);
+        facebookStatus = (ImageView) headerView.findViewById(R.id.drawer_status_facebook_image);
+        instagramStatus = (ImageView) headerView.findViewById(R.id.drawer_status_instagram_image);
+        twitterStatus = (ImageView) headerView.findViewById(R.id.drawer_status_twitter_image);
+
     }
 
     private void changeTopViewVisibility(int showPos) {
@@ -248,5 +283,60 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     public static int getShowingFragmentNumber() {
         return showingFragment;
+    }
+
+    private class LoadProfileAsync extends AsyncTask<Void, Void, Void>
+    {
+        private UserProfile profile;
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            final CountDownLatch countDownLatch = new CountDownLatch(1);
+
+            DataLoader loader = new TwitterLoader(mContext);
+            loader.LoadUserProfileData(new DataLoadCompleteCallback() {
+                @Override
+                public void Complete(boolean isSuccess, JSONObject result) {
+                    if (isSuccess) {
+                        try {
+                            SNSParser parser = new TwitterParser();
+                            profile = ((TwitterParser) parser).parseUserProfile(result);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    countDownLatch.countDown();
+                }
+            });
+
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void avoid) {
+            super.onPostExecute(avoid);
+
+            if (profile != null){
+                Log.e(TAG, repreName != null ? "not null" : "null");
+
+                repreName.setText(profile.getName());
+                Glide.with(MainActivity.this)
+                        .load(profile.getProfileImage())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(repreProfileImage);
+
+                if (UserSession.FacebookToken != null)
+                    facebookStatus.setAlpha(1.0f);
+                if (UserSession.TwitterToken != null)
+                    twitterStatus.setAlpha(1.0f);
+            }
+
+            loadProfileAsync = null;
+        }
     }
 }

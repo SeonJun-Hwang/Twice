@@ -149,6 +149,55 @@ public class TwitterLoader implements DataLoader {
     }
 
     @Override
+    public void LoadUserProfileData(DataLoadCompleteCallback callback) {
+        try {
+            String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_USER_INFO;
+
+            String nonce = generateNonce();
+            String timestamp = Long.toString(System.currentTimeMillis() / 1000);
+            String signatureBase = constructSignatureBase(restURL, nonce, timestamp);
+            String signature = generateSignature(signatureBase);
+
+            // Make Oauth Token
+            String Oauth = constructAuthorizationHeader(nonce, timestamp, signature);
+
+            //Log.e(TAG, "Oauth : " + Oauth);
+
+            // TODO : Make Resizable MaxItemRequest
+            URL url = null;
+
+            url = new URL(restURL);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setConnectTimeout(3000);
+            conn.setRequestProperty("User-Agent", USER_AGENT);
+            conn.setRequestProperty("Authorization", Oauth);
+
+            //Log.e(TAG, "Timeline ResponseCode " + conn.getResponseCode());
+
+            if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String line = br.readLine();
+
+                JSONObject result = new JSONObject(line);
+
+                callback.Complete(true, result);
+
+                br.close();
+            } else {
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+                String line = br.readLine();
+
+                Log.e(TAG,line);
+                callback.Complete(false, null);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Log.e(TAG, e.toString());
+        }
+    }
+
+    @Override
     public void LoadTimeLineData(DataLoadCompleteCallback callback) {
 
         try {

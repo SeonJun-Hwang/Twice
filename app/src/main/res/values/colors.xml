@@ -13,6 +13,11 @@
     <color name="timelineCardImageCountBack">#C4BBBBBB</color>
     <color name="timelineCardImageCountFont">#C4000000</color>
 
+    <!-- Navigation Header Text Color -->
+    <color name="navigationHeaderBackground">#C5C5C5</color>
+    <color name="navigationHeaderNameColor">#5C5C5C</color>
+    <color name="navigationHeaderEmailColor">#8F8F8F</color>
+
     <!-- Content BackGround Color -->
 
     <color name="colorFacebook">#3860ff</color>
