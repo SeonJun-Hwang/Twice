@@ -3,14 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:padding="@dimen/activity_horizontal_margin"
     tools:context=".view.InitActivity">
 
+    <TextView
+        android:id="@+id/editText"
+        android:layout_width="504dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="180dp"
+        android:layout_marginTop="300dp"
+        android:text="for your \n   Social Network Service"
+        android:textColor="#909999"
+        android:textSize="15dp"
+        tools:layout_editor_absoluteX="183dp"
+        tools:layout_editor_absoluteY="309dp"
+        />
+
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/logo" />
-
-
+        android:layout_width="500dp"
+        android:layout_height="300dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/logo"
+        android:contentDescription="logoimage" />
 </RelativeLayout>

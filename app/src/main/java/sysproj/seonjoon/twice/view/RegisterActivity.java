@@ -41,7 +41,7 @@ public class RegisterActivity extends FragmentActivity {
         fragmentsTag[1] = "TwiceForm";
         fragmentsTag[2] = "SNSForm";
 
-        ft.add(R.id.register_frame_layout, fragments[0], fragmentsTag[0]);
+        ft.add(R.id.register_frame_layout, fragments[1], fragmentsTag[1]);
         ft.commit();
     }
 

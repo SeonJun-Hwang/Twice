@@ -226,7 +226,7 @@ public class TwitterParser extends SNSParser {
     }
 
     private String parseMediaUrl(JSONObject mediaObject) throws JSONException{
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
+        if (Build.VERSION.SDK_INT < 28)
             return mediaObject.getString("media_url");
         return mediaObject.getString("media_url_https");
     }
@@ -234,7 +234,7 @@ public class TwitterParser extends SNSParser {
     @Override
     protected UserProfile parseUserProfile(JSONObject jsonObject) throws JSONException {
         JSONObject userObject = jsonObject.getJSONObject("user");
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
+        if (Build.VERSION.SDK_INT < 28)
             return new UserProfile.Builder(userObject.getString("name")).profileImage(userObject.getString("profile_image_url")).build();
         return new UserProfile.Builder(userObject.getString("name")).profileImage(userObject.getString("profile_image_url_https")).build();
     }
