@@ -226,7 +226,7 @@ public class TwitterParser extends SNSParser {
     }
 
     private String parseMediaUrl(JSONObject mediaObject) throws JSONException{
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
+        if (Build.VERSION.SDK_INT < 28)
             return mediaObject.getString("media_url");
         return mediaObject.getString("media_url_https");
     }
