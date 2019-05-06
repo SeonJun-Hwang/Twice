@@ -79,7 +79,7 @@ public class FragmentTwiceForm extends Fragment {
                     setData();
                     ((RegisterActivity) getActivity()).changeFragment(2);
                 } else
-                    Toast.makeText(mContext, "Password 칸이 비어 있습니다.", Toast.LENGTH_SHORT);
+                    Toast.makeText(mContext, "Password 칸이 비어 있습니다.", Toast.LENGTH_SHORT).show();
             }
         });
     }

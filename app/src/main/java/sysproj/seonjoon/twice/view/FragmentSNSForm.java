@@ -190,9 +190,9 @@ public class FragmentSNSForm extends Fragment {
                 while((result = br.readLine())!=null){
                     sb.append(result+"\n");
                 }
-                Log.e("hello",sb.toString());
+                Log.e("t hello",sb.toString());
             } catch (java.io.IOException e) {
-                Log.e("helloworld",e.toString());
+                Log.e("t helloworld",e.toString());
             }finally {
                 tconnection.disconnect();
             }
@@ -203,9 +203,9 @@ public class FragmentSNSForm extends Fragment {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             if(s != null)
-                facebookinfo.setText(s);
+                twitterinfo.setText(s);
             else
-                Log.e("null error","null error");
+                Log.e("t null error","null error");
         }
     }
     //http://100.24.24.64:3366/twitter
