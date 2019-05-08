@@ -6,7 +6,7 @@
     <!-- Logo -->
     <item
         android:gravity="center"
-        android:height="310dp"
+        android:height="280dp"
         android:width="310dp"
         >
         <bitmap
