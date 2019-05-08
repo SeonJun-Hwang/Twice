@@ -1,5 +1,7 @@
 package sysproj.seonjoon.twice.entity;
 
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -7,6 +9,7 @@ import sysproj.seonjoon.twice.staticdata.SNSTag;
 
 public abstract class Post {
 
+    private static final String TAG = "POST";
     private long id;
     private int type;
     private Date createDate;
@@ -27,6 +30,9 @@ public abstract class Post {
         this.imageList = b.imageList;
         this.extendInfo = b.extendInfo;
         this.extendPost = b.extendPost;
+
+        if (contentText != null)
+            convertSpecialCharacter();
     }
 
     // Getters
@@ -60,6 +66,13 @@ public abstract class Post {
 
     public UserProfile getUser() {
         return user;
+    }
+
+    private void convertSpecialCharacter() {
+        contentText = contentText
+                .replaceAll("&amp;", "&")
+                .replaceAll("&lt;", "<")
+                .replaceAll("&gt;", ">");
     }
 
     // Method

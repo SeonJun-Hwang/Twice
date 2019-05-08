@@ -2,10 +2,12 @@ package sysproj.seonjoon.twice.view;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -49,7 +51,7 @@ import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
 
-public class FragmentSNSForm extends Fragment {
+public class SNSLinkingActivity extends Activity {
 
     private static final String TAG = "SNSFrag";
     private static final int userAddReq = 10001;
@@ -59,7 +61,6 @@ public class FragmentSNSForm extends Fragment {
     private TwitterLoginButton twitterLoginButton;
     private LoginButton facebookLoginButton;
     private CallbackManager facebookCallback;
-
 
     private Button facebookinfobtn; // facebook 개인정보 동의 확인서를 보여주기 위한 버튼
     private TextView facebookinfo; // facebook 개인정보 동의 확인서 내용 text
@@ -76,39 +77,35 @@ public class FragmentSNSForm extends Fragment {
     private Button instargramAgreeBtn;
     private int instargraminfoison = 0;
 
-
+    private Context mContext;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View root = inflater.inflate(R.layout.fragment_sns_regist, container, false);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_sns_regist);
 
-        headText = (TextView) root.findViewById(R.id.sns_form_head_text);
-        completeButton = (Button) root.findViewById(R.id.sns_form_complete);
-        twitterLoginButton = (TwitterLoginButton) root.findViewById(R.id.sns_form_twitter);
-        facebookLoginButton = (LoginButton) root.findViewById(R.id.sns_form_facebook);
-        facebookLoginButton.setFragment(this);
+        headText = (TextView) findViewById(R.id.sns_form_head_text);
+        completeButton = (Button) findViewById(R.id.sns_form_complete);
+        twitterLoginButton = (TwitterLoginButton) findViewById(R.id.sns_form_twitter);
+        facebookLoginButton = (LoginButton) findViewById(R.id.sns_form_facebook);
 
         headText.setText(getString(R.string.sns_form_head));
         completeButton.setText(getString(R.string.sns_form_complete));
 
-
-        facebookinfobtn = (Button)root.findViewById(R.id.facebookinfobtn);
-        facebookinfo = (TextView)root.findViewById(R.id.facebookinfo);
-        facebookAgreeBtn = (Button)root.findViewById(R.id.facebook_Auth_AgreeBtn);
-        /*instargraminfobtn = (Button)root.findViewById(R.id.instargraminfobtn);
-        instargraminfo = (TextView)root.findViewById(R.id.instargraminfo);
-        instargramAgreeBtn = (Button)root.findViewById(R.id.instargram_Auth_AgreeBtn);*/
-        twitterinfobtn = (Button)root.findViewById(R.id.twitterinfobtn);
-        twitterinfo = (TextView)root.findViewById(R.id.twitterinfo);
-        twitterAgreeBtn = (Button)root.findViewById(R.id.twitter_Auth_AgreeBtn);
-
+        facebookinfobtn = (Button)findViewById(R.id.facebookinfobtn);
+        facebookinfo = (TextView)findViewById(R.id.facebookinfo);
+        facebookAgreeBtn = (Button)findViewById(R.id.facebook_Auth_AgreeBtn);
+        /*instargraminfobtn = (Button)findViewById(R.id.instargraminfobtn);
+        instargraminfo = (TextView)findViewById(R.id.instargraminfo);
+        instargramAgreeBtn = (Button)findViewById(R.id.instargram_Auth_AgreeBtn);*/
+        twitterinfobtn = (Button)findViewById(R.id.twitterinfobtn);
+        twitterinfo = (TextView)findViewById(R.id.twitterinfo);
+        twitterAgreeBtn = (Button)findViewById(R.id.twitter_Auth_AgreeBtn);
 
         setAuthText();
         setButtonState();
         setCallBack();
         setListener();
-
-        return root;
     }
 
     private void setAuthText(){
@@ -116,8 +113,7 @@ public class FragmentSNSForm extends Fragment {
         new twitterNetworkThread().execute();
     }
 
-
-    class facebookNetworkThread extends AsyncTask<Void,Void,String>{
+    private class facebookNetworkThread extends AsyncTask<Void,Void,String>{
         @Override
         protected String doInBackground(Void... voids) {
             URL facebookauthURL = null;
@@ -163,7 +159,7 @@ public class FragmentSNSForm extends Fragment {
         }
     }
 
-    class twitterNetworkThread extends AsyncTask<Void,Void,String>{
+    private class twitterNetworkThread extends AsyncTask<Void,Void,String>{
         @Override
         protected String doInBackground(Void... voids) {
             URL tauthURL = null;
@@ -214,38 +210,37 @@ public class FragmentSNSForm extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.e(TAG, "Request - " + requestCode);
-
-        if (requestCode == userAddReq) {
-            if (requestCode == Activity.RESULT_OK)
-                Toast.makeText(getContext(), "가입 완료 되었습니다.", Toast.LENGTH_SHORT).show();
-            else
-                Toast.makeText(getContext(), "가입에 실패했습니다.", Toast.LENGTH_SHORT).show();
-
-            boolean facebookRes = data.getBooleanExtra(SNSTag.FacebookResultTag, false);
-            boolean twitterRes = data.getBooleanExtra(SNSTag.TwitterResultTag, false);
-
-            if (!facebookRes || !twitterRes )
-            {
-                String fbMessage = "";
-                String twMessage = "";
-
-                if (!facebookRes)
-                    fbMessage = "Facebook ";
-
-                if (!twitterRes)
-                    twMessage = "Twitter ";
-
-                Snackbar.make(getView(),fbMessage + twMessage + "연동에 실패했습니다.", Snackbar.LENGTH_LONG).show();
-            }
-
-            ((RegisterActivity) getActivity()).finish();
-        } else {
-            facebookCallback.onActivityResult(requestCode, resultCode, data);
-            twitterLoginButton.onActivityResult(requestCode, resultCode, data);
-        }
-
-        Log.e(TAG, "Activity Result " + requestCode);
+//        Log.e(TAG, "Request - " + requestCode);
+//
+//        if (requestCode == userAddReq) {
+//            if (requestCode == Activity.RESULT_OK)
+//                Toast.makeText(this, "가입 완료 되었습니다.", Toast.LENGTH_SHORT).show();
+//            else
+//                Toast.makeText(this, "가입에 실패했습니다.", Toast.LENGTH_SHORT).show();
+//
+//            boolean facebookRes = data.getBooleanExtra(SNSTag.FacebookResultTag, false);
+//            boolean twitterRes = data.getBooleanExtra(SNSTag.TwitterResultTag, false);
+//
+//            if (!facebookRes || !twitterRes )
+//            {
+//                String fbMessage = "";
+//                String twMessage = "";
+//
+//                if (!facebookRes)
+//                    fbMessage = "Facebook ";
+//
+//                if (!twitterRes)
+//                    twMessage = "Twitter ";
+//
+//                Snackbar.make(fbMessage + twMessage + "연동에 실패했습니다.", Snackbar.LENGTH_LONG).show();
+//            }
+//
+//        } else {
+//            facebookCallback.onActivityResult(requestCode, resultCode, data);
+//            twitterLoginButton.onActivityResult(requestCode, resultCode, data);
+//        }
+//
+//        Log.e(TAG, "Activity Result " + requestCode);
     }
 
     private void setButtonState(){
@@ -257,7 +252,7 @@ public class FragmentSNSForm extends Fragment {
         completeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
                 builder.setMessage("해당 정보로 가입 하시겠습니까?").setPositiveButton("확인", new DialogInterface.OnClickListener() {
                     @Override
@@ -266,7 +261,6 @@ public class FragmentSNSForm extends Fragment {
                         // For Additional Register
                         LoginManager.getInstance().logOut();
 
-                        IDRegister();
                     }
                 }).setNegativeButton("취소", null);
 
@@ -343,13 +337,13 @@ public class FragmentSNSForm extends Fragment {
 
             @Override
             public void onCancel() {
-                Toast.makeText(getContext(), "취소하셨습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "취소하셨습니다.", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.e(TAG, error.toString());
-                Toast.makeText(getContext(), "네트워크 에러입니다. 잠시 후에 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "네트워크 에러입니다. 잠시 후에 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -370,15 +364,4 @@ public class FragmentSNSForm extends Fragment {
         });
     }
 
-    private void IDRegister() {
-        RegisterActivity activity = (RegisterActivity) getActivity();
-        UserInformation information = activity.getData();
-        Intent intent = new Intent(getActivity(), UserAddActivity.class);
-
-        Log.e(TAG, information.getId() + ' ' + information.getPassword());
-        intent.putExtra("email", information.getId());
-        intent.putExtra("password", information.getPassword());
-
-        startActivityForResult(intent, userAddReq);
-    }
 }

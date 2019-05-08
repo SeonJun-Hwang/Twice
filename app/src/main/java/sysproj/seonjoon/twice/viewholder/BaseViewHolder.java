@@ -5,6 +5,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -13,6 +14,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.text.util.Linkify;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -38,6 +40,8 @@ import sysproj.seonjoon.twice.staticdata.LastUpdate;
 import sysproj.seonjoon.twice.view.MainActivity;
 
 public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
+
+    private final static String TAG = "BaseViewHolder";
 
     protected Context context;
     protected ImageView snsLogo;
@@ -78,6 +82,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         setProfileImage(item);
         setImageContent(item);
         setExtendField(item);
+
     }
 
     private Drawable getLogo(Post post) {
@@ -132,20 +137,43 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                 }
             };
 
+            ArrayList<String> hashtags = new ArrayList<>();
+
+//            for (PostExtendInfo item : post){
+//                if (item.getPostTag() == PostExtendInfo.HASH_TAG)
+//                    hashtags.add('#' + item.getKeyword());
+//            }
+//
+//            addHashTags(contentText,content , hashtags);
+
+            SpannableString contentSpannable = new SpannableString(content);
+
             for (PostExtendInfo item : post) {
                 Pattern pattern = Pattern.compile(item.getKeyword());
 
+                Log.e(TAG, item.getKeyword());
+
                 switch (item.getPostTag()) {
                     case PostExtendInfo.HASH_TAG:
-                        //convertHashtag(contentText, item.getStart(), item.getEnd(), item.getKeyword());
+                        try{
+                        int startPos = item.getStart();//content.indexOf(item.getKeyword());
+                        int endPos = item.getEnd();// startPos + item.getKeyword().length();
+                        addHashTags(contentSpannable, startPos, endPos, item.getKeyword());
+                        } catch (Exception e){
+                            Log.e(TAG, e.getMessage() + " / " + item.getKeyword());
+                        }
                         break;
                     case PostExtendInfo.MENTION:
                     case PostExtendInfo.URLS:
-                        removeUnderlines(contentText);
-                        Linkify.addLinks(contentText, pattern, item.getLinkURL(), null, transformFilter);
+                        //String checker = contentText.getText().toString();
+                        //Log.e(TAG, "Key : " + item.getKeyword() + " / " + checker.contains(item.getKeyword()));
+                        Linkify.addLinks(contentSpannable, pattern, item.getLinkURL(), null, transformFilter);
                         break;
                 }
             }
+
+            removeUnderlines(contentSpannable);
+            convertSpannedText(contentText, contentSpannable);
         }
     }
 
@@ -180,8 +208,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
     protected abstract void setExtendField(Post extPost);
 
-    private void removeUnderlines(TextView textView) {
-        Spannable s = new SpannableString(textView.getText());
+    private void removeUnderlines(SpannableString s) {
         URLSpan[] spans = s.getSpans(0, s.length(), URLSpan.class);
         for (URLSpan span : spans) {
             int start = s.getSpanStart(span);
@@ -190,17 +217,16 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             span = new URLSpanNoUnderline(span.getURL());
             s.setSpan(span, start, end, 0);
         }
-        textView.setText(s);
     }
 
-    private void convertHashtag(TextView textView, int strPos, int endPos, String keyword) {
-        SpannableString tagSpan = new SpannableString('#' + keyword);
-        HashTagURLSpan hashtagSpan = new HashTagURLSpan(keyword);
+    private void addHashTags(SpannableString spannableString, int strPos, int endPos, String keyword) {
+        HashTagURLSpan hashtagSpan = new HashTagURLSpan('#' + keyword);
+        spannableString.setSpan(hashtagSpan, strPos, endPos, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+    }
 
-        tagSpan.setSpan(hashtagSpan, strPos, endPos, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        textView.setText(tagSpan);
+    private void convertSpannedText(TextView textView, SpannableString spannableString){
+        textView.setText(spannableString);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
-
     }
 
     private class HashTagURLSpan extends ClickableSpan {
@@ -222,6 +248,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
             // TODO : Set Border & Black TextColor
             ds.setTypeface(Typeface.create(Typeface.DEFAULT_BOLD, Typeface.BOLD));
+            ds.setUnderlineText(false);
         }
     }
 
@@ -236,6 +263,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             ds.setUnderlineText(false);
         }
     }
+
 }
 
 

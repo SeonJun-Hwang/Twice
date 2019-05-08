@@ -101,6 +101,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.drawer_link:
+                gotoLinkingActivity();
+                break;
             case R.id.drawer_logout:
                 askLogout();
                 break;
@@ -144,7 +147,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     @Override
     public void onClickHashTag(String hashTag) {
         showSearchFragment();
-        ((FragmentSearch) getFragmentManager().findFragmentByTag(fragmentsTags[1])).startSearch(hashTag);
+        ((FragmentSearch) getFragmentManager().findFragmentByTag(fragmentsTags[SEARCH])).startSearch(hashTag);
     }
 
     private void setLayout() {
@@ -253,6 +256,11 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         startActivity(intent);
     }
 
+    private void gotoLinkingActivity(){
+        Intent intent = new Intent(MainActivity.this, SNSLinkingActivity.class);
+        startActivity(intent);
+    }
+
     private void showHomeFragment() {
         showingFragment = HOME;
         changeTopViewVisibility(showingFragment);
@@ -285,8 +293,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         return showingFragment;
     }
 
-    private class LoadProfileAsync extends AsyncTask<Void, Void, Void>
-    {
+    private class LoadProfileAsync extends AsyncTask<Void, Void, Void> {
         private UserProfile profile;
 
         @Override
@@ -321,7 +328,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         protected void onPostExecute(Void avoid) {
             super.onPostExecute(avoid);
 
-            if (profile != null){
+            if (profile != null) {
                 Log.e(TAG, repreName != null ? "not null" : "null");
 
                 repreName.setText(profile.getName());

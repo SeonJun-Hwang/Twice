@@ -19,6 +19,8 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:scaleType="fitXY"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="2dp"
             android:src="@drawable/list" />
 
         <TextView

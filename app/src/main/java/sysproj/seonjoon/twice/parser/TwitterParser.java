@@ -32,29 +32,40 @@ public class TwitterParser extends SNSParser {
 
             for (int i = 0; i < requestData.length(); i++) {
                 JSONObject item = requestData.getJSONObject(i);
-                String text = parseContextText(item);
-                UserProfile userProfile = parseUserProfile(parserUserObject(item));
+                JSONObject retweetItem = parseRetweetStatus(item);
+                ArrayList<PostExtendInfo> extendList = null;
+
+                // Only Item Field
                 long id = parseID(item);
-                UserProfile retweetUserProfile = null;
+                UserProfile userProfile = parseUserProfile(parserUserObject(item));
+                ArrayList<PostExtendInfo> urls = parseExtendUrls(parseEntities(item));
 
-                //Log.e(TAG, userProfile.getName() + " - " + userProfile.getProfileImage());
+                // Different Content about retweet Status
+                String text = retweetItem != null ? parseContextText(retweetItem) : parseContextText(item);
+                String createDate = retweetItem != null ? parseCreatedDate(retweetItem) : parseCreatedDate(item);
+                int retweetCount = retweetItem != null ? parseRetweetCount(retweetItem) : parseRetweetCount(item);
+                int favoriteCount = retweetItem != null ? parseFavoriteCount(retweetItem) : parseFavoriteCount(item);
+                UserProfile retweetUserProfile = retweetItem != null ? parseUserProfile(parserUserObject(retweetItem)) : null;
+                ArrayList<PostMedia> imageList = retweetItem != null ? parseMediaInfo(retweetItem) : parseMediaInfo(item);
+                ArrayList<PostExtendInfo> hashTags = retweetItem != null ? parseHashTags(parseEntities(retweetItem)) : parseHashTags(parseEntities(item));
+                ArrayList<PostExtendInfo> mentions = retweetItem != null ? parseMentions(parseEntities(retweetItem)) : parseMentions(parseEntities(item));
+                PostExtendInfo relatedThread = retweetItem != null ? parseRelatedThread(parseEntities(retweetItem)) : null;
 
-                if (isRetweetedTweet(text)) {
-                    JSONObject retweetObject = parseRetweetStatus(item);
-
-                    retweetUserProfile = parseUserProfile(parserUserObject(retweetObject));
-                    Log.e(TAG, (i+1) + " : " +  retweetUserProfile.getName());
-                    item = retweetObject;
+                if ((hashTags != null && !hashTags.isEmpty())) {
+                    extendList = new ArrayList<>(hashTags);
                 }
-
-                text = parseContextText(item);
-                String createDate = parseCreatedDate(item);
-                int retweetCount = parseRetweetCount(item);
-                int favoriteCount = parseFavoriteCount(item);
-                JSONObject entities = parseEntities(item);
-
-                ArrayList<PostMedia> imageList = parseMediaInfo(item);
-                ArrayList<PostExtendInfo> extendList = parseExtendInfo(entities);
+                if (urls != null && !urls.isEmpty()) {
+                    if (extendList == null)
+                        extendList = new ArrayList<>(urls);
+                    else
+                        extendList.addAll(urls);
+                }
+                if (mentions != null && !mentions.isEmpty()) {
+                    if (extendList == null)
+                        extendList = new ArrayList<>(mentions);
+                    else
+                        extendList.addAll(mentions);
+                }
 
                 int type = (SNSTag.Twitter * SNSTag.Platform)
                         + (retweetUserProfile != null ? SNSTag.Extension : SNSTag.None)
@@ -63,21 +74,20 @@ public class TwitterParser extends SNSParser {
                 Post post;
 
                 if (retweetUserProfile == null) {
-                    post = new TwitterPost.Builder(id, type, userProfile , text, createDate, new PostRFS(0, favoriteCount, retweetCount))
+                    post = new TwitterPost.Builder(id, type, userProfile, text, createDate, new PostRFS(0, favoriteCount, retweetCount))
                             .extendInfo(extendList)
                             .imageList(imageList).build();
-                }
-                else
-                {
-                    post = new TwitterPost.Builder(id, type, retweetUserProfile , text, createDate, new PostRFS(0, favoriteCount, retweetCount))
+                } else {
+                    post = new TwitterPost.Builder(id, type, retweetUserProfile, text, createDate, new PostRFS(0, favoriteCount, retweetCount))
                             .retweetUser(userProfile)
+                            .relatedThread(relatedThread)
                             .extendInfo(extendList)
                             .imageList(imageList).build();
                 }
 
                 result.add(post);
 
-                if (i == UserSession.TwitterPerOnce - 1){
+                if (i == UserSession.TwitterPerOnce - 1) {
                     LastUpdate.setMaxIds(SNSTag.Twitter, id);
                 }
             }
@@ -99,24 +109,40 @@ public class TwitterParser extends SNSParser {
 
             for (int i = 0; i < requestData.length(); i++) {
                 JSONObject item = requestData.getJSONObject(i);
-                String text = parseContextText(item);
-                UserProfile userProfile = parseUserProfile(parserUserObject(item));
+                JSONObject retweetItem = parseRetweetStatus(item);
+                ArrayList<PostExtendInfo> extendList = null;
+
+                // Only Item Field
                 long id = parseID(item);
-                UserProfile retweetUserProfile = null;
+                UserProfile userProfile = parseUserProfile(parserUserObject(item));
+                ArrayList<PostExtendInfo> urls = parseExtendUrls(parseEntities(item));
 
-                if (isRetweetedTweet(text)) {
-                    JSONObject retweetObject = parseRetweetStatus(item);
-                    retweetUserProfile = parseUserProfile(parserUserObject(retweetObject));
-                    item = retweetObject;
+                // Different Content about retweet Status
+                String text = retweetItem != null ? parseContextText(retweetItem) : parseContextText(item);
+                String createDate = retweetItem != null ? parseCreatedDate(retweetItem) : parseCreatedDate(item);
+                int retweetCount = retweetItem != null ? parseRetweetCount(retweetItem) : parseRetweetCount(item);
+                int favoriteCount = retweetItem != null ? parseFavoriteCount(retweetItem) : parseFavoriteCount(item);
+                UserProfile retweetUserProfile = retweetItem != null ? parseUserProfile(parserUserObject(retweetItem)) : null;
+                ArrayList<PostMedia> imageList = retweetItem != null ? parseMediaInfo(retweetItem) : parseMediaInfo(item);
+                ArrayList<PostExtendInfo> hashTags = retweetItem != null ? parseHashTags(parseEntities(retweetItem)) : parseHashTags(parseEntities(item));
+                ArrayList<PostExtendInfo> mentions = retweetItem != null ? parseMentions(parseEntities(retweetItem)) : parseMentions(parseEntities(item));
+                PostExtendInfo relatedThread = retweetItem != null ? parseRelatedThread(parseEntities(retweetItem)) : null;
+
+                if ((hashTags != null && !hashTags.isEmpty())) {
+                    extendList = new ArrayList<>(hashTags);
                 }
-
-                String createDate = parseCreatedDate(item);
-                int retweetCount = parseRetweetCount(item);
-                int favoriteCount = parseFavoriteCount(item);
-                JSONObject entities = parseEntities(item);
-
-                ArrayList<PostMedia> imageList = parseMediaInfo(item);
-                ArrayList<PostExtendInfo> extendList = parseExtendInfo(entities);
+                if (urls != null && !urls.isEmpty()) {
+                    if (extendList == null)
+                        extendList = new ArrayList<>(urls);
+                    else
+                        extendList.addAll(urls);
+                }
+                if (mentions != null && !mentions.isEmpty()) {
+                    if (extendList == null)
+                        extendList = new ArrayList<>(mentions);
+                    else
+                        extendList.addAll(mentions);
+                }
 
                 int type = (SNSTag.Twitter * SNSTag.Platform)
                         + (imageList == null ? SNSTag.Origin : SNSTag.Image);
@@ -124,14 +150,13 @@ public class TwitterParser extends SNSParser {
                 Post post = null;
 
                 if (retweetUserProfile == null) {
-                    post = new TwitterPost.Builder(id, type, userProfile , text, createDate, new PostRFS(0, favoriteCount, retweetCount))
+                    post = new TwitterPost.Builder(id, type, userProfile, text, createDate, new PostRFS(0, favoriteCount, retweetCount))
                             .extendInfo(extendList)
                             .imageList(imageList).build();
-                }
-                else
-                {
-                    post = new TwitterPost.Builder(id, type, retweetUserProfile , text, createDate, new PostRFS(0, favoriteCount, retweetCount))
+                } else {
+                    post = new TwitterPost.Builder(id, type, retweetUserProfile, text, createDate, new PostRFS(0, favoriteCount, retweetCount))
                             .retweetUser(userProfile)
+                            .relatedThread(relatedThread)
                             .extendInfo(extendList)
                             .imageList(imageList).build();
                 }
@@ -145,7 +170,7 @@ public class TwitterParser extends SNSParser {
         return result;
     }
 
-    private ArrayList parseMediaInfo(JSONObject entities) {
+    private ArrayList<PostMedia> parseMediaInfo(JSONObject entities) {
         ArrayList<PostMedia> imageList = null;
 
         try {
@@ -163,75 +188,129 @@ public class TwitterParser extends SNSParser {
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "No Media Elements");
+            //Log.e(TAG, "No Media Elements");
         }
 
         return imageList;
     }
 
-    private ArrayList parseExtendInfo(JSONObject entities) {
-        ArrayList extendInfo = null;
+    private ArrayList<PostExtendInfo> parseHashTags(JSONObject entities) {
+        ArrayList<PostExtendInfo> hashtags = null;
 
         try {
-            JSONArray urls = entities.getJSONArray("urls");
-            JSONArray mention = entities.getJSONArray("user_mentions");
-            JSONArray hashtag = entities.getJSONArray("hashtags");
+            JSONArray hashtagArray = entities.getJSONArray("hashtags");
 
-            extendInfo = new ArrayList<PostExtendInfo>();
+            hashtags = new ArrayList<>();
 
-            for (int i = 0; i < hashtag.length(); i++) {
-                JSONObject object = hashtag.getJSONObject(i);
+            for (int i = 0; i < hashtagArray.length(); i++) {
+                JSONObject object = hashtagArray.getJSONObject(i);
                 JSONArray indices = object.getJSONArray("indices");
 
                 String text = object.getString("text");
-                extendInfo.add(new PostExtendInfo(PostExtendInfo.HASH_TAG, indices.getInt(0), indices.getInt(1), text, null));
+                hashtags.add(new PostExtendInfo(PostExtendInfo.HASH_TAG, indices.getInt(0), indices.getInt(1), text, null));
             }
 
-            for (int i = 0; i < urls.length(); i++) {
-                JSONObject object = urls.getJSONObject(i);
+        } catch (Exception e) {
+            Log.e(TAG, "Parsing Error Hash Tag");
+        }
+
+        return hashtags;
+    }
+
+    private ArrayList<PostExtendInfo> parseExtendUrls(JSONObject entities) {
+        ArrayList<PostExtendInfo> urls = null;
+
+        try {
+            JSONArray urlArray = entities.getJSONArray("urls");
+
+            urls = new ArrayList<PostExtendInfo>();
+
+            for (int i = 0; i < urlArray.length(); i++) {
+                JSONObject object = urlArray.getJSONObject(i);
                 JSONArray indices = object.getJSONArray("indices");
 
                 String keyword = object.getString("url");
                 String linkURL = object.getString("expanded_url");
-                extendInfo.add(new PostExtendInfo(PostExtendInfo.URLS, indices.getInt(0), indices.getInt(1), keyword, linkURL));
+                urls.add(new PostExtendInfo(PostExtendInfo.URLS, indices.getInt(0), indices.getInt(1), keyword, linkURL));
             }
 
-            for (int i = 0; i < mention.length(); i++) {
-                JSONObject object = mention.getJSONObject(i);
+        } catch (Exception e) {
+            Log.e(TAG, "Parsing Error in URL");
+        }
+
+        return urls;
+    }
+
+    private PostExtendInfo parseRelatedThread(JSONObject entities) {
+
+        PostExtendInfo relThread = null;
+
+        try {
+            relThread = parseExtendUrls(entities).get(0);
+        } catch (Exception e) {
+        }
+
+        return relThread;
+    }
+
+    private ArrayList<PostExtendInfo> parseMentions(JSONObject entities) {
+        ArrayList<PostExtendInfo> mentions = null;
+
+        try {
+            JSONArray mentionArray = entities.getJSONArray("user_mentions");
+
+            mentions = new ArrayList<>();
+
+            for (int i = 0; i < mentionArray.length(); i++) {
+                JSONObject object = mentionArray.getJSONObject(i);
                 JSONArray indices = object.getJSONArray("indices");
 
                 String screenName = object.getString("screen_name");
                 String keyword = '@' + screenName;
                 String linkURL = "https://twitter.com/" + screenName;
 
-                extendInfo.add(new PostExtendInfo(PostExtendInfo.MENTION, indices.getInt(0), indices.getInt(1), keyword, linkURL));
+                mentions.add(new PostExtendInfo(PostExtendInfo.MENTION, indices.getInt(0), indices.getInt(1), keyword, linkURL));
             }
 
         } catch (Exception e) {
+            Log.e(TAG, "Parsing Error in Mention / " + e.getMessage());
         }
 
-        return extendInfo;
+        return mentions;
     }
 
-    private JSONObject parseRetweetStatus(JSONObject object) throws JSONException{
-        return object.getJSONObject("retweeted_status");
+    private JSONObject parseRetweetStatus(JSONObject object) {
+        JSONObject res = null;
+        try {
+            res = object.getJSONObject("retweeted_status");
+        } catch (JSONException e) {
+
+        }
+        return res;
     }
 
-    private JSONObject parseEntities(JSONObject object) throws JSONException {
-        return object.getJSONObject("entities");
+    private JSONObject parseEntities(JSONObject object) {
+        JSONObject res = null;
+
+        try {
+            res = object.getJSONObject("entities");
+        } catch (JSONException e) {
+        }
+
+        return res;
     }
 
     private String parseContextText(JSONObject jsonObject) throws JSONException {
         return jsonObject.getString("text");
     }
 
-    private String parseMediaUrl(JSONObject mediaObject) throws JSONException{
+    private String parseMediaUrl(JSONObject mediaObject) throws JSONException {
         if (Build.VERSION.SDK_INT < 28)
             return mediaObject.getString("media_url");
         return mediaObject.getString("media_url_https");
     }
 
-    private JSONObject parserUserObject(JSONObject jsonObject) throws JSONException{
+    private JSONObject parserUserObject(JSONObject jsonObject) throws JSONException {
         return jsonObject.getJSONObject("user");
     }
 
@@ -259,9 +338,4 @@ public class TwitterParser extends SNSParser {
     private int parseFavoriteCount(JSONObject jsonObject) throws JSONException {
         return jsonObject.getInt("favorite_count");
     }
-
-    private boolean isRetweetedTweet(String text){
-        return text.substring(0, 3).contains("RT");
-    }
-
 }

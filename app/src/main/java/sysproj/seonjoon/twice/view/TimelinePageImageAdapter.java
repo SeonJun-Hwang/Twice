@@ -44,7 +44,7 @@ public class TimelinePageImageAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View view = null;
 
-        Log.e(TAG, "Context" + context.toString());
+        //Log.e(TAG, "Context" + context.toString());
 
         if (context != null)
         {

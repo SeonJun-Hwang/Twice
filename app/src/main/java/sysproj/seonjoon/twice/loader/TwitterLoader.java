@@ -11,9 +11,11 @@ import com.twitter.sdk.android.core.internal.network.UrlUtils;
 import com.twitter.sdk.android.core.internal.oauth.OAuthConstants;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
@@ -243,10 +245,16 @@ public class TwitterLoader implements DataLoader {
                 Log.e(TAG,line);
                 callback.Complete(false, null);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Log.e(TAG, e.toString());
+        }catch (IOException e){
+            Log.e(TAG, "IO Exception ");
+        } catch (JSONException e) {
+            Log.e(TAG, "JSON Exception");
         }
+//        catch (Exception e) {
+//            e.printStackTrace();
+//            Log.e(TAG, e.getLocalizedMessage());
+//            //Log.e(TAG, e.ge.getMessage() + " / " + e.toString());
+//        }
     }
 
     @Override
