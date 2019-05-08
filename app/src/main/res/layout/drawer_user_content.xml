@@ -17,6 +17,8 @@
             android:id="@+id/main_profile_setting"
             android:layout_width="@dimen/timeline_height"
             android:layout_height="match_parent"
+            android:padding="5dp"
+            android:layout_marginRight="5dp"
             android:layout_alignParentLeft="true"
             android:scaleType="fitXY"
             android:paddingHorizontal="5dp"
