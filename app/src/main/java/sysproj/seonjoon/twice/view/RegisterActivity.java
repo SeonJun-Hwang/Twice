@@ -4,13 +4,10 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.AsyncTask;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
+import android.support.annotation.NonNull;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -18,10 +15,24 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.Iterator;
+
+import sysproj.seonjoon.twice.DBAccessResultCallback;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.UserInformation;
+import sysproj.seonjoon.twice.manager.DBManager;
 import sysproj.seonjoon.twice.manager.LoginManager;
-import sysproj.seonjoon.twice.staticdata.StaticAppData;
+import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class RegisterActivity extends Activity {
@@ -36,7 +47,7 @@ public class RegisterActivity extends Activity {
     private Button duplicateButton;
     private Button nextButton;
 
-    private UserInformation userInfo;
+    private CheckDuplicateAsnc checkDuplicateAsync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +85,10 @@ public class RegisterActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (checkEnableId()) {
-                    CheckDuplicateAsnc cda = new CheckDuplicateAsnc();
-                    cda.execute(idEdit.getText().toString());
+                    if (checkDuplicateAsync == null) {
+                        checkDuplicateAsync = new CheckDuplicateAsnc();
+                        checkDuplicateAsync.execute(idEdit.getText().toString());
+                    }
                 } else
                     Toast.makeText(mContext, "ID는 영어 소문자 및 숫자만 가능합니다.", Toast.LENGTH_SHORT).show();
             }
@@ -85,15 +98,24 @@ public class RegisterActivity extends Activity {
             @Override
             public void onClick(View view) {
                 if (checkPassword()) {
-
+                    String email = idEdit.getText().toString() + SNSTag.TWICE_EMAIL_TAIL;
+                    String password = passwordEdit.getText().toString();
+                    DBManager.getInstance().createUser(RegisterActivity.this, email, password, new DBAccessResultCallback() {
+                        @Override
+                        public void AccessCallback(boolean isSuccess) {
+                            if (isSuccess){
+                                Toast.makeText(mContext, "회원가입 되었습니다.", Toast.LENGTH_SHORT).show();
+                                finish();
+                            }
+                            else {
+                                Toast.makeText(mContext, "회원가입에 실패 하였습니다.\n 잠시 후 다시 시도해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
                 } else
                     Toast.makeText(mContext, "Password 칸이 비어 있습니다.", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    public UserInformation getData() {
-        return userInfo;
     }
 
     @Override
@@ -136,6 +158,8 @@ public class RegisterActivity extends Activity {
         protected void onPostExecute(Void voids) {
             super.onPostExecute(voids);
 
+            checkDuplicateAsync = null;
+
             if (result) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
                 builder.setMessage(input + "은 사용 가능한 아이디 입니다.\n 사용하시겠습니까?")
@@ -144,7 +168,8 @@ public class RegisterActivity extends Activity {
                 AlertDialog resultDialog = builder.create();
                 resultDialog.show();
             } else {
-                Toast.makeText(mContext, "누락된 정보가 있습니다.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "중복된 ID 입니다.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "누락된 정보가 있습니다.", Toast.LENGTH_SHORT).show();
             }
         }
 
