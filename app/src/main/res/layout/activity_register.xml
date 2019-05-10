@@ -10,10 +10,11 @@
         android:id="@+id/twice_form_head_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:padding="5dp"
         android:layout_marginBottom="10dp"
         android:background="@color/registFragmentHeadBack"
         android:gravity="center"
-        android:textColor="@color/registFragmentHeadFore"
+        android:textColor="@color/HeadTextColor"
         android:textSize="@dimen/regist_font_size"
         android:textStyle="bold" />
 
@@ -24,7 +25,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/twice_form_head_text"
         android:orientation="horizontal"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:paddingHorizontal="@dimen/register_padding"
+        >
 
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
@@ -55,7 +58,8 @@
         android:id="@+id/twice_password_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/twice_linear_id">
+        android:layout_below="@id/twice_linear_id"
+        android:paddingHorizontal="@dimen/register_padding">
 
         <EditText
             android:id="@+id/twice_password"
@@ -73,7 +77,8 @@
 
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/twice_password_edit">
+        android:layout_below="@id/twice_password_edit"
+        android:paddingHorizontal="@dimen/register_padding">
 
         <AutoCompleteTextView
             android:id="@+id/twice_email"

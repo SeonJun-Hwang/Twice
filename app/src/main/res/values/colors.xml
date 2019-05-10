@@ -3,7 +3,7 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="registFragmentHeadBack">#fc71ed</color>
+    <color name="registFragmentHeadBack">#464A4F</color>
     <color name="registFragmentHeadFore">#464A4F</color>
     <color name="timelineHeadBack">#302F2F</color>
     <color name="timelineSearchBack">#E67FB4</color>
@@ -12,6 +12,7 @@
     <color name="timelineCardUnderBack">#E3E1E6</color>
     <color name="timelineCardImageCountBack">#C4BBBBBB</color>
     <color name="timelineCardImageCountFont">#C4000000</color>
+    <color name= "HeadTextColor">#FFFFFF</color>
 
     <!-- Navigation Header Text Color -->
     <color name="navigationHeaderBackground">#C5C5C5</color>
@@ -26,5 +27,8 @@
     <!-- Appbar Theme Color -->
     <color name="actionBarText">#03A9F4</color>
     <color name="actionBarBackground">#FFFFFF</color>
+
+    <!-- SNS register Color -->
+    <color name="SNSRegister">#ededff</color>
 
 </resources>

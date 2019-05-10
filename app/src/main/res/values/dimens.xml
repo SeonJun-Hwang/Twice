@@ -3,7 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="regist_font_size">12pt</dimen>
+    <dimen name="regist_font_size">10pt</dimen>
 
     <!-- layout listview consent item -->
     <dimen name="consent_item_height">30dp</dimen>
@@ -24,4 +24,6 @@
     <!-- main navigation drawer item -->
     <dimen name="drawer_image_size">30dp</dimen>
 
+    <!-- Register -->
+    <dimen name="register_padding">20dp</dimen>
 </resources>

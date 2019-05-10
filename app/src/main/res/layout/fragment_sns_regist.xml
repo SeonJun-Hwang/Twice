@@ -13,14 +13,13 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:padding="10dp"
-        android:text="Twice의 원활한 사용을 위하여 SNS를 연동합니다.\n 해당 페이지에서 SNS 연동을 관리할 수 있습니다. \n 연동이후 우측 하단의 완료 버튼을 눌러주세요"
+        android:text="@string/clickthebuttonSNS"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_above="@id/sns_register_bottom_linear"
+        android:layout_height="match_parent"
         android:layout_below="@+id/editText2">
 
         <LinearLayout
@@ -35,17 +34,17 @@
                 android:layout_marginVertical="10dp"
                 android:layout_marginStart="0dp"
                 android:gravity="center_vertical|center_horizontal"
-                android:text="각 계정은 개인정보 동의사항에 동의한 후에 연동할 수 있습니다. \n아래의 버튼을 눌러 SNS계정과 연동할수 있습니다." />
+                android:text="@string/authwithSNS" />
 
 
             <Button
                 android:id="@+id/facebookinfobtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ededff"
+                android:background="@color/SNSRegister"
                 android:clickable="true"
                 android:onClick="facebookinfoBtn"
-                android:text="Facebook의 계정을 연결하시려면 여기를 눌러주세요"
+                android:text="@string/facebookConnect"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
@@ -86,9 +85,9 @@
                 android:id="@+id/textView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ededff"
+                android:background="@color/SNSRegister"
                 android:clickable="true"
-                android:text="Instargram 계정을 연결하시려면 여기를 눌러주세요"
+                android:text="@string/instagramConnect"
 
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
@@ -108,9 +107,9 @@
                 android:id="@+id/twitterinfobtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#ededff"
+                android:background="@color/SNSRegister"
                 android:clickable="true"
-                android:text="Twitter 계정을 연결하시려면 여기를 눌러주세요"
+                android:text="@string/twitterConnect"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <View
@@ -164,7 +163,7 @@
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
         android:background="#ffffff"
-        android:gravity="right">
+        android:gravity="end">
 
         <Button
             android:id="@+id/sns_form_complete"
