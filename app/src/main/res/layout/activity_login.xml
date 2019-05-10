@@ -15,25 +15,24 @@
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop ="130dp"
-        android:paddingHorizontal="20dp">
+        android:paddingHorizontal="20dp"
+        android:paddingTop="90dp">
 
 
         <LinearLayout
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
+            android:orientation="vertical">
 
 
             <ImageView
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:src="@drawable/twicelogo"
+                android:layout_marginBottom="16dp"
                 android:paddingBottom="15dp"
-                />
+                android:src="@drawable/twicelogo" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -45,9 +44,9 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_email"
                     android:inputType="textEmailAddress"
-                    android:text="testuser"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:text="testuser" />
 
             </android.support.design.widget.TextInputLayout>
 
@@ -61,45 +60,67 @@
                     android:layout_height="wrap_content"
                     android:hint="@string/prompt_password"
                     android:imeActionId="6"
-                    android:text="test1234"
                     android:imeActionLabel="@string/action_sign_in_short"
                     android:imeOptions="actionUnspecified"
                     android:inputType="textPassword"
                     android:maxLines="1"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:text="test1234" />
 
             </android.support.design.widget.TextInputLayout>
 
             <CheckBox
+                android:id="@+id/login_save_id_button"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/login_save_id_button"/>
+                android:layout_height="wrap_content" />
 
             <CheckBox
+                android:id="@+id/login_auto_login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginBottom="20dp"
+                android:gravity="center"
+                android:paddingTop="10dp">
+
+                <Button
+                    android:id="@+id/email_sign_in_button"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp"
+                    android:background="@drawable/loginbuttonstyle"
+                    android:text="@string/action_sign_in"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/login_register"
+                    style="?android:textAppearanceButton"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/loginbuttonstyle"
+                    android:text="@string/login_button_register"
+                    android:textColor="#ffffff"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/login_auto_login_button"/>
-
-            <Button
-                android:id="@+id/email_sign_in_button"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/action_sign_in"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/login_register"
-                style="?android:textAppearanceButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/login_button_register"
-                android:textStyle="bold" />
+                android:layout_marginLeft="5dp"
+                android:layout_marginTop="20dp"
+                android:text="login with social network service"
+                android:textColor="#999494" />
 
             <com.google.android.gms.common.SignInButton
-                android:layout_marginTop="5dp"
                 android:id="@+id/login_google_login_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
         </LinearLayout>
     </ScrollView>

@@ -10,7 +10,7 @@
     <dimen name="consent_text_padding">5dp</dimen>
 
     <!-- layout timeLine content item -->
-    <dimen name="timeline_height">48dp</dimen>
+    <dimen name="timeline_height">46dp</dimen>
     <dimen name="timeline_padding">5dp</dimen>
     <dimen name="timeline_card_vertical_padding">7dp</dimen>
     <dimen name="timeline_card_vertical_margin">15dp</dimen>

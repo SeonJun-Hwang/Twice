@@ -5,7 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="registFragmentHeadBack">#fc71ed</color>
     <color name="registFragmentHeadFore">#464A4F</color>
-    <color name="timelineHeadBack">#464A4F</color>
+    <color name="timelineHeadBack">#302F2F</color>
     <color name="timelineSearchBack">#E67FB4</color>
     <color name="timelineThemeBackWhite">#ffffff</color>
     <color name="timelineSeparatorBlack">#000000</color>

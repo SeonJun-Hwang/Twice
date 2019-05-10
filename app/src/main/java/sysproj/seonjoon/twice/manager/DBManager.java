@@ -153,7 +153,7 @@ public class DBManager {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.e(TAG, "Create User : " + task.isSuccessful());
-                        if (task.isSuccessful()) {
+                            if (task.isSuccessful()) {
                             Log.e(TAG, task.getResult().getUser().getUid());
                             callback.AccessCallback(true);
                         } else {

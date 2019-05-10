@@ -19,7 +19,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_above="@id/sns_register_bottom_linear"
         android:layout_below="@+id/editText2">
 
         <LinearLayout
@@ -151,20 +152,13 @@
                     android:text="동의"
                     android:visibility="gone" />
             </LinearLayout>
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="\n\n\n\n\n\n" />
-
         </LinearLayout>
     </ScrollView>
 
     <LinearLayout
+        android:id="@+id/sns_register_bottom_linear"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="0dp"

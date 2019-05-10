@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:clipToPadding="false">
+
 
     <!-- Top -->
     <RelativeLayout
@@ -10,19 +12,19 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/timeline_height"
         android:background="@color/timelineHeadBack"
+        android:clipToPadding="false"
         android:elevation="10dp"
-        android:padding="@dimen/timeline_padding">
+        android:padding="5dp">
 
         <ImageView
             android:id="@+id/main_profile_setting"
             android:layout_width="@dimen/timeline_height"
             android:layout_height="match_parent"
-            android:padding="5dp"
-            android:layout_marginRight="5dp"
             android:layout_alignParentLeft="true"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:padding="2dp"
             android:scaleType="fitXY"
-            android:paddingHorizontal="5dp"
-            android:paddingVertical="2dp"
             android:src="@drawable/list" />
 
         <TextView
@@ -32,6 +34,7 @@
             android:layout_marginLeft="5dp"
             android:layout_toRightOf="@id/main_profile_setting"
             android:clickable="true"
+            android:fontFamily="sans-serif"
             android:gravity="center_vertical"
             android:padding="2dp"
             android:text="Home"
