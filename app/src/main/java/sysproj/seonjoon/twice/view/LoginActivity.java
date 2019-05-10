@@ -4,9 +4,11 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.app.LoaderManager.LoaderCallbacks;
 
@@ -54,6 +56,7 @@ import java.util.concurrent.CountDownLatch;
 
 import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.R;
+import sysproj.seonjoon.twice.loader.PreferenceLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
 import sysproj.seonjoon.twice.manager.PreferenceManager;
 import sysproj.seonjoon.twice.parser.FacebookTokenParser;
@@ -319,8 +322,10 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
 
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            if (mAuthTask == null){
+                mAuthTask = new UserLoginTask(email, password);
+                mAuthTask.execute();
+            }
         }
     }
 
@@ -378,10 +383,22 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         private final String mPassword;
         private final String TAG = "LOGIN_ASYNC";
         private FirebaseUser user = null;
+        private ProgressDialog progressDialog;
 
         UserLoginTask(String id, String password) {
             mID = id;
             mPassword = password;
+
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("로그인 중입니다.");
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog.show();
         }
 
         @Override
@@ -438,6 +455,11 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
 
+            if (progressDialog != null){
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
+
             if (success) {
                 user = FirebaseAuth.getInstance().getCurrentUser();
 
@@ -458,6 +480,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected void onCancelled() {
             mAuthTask = null;
+
+            progressDialog.dismiss();
+            progressDialog = null;
         }
     }
 

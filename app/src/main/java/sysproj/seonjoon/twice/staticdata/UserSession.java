@@ -13,8 +13,4 @@ public class UserSession {
     public static final String UserPasswordTag = "AuthPassword";
 
     public static final int MIN_PASSWORD_LENGTH = 8;
-
-    public static int FacbookPerOnce = 10;
-    public static int InstagramPerOnce = 10;
-    public static int TwitterPerOnce = 20;
 }

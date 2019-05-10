@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:defaultValue="20"
+        android:entries="@array/pref_load_item_titles"
+        android:entryValues="@array/pref_load_item_values"
+        android:key="load_item_facebook"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_load_item_per_once_facebook"
+        />
+
+    <ListPreference
+        android:defaultValue="20"
+        android:entries="@array/pref_load_item_titles"
+        android:entryValues="@array/pref_load_item_values"
+        android:key="load_item_instagram"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_load_item_per_once_instagram"
+        />
+
+    <ListPreference
+        android:defaultValue="20"
+        android:entries="@array/pref_load_item_titles"
+        android:entryValues="@array/pref_load_item_values"
+        android:key="load_item_twitter"
+        android:negativeButtonText="@null"
+        android:positiveButtonText="@null"
+        android:title="@string/pref_title_load_item_per_once_twitter"
+        />
+
+</PreferenceScreen>

@@ -15,6 +15,7 @@ import sysproj.seonjoon.twice.entity.PostMedia;
 import sysproj.seonjoon.twice.entity.PostRFS;
 import sysproj.seonjoon.twice.entity.TwitterPost;
 import sysproj.seonjoon.twice.entity.UserProfile;
+import sysproj.seonjoon.twice.loader.PreferenceLoader;
 import sysproj.seonjoon.twice.staticdata.LastUpdate;
 import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.UserSession;
@@ -87,7 +88,7 @@ public class TwitterParser extends SNSParser {
 
                 result.add(post);
 
-                if (i == UserSession.TwitterPerOnce - 1) {
+                if (i == (requestData.length() - 1)) {
                     LastUpdate.setMaxIds(SNSTag.Twitter, id);
                 }
             }

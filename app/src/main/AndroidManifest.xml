@@ -66,7 +66,9 @@
             android:name=".view.UserAddActivity"
             android:theme="@style/NoDisplay" />
 
-        <activity android:name=".view.SNSLinkingActivity" />
+        <activity
+            android:name=".view.SNSLinkingActivity"
+            android:label="@string/app_linkage_title"/>
     </application>
 
 </manifest>

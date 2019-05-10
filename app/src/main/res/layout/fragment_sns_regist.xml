@@ -7,81 +7,52 @@
     android:layout_gravity="center_vertical">
 
     <TextView
-        android:id="@+id/sns_form_head_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="0dp"
-        android:background="@color/registFragmentHeadBack"
-        android:gravity="center"
-        android:textColor="@color/registFragmentHeadFore"
-        android:textSize="@dimen/regist_font_size"
-        android:textStyle="bold"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <TextView
         android:id="@+id/editText2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="33dp"
         android:padding="10dp"
-        android:text="1개이상 등록해주셔야 다음으로 넘어갈 수 있습니다\n사용하실 SNS계정을 등록해주세요"
+        android:text="Twice의 원활한 사용을 위하여 SNS를 연동합니다.\n 해당 페이지에서 SNS 연동을 관리할 수 있습니다. \n 연동이후 우측 하단의 완료 버튼을 눌러주세요"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignTop="@+id/editText2"
-        android:layout_alignParentStart="true"
-        android:layout_marginStart="0dp"
-        android:layout_marginTop="54dp">
+        android:layout_below="@+id/editText2">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-
             <TextView
                 android:id="@+id/textView12"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
+                android:layout_marginVertical="10dp"
                 android:layout_marginStart="0dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="10dp"
                 android:gravity="center_vertical|center_horizontal"
                 android:text="각 계정은 개인정보 동의사항에 동의한 후에 연동할 수 있습니다. \n아래의 버튼을 눌러 SNS계정과 연동할수 있습니다." />
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="2px"
-                android:background="#aaaaaa" />
 
             <Button
                 android:id="@+id/facebookinfobtn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="#ededff"
-            android:clickable="true"
-            android:text="Facebook의 계정을 연결하시려면 여기를 눌러주세요"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:onClick="facebookinfoBtn"/>
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#ededff"
+                android:clickable="true"
+                android:onClick="facebookinfoBtn"
+                android:text="Facebook의 계정을 연결하시려면 여기를 눌러주세요"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
             <TextView
                 android:id="@+id/facebookinfo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="10dp"
-            android:visibility="gone"/>
+                android:visibility="gone" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -125,7 +96,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="10dp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <View
                 android:layout_width="match_parent"
@@ -151,7 +122,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:padding="10dp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
 
             <LinearLayout
@@ -169,9 +140,8 @@
                     android:layout_width="300dp"
                     android:layout_height="30dp"
                     android:layout_margin="5dp"
-                    android:visibility="gone"
                     android:enabled="false"
-                    />
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/twitter_Auth_AgreeBtn"
@@ -190,6 +160,7 @@
 
         </LinearLayout>
     </ScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -198,8 +169,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="0dp"
-        android:gravity="right"
-        android:background="#ffffff">
+        android:background="#ffffff"
+        android:gravity="right">
 
         <Button
             android:id="@+id/sns_form_complete"

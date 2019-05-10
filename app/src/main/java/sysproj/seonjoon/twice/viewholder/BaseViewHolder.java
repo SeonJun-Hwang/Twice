@@ -82,7 +82,6 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         setProfileImage(item);
         setImageContent(item);
         setExtendField(item);
-
     }
 
     private Drawable getLogo(Post post) {
@@ -126,8 +125,10 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
         if (content != null) {
             contentText.setText(content);
-        } else
+        } else {
             contentText.setHeight(0);
+            return ;
+        }
 
         if (post != null) {
             Linkify.TransformFilter transformFilter = new Linkify.TransformFilter() {
@@ -137,28 +138,22 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                 }
             };
 
-            ArrayList<String> hashtags = new ArrayList<>();
-
-//            for (PostExtendInfo item : post){
-//                if (item.getPostTag() == PostExtendInfo.HASH_TAG)
-//                    hashtags.add('#' + item.getKeyword());
-//            }
-//
-//            addHashTags(contentText,content , hashtags);
-
             SpannableString contentSpannable = new SpannableString(content);
+
+            int lastTagPos = 0;
 
             for (PostExtendInfo item : post) {
                 Pattern pattern = Pattern.compile(item.getKeyword());
 
-                Log.e(TAG, item.getKeyword());
+                //Log.e(TAG, item.getKeyword());
 
                 switch (item.getPostTag()) {
                     case PostExtendInfo.HASH_TAG:
                         try{
-                        int startPos = item.getStart();//content.indexOf(item.getKeyword());
-                        int endPos = item.getEnd();// startPos + item.getKeyword().length();
+                        int startPos = content.indexOf('#' + item.getKeyword(), lastTagPos);
+                        int endPos =  startPos + item.getKeyword().length() + 1;
                         addHashTags(contentSpannable, startPos, endPos, item.getKeyword());
+                        lastTagPos = endPos;
                         } catch (Exception e){
                             Log.e(TAG, e.getMessage() + " / " + item.getKeyword());
                         }

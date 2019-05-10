@@ -11,10 +11,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -191,6 +193,26 @@ public class DBManager {
                 });
 
         while (locking);
+    }
+
+    public void checkDuplicateUser(String id, final DBAccessResultCallback callback){
+
+        if (firebaseAuth == null)
+            firebaseAuth = FirebaseAuth.getInstance();
+
+        firebaseAuth.fetchProvidersForEmail(id + SNSTag.TWICE_EMAIL_TAIL)
+                .addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<ProviderQueryResult> task) {
+                        List providers = task.getResult().getProviders();
+                        boolean result = true;
+
+                        if (providers != null)
+                            result= providers.isEmpty();
+
+                        callback.AccessCallback(result);
+                    }
+                });
     }
 
     public static DBManager getInstance() {

@@ -14,17 +14,21 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.preference.PreferenceScreen;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 
 import java.util.List;
 
 import sysproj.seonjoon.twice.AppCompatPreferenceActivity;
 import sysproj.seonjoon.twice.R;
+import sysproj.seonjoon.twice.loader.PreferenceLoader;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -39,6 +43,8 @@ import sysproj.seonjoon.twice.R;
  */
 public class SettingsActivity extends AppCompatPreferenceActivity {
 
+    private static final String TAG = "SettingActivity";
+
     /**
      * A preference value change listener that updates the preference's summary
      * to reflect its new value.
@@ -48,11 +54,15 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         public boolean onPreferenceChange(Preference preference, Object value) {
             String stringValue = value.toString();
 
+            Log.e(TAG, preference.getKey() + " / " + stringValue);
+
             if (preference instanceof ListPreference) {
                 // For list preferences, look up the correct display value in
                 // the preference's 'entries' list.
                 ListPreference listPreference = (ListPreference) preference;
                 int index = listPreference.findIndexOfValue(stringValue);
+
+                preference.setSummary(stringValue);
 
                 // Set the summary to reflect the new value.
                 preference.setSummary(
@@ -165,7 +175,8 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
         return PreferenceFragment.class.getName().equals(fragmentName)
                 || GeneralPreferenceFragment.class.getName().equals(fragmentName)
                 || DataSyncPreferenceFragment.class.getName().equals(fragmentName)
-                || NotificationPreferenceFragment.class.getName().equals(fragmentName);
+                || NotificationPreferenceFragment.class.getName().equals(fragmentName)
+                || DataLoadPreferenceFragment.class.getName().equals(fragmentName);
     }
 
     /**
@@ -257,5 +268,35 @@ public class SettingsActivity extends AppCompatPreferenceActivity {
             }
             return super.onOptionsItemSelected(item);
         }
+    }
+
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public static class DataLoadPreferenceFragment extends PreferenceFragment{
+
+        private ListPreference facebook;
+        private ListPreference instagram;
+        private ListPreference twitter;
+
+        @Override
+        public void onCreate(@Nullable Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.pre_data_load);
+
+            PreferenceScreen screen = getPreferenceScreen();
+
+            facebook = (ListPreference) screen.findPreference(PreferenceLoader.KEY_FACEBOOK);
+            twitter = (ListPreference) screen.findPreference(PreferenceLoader.KEY_TWITTER);
+            instagram = (ListPreference) screen.findPreference(PreferenceLoader.KEY_INSTAGRAM);
+
+            bindPreferenceSummaryToValue(findPreference(PreferenceLoader.KEY_TWITTER));
+            bindPreferenceSummaryToValue(findPreference(PreferenceLoader.KEY_FACEBOOK));
+            bindPreferenceSummaryToValue(findPreference(PreferenceLoader.KEY_INSTAGRAM));
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            return super.onOptionsItemSelected(item);
+        }
+
     }
 }

@@ -2,12 +2,14 @@ package sysproj.seonjoon.twice.view;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -19,13 +21,17 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import sysproj.seonjoon.twice.DBAccessResultCallback;
 import sysproj.seonjoon.twice.R;
@@ -103,11 +109,10 @@ public class RegisterActivity extends Activity {
                     DBManager.getInstance().createUser(RegisterActivity.this, email, password, new DBAccessResultCallback() {
                         @Override
                         public void AccessCallback(boolean isSuccess) {
-                            if (isSuccess){
+                            if (isSuccess) {
                                 Toast.makeText(mContext, "회원가입 되었습니다.", Toast.LENGTH_SHORT).show();
                                 finish();
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(mContext, "회원가입에 실패 하였습니다.\n 잠시 후 다시 시도해주시기 바랍니다.", Toast.LENGTH_SHORT).show();
                             }
                         }
@@ -143,6 +148,17 @@ public class RegisterActivity extends Activity {
     private class CheckDuplicateAsnc extends AsyncTask<String, Void, Void> implements DialogInterface.OnClickListener {
         private String input;
         private Boolean result;
+        private ProgressDialog progressDialog;
+
+
+        @Override
+        protected void onPreExecute() {
+            progressDialog = new ProgressDialog(RegisterActivity.this);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("ID 중복 검사중입니다.");
+            progressDialog.show();
+            super.onPreExecute();
+        }
 
         @Override
         protected Void doInBackground(String... strings) {
@@ -150,6 +166,20 @@ public class RegisterActivity extends Activity {
             input = strings[0];
 
             //TODO : Check ID Duplicate Code
+            final CountDownLatch latch = new CountDownLatch(1);
+            DBManager.getInstance().checkDuplicateUser(input, new DBAccessResultCallback() {
+                @Override
+                public void AccessCallback(boolean isSuccess) {
+                    result = isSuccess;
+                    latch.countDown();
+                }
+            });
+
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 
             return null;
         }
@@ -159,6 +189,10 @@ public class RegisterActivity extends Activity {
             super.onPostExecute(voids);
 
             checkDuplicateAsync = null;
+            if (progressDialog != null){
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
 
             if (result) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(mContext);

@@ -6,22 +6,22 @@
         android:checkableBehavior="single">
         <item
             android:id="@+id/drawer_link"
-            android:title="Linkage" />
+            android:title="@string/app_linkage_title" />
 
         <item
             android:id="@+id/drawer_logout"
-            android:title="Logout" />
+            android:title="@string/app_logout_title" />
     </group>
 
     <group android:id="@+id/drawer_menu_related_app">
 
         <item
             android:id="@+id/drawer_app_setting"
-            android:title="Setting" />
+            android:title="@string/app_setting_title" />
 
         <item
             android:id="@+id/drawer_app_developers"
-            android:title="About Twice" />
+            android:title="@string/app_about_title" />
 
     </group>
 </menu>

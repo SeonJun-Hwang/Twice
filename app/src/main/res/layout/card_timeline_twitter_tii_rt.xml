@@ -63,6 +63,7 @@
             android:id="@+id/card_content_text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/timeline_margin_between_time_context"
             android:padding="2dp"
             android:textSize="15dp"
             app:layout_constraintLeft_toRightOf="@id/card_profile_image"

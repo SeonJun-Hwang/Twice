@@ -1,5 +1,6 @@
 package sysproj.seonjoon.twice.view;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -135,7 +136,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                     parsedTime = 0;
                 } else {
                     super.onBackPressed();
-                    finish();
+                    finishAffinity();
+                    System.runFinalization();
+                    System.exit(0);
                 }
             }
         }

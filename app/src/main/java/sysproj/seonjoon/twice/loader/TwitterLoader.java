@@ -204,7 +204,7 @@ public class TwitterLoader implements DataLoader {
 
         try {
             String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_TIMELINE
-                    + "?count=" + UserSession.TwitterPerOnce;
+                    + "?count=" + PreferenceLoader.loadPreference(context, PreferenceLoader.KEY_TWITTER);
 
             String nonce = generateNonce();
             String timestamp = Long.toString(System.currentTimeMillis() / 1000);
@@ -250,18 +250,13 @@ public class TwitterLoader implements DataLoader {
         } catch (JSONException e) {
             Log.e(TAG, "JSON Exception");
         }
-//        catch (Exception e) {
-//            e.printStackTrace();
-//            Log.e(TAG, e.getLocalizedMessage());
-//            //Log.e(TAG, e.ge.getMessage() + " / " + e.toString());
-//        }
     }
 
     @Override
     public void LoadTimeLineData(DataLoadCompleteCallback callback, long maxId) {
         try {
             String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_TIMELINE
-                    + "?count=" + UserSession.TwitterPerOnce;
+                    + "?count=" + PreferenceLoader.loadPreference(context, PreferenceLoader.KEY_TWITTER);
             if (LastUpdate.getMaxIds(SNSTag.Twitter) != LastUpdate.NONE)
                 restURL += "&max_id=" + maxId;
 

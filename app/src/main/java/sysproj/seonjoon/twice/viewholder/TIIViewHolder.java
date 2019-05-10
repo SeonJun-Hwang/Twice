@@ -49,6 +49,8 @@ public class TIIViewHolder extends BaseViewHolder{
 
             if (imageList.size() > 1)
                 imageCountText.setText("+" + (imageList.size() - 1));
+            else
+                imageCountText.setVisibility(View.GONE);
 
             for (int i = 0; i < imageList.size(); i++) {
                 PostMedia item = imageList.get(i);

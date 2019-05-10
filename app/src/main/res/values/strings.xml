@@ -38,7 +38,8 @@
     <string name="consent_form_instagram">Instagram 정보 사용 동의서</string>
     <string name="consent_form_twitter">Twitter 정보 사용 동의서</string>
     <string name="twice_form_head">사용자 정보 입력</string>
-    <string name="sns_form_head">SNS 계정 연동</string>
+    <string name="sns_item_title">SNS 계정 연동</string>
+    <string name="sns_logout_title">로그아웃 </string>
     <string name="sns_form_complete">가입</string>
 
     <!-- String related to Main Activity -->
@@ -49,6 +50,34 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
+    <string name="app_linkage_title">SNS 계정 연동</string>
+    <string name="app_logout_title">로그아웃</string>
+    <string name="app_setting_title">설정</string>
+    <string name="app_about_title">About Twice</string>
+
+    <!-- Preference Strings -->
+    <string name="pref_title_load_item_per_once_facebook">Facebook</string>
+    <string name="pref_title_load_item_per_once_twitter">Twitter</string>
+    <string name="pref_title_load_item_per_once_instagram">Instagram</string>
+    <string name="pref_title_load_item_per_once">타임라인 갯수 설정</string>
+    <string name="pref_summary_load_item_per_once">1회에 읽어오는 게시글 수를 SNS별로 설정합니다.</string>
+
+    <!-- Timeline Load Count Pref -->
+    <string-array name="pref_load_item_titles">
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+    </string-array>
+
+    <string-array name="pref_load_item_values">
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>25</item>
+        <item>30</item>
+    </string-array>
 
     <!-- Example General settings -->
     <string name="pref_header_general">General</string>

@@ -3,6 +3,10 @@
     <!-- These settings headers are only used on tablets. -->
 
     <header
+        android:fragment="sysproj.seonjoon.twice.view.SettingsActivity$DataLoadPreferenceFragment"
+        android:title="@string/pref_title_load_item_per_once"/>
+
+    <header
         android:fragment="sysproj.seonjoon.twice.view.SettingsActivity$GeneralPreferenceFragment"
         android:icon="@drawable/ic_info_black_24dp"
         android:title="@string/pref_header_general" />

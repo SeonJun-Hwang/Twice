@@ -1,19 +1,18 @@
 package sysproj.seonjoon.twice.view;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,33 +29,22 @@ import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.StringReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.Buffer;
-import java.util.Map;
 
 import sysproj.seonjoon.twice.R;
-import sysproj.seonjoon.twice.entity.UserInformation;
 import sysproj.seonjoon.twice.staticdata.SNSPermission;
-import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
 
-public class SNSLinkingActivity extends Activity {
+public class SNSLinkingActivity extends AppCompatActivity {
 
     private static final String TAG = "SNSFrag";
     private static final int userAddReq = 10001;
 
-    private TextView headText;
     private Button completeButton;
     private TwitterLoginButton twitterLoginButton;
     private LoginButton facebookLoginButton;
@@ -84,36 +72,43 @@ public class SNSLinkingActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_sns_regist);
 
-        headText = (TextView) findViewById(R.id.sns_form_head_text);
         completeButton = (Button) findViewById(R.id.sns_form_complete);
         twitterLoginButton = (TwitterLoginButton) findViewById(R.id.sns_form_twitter);
         facebookLoginButton = (LoginButton) findViewById(R.id.sns_form_facebook);
 
-        headText.setText(getString(R.string.sns_form_head));
         completeButton.setText(getString(R.string.sns_form_complete));
 
-        facebookinfobtn = (Button)findViewById(R.id.facebookinfobtn);
-        facebookinfo = (TextView)findViewById(R.id.facebookinfo);
-        facebookAgreeBtn = (Button)findViewById(R.id.facebook_Auth_AgreeBtn);
+        facebookinfobtn = (Button) findViewById(R.id.facebookinfobtn);
+        facebookinfo = (TextView) findViewById(R.id.facebookinfo);
+        facebookAgreeBtn = (Button) findViewById(R.id.facebook_Auth_AgreeBtn);
         /*instargraminfobtn = (Button)findViewById(R.id.instargraminfobtn);
         instargraminfo = (TextView)findViewById(R.id.instargraminfo);
         instargramAgreeBtn = (Button)findViewById(R.id.instargram_Auth_AgreeBtn);*/
-        twitterinfobtn = (Button)findViewById(R.id.twitterinfobtn);
-        twitterinfo = (TextView)findViewById(R.id.twitterinfo);
-        twitterAgreeBtn = (Button)findViewById(R.id.twitter_Auth_AgreeBtn);
+        twitterinfobtn = (Button) findViewById(R.id.twitterinfobtn);
+        twitterinfo = (TextView) findViewById(R.id.twitterinfo);
+        twitterAgreeBtn = (Button) findViewById(R.id.twitter_Auth_AgreeBtn);
 
         setAuthText();
         setButtonState();
         setCallBack();
         setListener();
+        setActionBar();
     }
 
-    private void setAuthText(){
+    private void setAuthText() {
         new facebookNetworkThread().execute();
         new twitterNetworkThread().execute();
     }
 
-    private class facebookNetworkThread extends AsyncTask<Void,Void,String>{
+    private void setActionBar() {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setBackgroundDrawable(new ColorDrawable(getColor(R.color.timelineHeadBack)));// #464A4F
+        }
+    }
+
+    private class facebookNetworkThread extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... voids) {
             URL facebookauthURL = null;
@@ -122,7 +117,7 @@ public class SNSLinkingActivity extends Activity {
             try {
                 facebookauthURL = new URL("http://100.24.24.64:3366/facebook");
 
-                fconnection = (HttpURLConnection)facebookauthURL.openConnection();
+                fconnection = (HttpURLConnection) facebookauthURL.openConnection();
                 fconnection.setRequestMethod("GET");
                 //fconnection.setDoOutput(true);
 
@@ -135,15 +130,15 @@ public class SNSLinkingActivity extends Activity {
 
                 InputStream is = fconnection.getInputStream();
 
-                BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+                BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 String result;
-                while((result = br.readLine())!=null){
-                    sb.append(result+"\n");
+                while ((result = br.readLine()) != null) {
+                    sb.append(result + "\n");
                 }
-                Log.e("hello",sb.toString());
+                //Log.e("hello", sb.toString());
             } catch (java.io.IOException e) {
-                Log.e("helloworld",e.toString());
-            }finally {
+                Log.e("helloworld", e.toString());
+            } finally {
                 fconnection.disconnect();
             }
             return sb.toString();
@@ -152,14 +147,14 @@ public class SNSLinkingActivity extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(s != null)
+            if (s != null)
                 facebookinfo.setText(s);
             else
-                Log.e("null error","null error");
+                Log.e("null error", "null error");
         }
     }
 
-    private class twitterNetworkThread extends AsyncTask<Void,Void,String>{
+    private class twitterNetworkThread extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... voids) {
             URL tauthURL = null;
@@ -168,7 +163,7 @@ public class SNSLinkingActivity extends Activity {
             try {
                 tauthURL = new URL("http://100.24.24.64:3366/twitter");
 
-                tconnection = (HttpURLConnection)tauthURL.openConnection();
+                tconnection = (HttpURLConnection) tauthURL.openConnection();
                 tconnection.setRequestMethod("GET");
                 //fconnection.setDoOutput(true);
 
@@ -181,15 +176,15 @@ public class SNSLinkingActivity extends Activity {
 
                 InputStream is = tconnection.getInputStream();
 
-                BufferedReader br = new BufferedReader(new InputStreamReader(is,"UTF-8"));
+                BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
                 String result;
-                while((result = br.readLine())!=null){
-                    sb.append(result+"\n");
+                while ((result = br.readLine()) != null) {
+                    sb.append(result + "\n");
                 }
-                Log.e("t hello",sb.toString());
+                //Log.e("t hello", sb.toString());
             } catch (java.io.IOException e) {
-                Log.e("t helloworld",e.toString());
-            }finally {
+                Log.e("t helloworld", e.toString());
+            } finally {
                 tconnection.disconnect();
             }
             return sb.toString();
@@ -198,13 +193,25 @@ public class SNSLinkingActivity extends Activity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if(s != null)
+            if (s != null)
                 twitterinfo.setText(s);
             else
-                Log.e("t null error","null error");
+                Log.e("t null error", "null error");
         }
     }
     //http://100.24.24.64:3366/twitter
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -243,10 +250,11 @@ public class SNSLinkingActivity extends Activity {
 //        Log.e(TAG, "Activity Result " + requestCode);
     }
 
-    private void setButtonState(){
+    private void setButtonState() {
         facebookLoginButton.setEnabled(false);
         facebookAgreeBtn.setEnabled(true);
     }
+
     private void setListener() {
 
         completeButton.setOnClickListener(new View.OnClickListener() {
@@ -279,7 +287,7 @@ public class SNSLinkingActivity extends Activity {
                     facebookLoginButton.setVisibility(View.VISIBLE);
                     facebookAgreeBtn.setVisibility(View.VISIBLE);
                     facebookinfoison = 1;
-                }else{
+                } else {
                     facebookinfo.setVisibility(View.GONE);
                     facebookLoginButton.setVisibility(View.GONE);
                     facebookAgreeBtn.setVisibility(View.GONE);
@@ -305,7 +313,7 @@ public class SNSLinkingActivity extends Activity {
                     twitterLoginButton.setVisibility(View.VISIBLE);
                     twitterAgreeBtn.setVisibility(View.VISIBLE);
                     twitterinfoison = 1;
-                }else{
+                } else {
                     twitterinfo.setVisibility(View.GONE);
                     twitterLoginButton.setVisibility(View.GONE);
                     twitterAgreeBtn.setVisibility(View.GONE);
