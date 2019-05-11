@@ -12,6 +12,8 @@ android {
 
         buildConfigField "String", 'TwitterAPI', '"H3qNM38a3TzDXpWz6yY1hknFy"'
         buildConfigField "String", 'TwitterAPISecret', "\"GU4uxItEP3ZM926o1NcUP2gGbBoivm4cWge9dzxsvpJFLHLzRe\""
+        buildConfigField "String", "IDPreferenceKey", "\"load_id_key\""
+        buildConfigField "String", "PwdPreferenceKey", "\"load_pwd_key\""
     }
     buildTypes {
         release {

@@ -46,7 +46,6 @@
         android:layout_width="@dimen/drawer_image_size"
         android:layout_height="@dimen/drawer_image_size"
         android:layout_marginTop="10dp"
-        android:alpha="0.5"
         android:background="@drawable/navigation_header_item_background"
         android:src="@drawable/facebook"
         app:layout_constraintLeft_toLeftOf="@id/drawer_profile_image"
@@ -57,7 +56,6 @@
         android:layout_width="@dimen/drawer_image_size"
         android:layout_height="@dimen/drawer_image_size"
         android:layout_marginHorizontal="15dp"
-        android:alpha="0.5"
         android:background="@drawable/navigation_header_item_background"
         android:src="@drawable/instagram"
         app:layout_constraintLeft_toRightOf="@id/drawer_status_facebook_image"
@@ -67,9 +65,7 @@
         android:id="@+id/drawer_status_twitter_image"
         android:layout_width="@dimen/drawer_image_size"
         android:layout_height="@dimen/drawer_image_size"
-
         android:layout_marginHorizontal="15dp"
-        android:alpha="0.5"
         android:src="@drawable/twitter"
         app:layout_constraintLeft_toRightOf="@id/drawer_status_instagram_image"
         app:layout_constraintTop_toTopOf="@id/drawer_status_instagram_image" />

@@ -54,6 +54,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.loader.PreferenceLoader;
@@ -463,10 +464,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             if (success) {
                 user = FirebaseAuth.getInstance().getCurrentUser();
 
-                if (mSaveIDCheck.isChecked())
-                    PreferenceManager.getInstance().saveString(mContext, UserSession.UserFileName, UserSession.UserIDTag, mID);
-                if (mAutoLoginCheck.isChecked())
-                    PreferenceManager.getInstance().saveString(mContext, UserSession.UserFileName, UserSession.UserPasswordTag, mPassword);
+                if (mSaveIDCheck.isChecked()){
+                    PreferenceLoader.savePreference(mContext, BuildConfig.IDPreferenceKey, mID);
+                }
+                if (mAutoLoginCheck.isChecked()) {
+                    PreferenceLoader.savePreference(mContext, BuildConfig.PwdPreferenceKey, mPassword);
+                }
 
                 Intent loginToMain = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(loginToMain);

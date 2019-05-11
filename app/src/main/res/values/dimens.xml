@@ -24,4 +24,10 @@
     <!-- main navigation drawer item -->
     <dimen name="drawer_image_size">30dp</dimen>
 
+    <!-- Link SNS Activity item -->
+    <dimen name="link_sns_image_size">40dp</dimen>
+    <dimen name="link_sns_padding_between_image_text">10dp</dimen>
+    <dimen name="link_sns_margin_between_items">20dp</dimen>
+    <dimen name="link_sns_text_size">18sp</dimen>
+
 </resources>

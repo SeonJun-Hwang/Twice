@@ -1,6 +1,5 @@
 package sysproj.seonjoon.twice.view;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,25 +8,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.Toast;
-
-import com.facebook.CallbackManager;
-import com.facebook.FacebookCallback;
-import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
-import com.facebook.login.LoginResult;
-import com.facebook.login.widget.LoginButton;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterException;
-import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -36,61 +24,41 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import sysproj.seonjoon.twice.R;
-import sysproj.seonjoon.twice.staticdata.SNSPermission;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
-
-public class SNSLinkingActivity extends AppCompatActivity {
+public class SNSLinkingActivity extends AppCompatActivity implements CompoundButton.OnClickListener {
 
     private static final String TAG = "SNSFrag";
     private static final int userAddReq = 10001;
 
-    private Button completeButton;
-    private TwitterLoginButton twitterLoginButton;
-    private LoginButton facebookLoginButton;
-    private CallbackManager facebookCallback;
-
-    private Button facebookinfobtn; // facebook 개인정보 동의 확인서를 보여주기 위한 버튼
-    private TextView facebookinfo; // facebook 개인정보 동의 확인서 내용 text
-    private Button facebookAgreeBtn; //facebook 개인정보 동의버튼
-    private int facebookinfoison = 0;
-
-    private Button twitterinfobtn;
-    private TextView twitterinfo;
-    private Button twitterAgreeBtn;
-    private int twitterinfoison = 0;
-
-    private TextView instargraminfo;
-    private Button instargraminfobtn;
-    private Button instargramAgreeBtn;
-    private int instargraminfoison = 0;
-
     private Context mContext;
+
+    private Switch facebookSwitch;
+    private Switch twitterSwitch;
+    private Switch instagramSwitch;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_sns_regist);
+        setContentView(R.layout.sns_linking_activity);
 
-        completeButton = (Button) findViewById(R.id.sns_form_complete);
-        twitterLoginButton = (TwitterLoginButton) findViewById(R.id.sns_form_twitter);
-        facebookLoginButton = (LoginButton) findViewById(R.id.sns_form_facebook);
+        mContext = this;
 
-        completeButton.setText(getString(R.string.sns_form_complete));
+        facebookSwitch = (Switch) findViewById(R.id.link_facebook_switch);
+        twitterSwitch = (Switch) findViewById(R.id.link_twitter_switch);
+        instagramSwitch = (Switch) findViewById(R.id.link_instagram_switch);
 
-        facebookinfobtn = (Button) findViewById(R.id.facebookinfobtn);
-        facebookinfo = (TextView) findViewById(R.id.facebookinfo);
-        facebookAgreeBtn = (Button) findViewById(R.id.facebook_Auth_AgreeBtn);
-        /*instargraminfobtn = (Button)findViewById(R.id.instargraminfobtn);
-        instargraminfo = (TextView)findViewById(R.id.instargraminfo);
-        instargramAgreeBtn = (Button)findViewById(R.id.instargram_Auth_AgreeBtn);*/
-        twitterinfobtn = (Button) findViewById(R.id.twitterinfobtn);
-        twitterinfo = (TextView) findViewById(R.id.twitterinfo);
-        twitterAgreeBtn = (Button) findViewById(R.id.twitter_Auth_AgreeBtn);
+        if (UserSession.FacebookToken != null)
+            facebookSwitch.setChecked(true);
+
+        facebookSwitch.setOnClickListener(this);
+        twitterSwitch.setOnClickListener(this);
+        instagramSwitch.setOnClickListener(this);
+
+        if (UserSession.TwitterToken != null)
+            twitterSwitch.setChecked(true);
 
         setAuthText();
-        setButtonState();
-        setCallBack();
         setListener();
         setActionBar();
     }
@@ -106,6 +74,50 @@ public class SNSLinkingActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setBackgroundDrawable(new ColorDrawable(getColor(R.color.timelineHeadBack)));// #464A4F
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+
+        int resId = view.getId();
+        final CompoundButton compoundButton = (CompoundButton) view;
+        final boolean checkStatus = !compoundButton.isChecked();
+
+        AlertDialog dialog = new AlertDialog.Builder(this).setMessage("Facebook와 연동을 해제 합니다. 계약 동의도 해제 됩니다.")
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        compoundButton.setChecked(!checkStatus);
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        compoundButton.setChecked(checkStatus);
+                    }
+                }).create();
+
+        switch (resId)
+        {
+            case R.id.link_facebook_switch:
+                if (checkStatus)
+                    dialog.show();
+                else
+                    Toast.makeText(mContext, "True", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.link_twitter_switch:
+                if (checkStatus)
+                    dialog.show();
+                else
+                    Toast.makeText(mContext, "True", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.link_instagram_switch:
+                if (checkStatus);
+                else
+                    dialog.show();
+                break;
+        }
+
     }
 
     private class facebookNetworkThread extends AsyncTask<Void, Void, String> {
@@ -147,10 +159,6 @@ public class SNSLinkingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if (s != null)
-                facebookinfo.setText(s);
-            else
-                Log.e("null error", "null error");
         }
     }
 
@@ -193,10 +201,6 @@ public class SNSLinkingActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            if (s != null)
-                twitterinfo.setText(s);
-            else
-                Log.e("t null error", "null error");
         }
     }
     //http://100.24.24.64:3366/twitter
@@ -250,126 +254,9 @@ public class SNSLinkingActivity extends AppCompatActivity {
 //        Log.e(TAG, "Activity Result " + requestCode);
     }
 
-    private void setButtonState() {
-        facebookLoginButton.setEnabled(false);
-        facebookAgreeBtn.setEnabled(true);
-    }
-
     private void setListener() {
 
-        completeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-
-                builder.setMessage("해당 정보로 가입 하시겠습니까?").setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-
-                        // For Additional Register
-                        LoginManager.getInstance().logOut();
-
-                    }
-                }).setNegativeButton("취소", null);
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
-            }
-        });
-
-
-        //facebook info button을 눌렀을때 개인정보 동의 확인서가 뜨게 하는것
-        facebookinfobtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (facebookinfoison == 0) {
-                    facebookinfo.setVisibility(View.VISIBLE);
-                    facebookLoginButton.setVisibility(View.VISIBLE);
-                    facebookAgreeBtn.setVisibility(View.VISIBLE);
-                    facebookinfoison = 1;
-                } else {
-                    facebookinfo.setVisibility(View.GONE);
-                    facebookLoginButton.setVisibility(View.GONE);
-                    facebookAgreeBtn.setVisibility(View.GONE);
-                    facebookinfoison = 0;
-                }
-            }
-        });
-        //동의시 로그인 버튼 활성화
-        facebookAgreeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                facebookLoginButton.setEnabled(true);
-                facebookAgreeBtn.setEnabled(false);
-            }
-        });
-
-        //twitter
-        twitterinfobtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (twitterinfoison == 0) {
-                    twitterinfo.setVisibility(View.VISIBLE);
-                    twitterLoginButton.setVisibility(View.VISIBLE);
-                    twitterAgreeBtn.setVisibility(View.VISIBLE);
-                    twitterinfoison = 1;
-                } else {
-                    twitterinfo.setVisibility(View.GONE);
-                    twitterLoginButton.setVisibility(View.GONE);
-                    twitterAgreeBtn.setVisibility(View.GONE);
-                    twitterinfoison = 0;
-                }
-            }
-        });
-        twitterAgreeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                twitterLoginButton.setEnabled(true);
-                twitterAgreeBtn.setEnabled(false);
-            }
-        });
     }
 
-    private void setCallBack() {
-        facebookCallback = CallbackManager.Factory.create();
-        facebookLoginButton.setReadPermissions(SNSPermission.getFacebookPermission());
-
-        LoginManager.getInstance().registerCallback(facebookCallback, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-                facebookLoginButton.setEnabled(false);
-                UserSession.FacebookToken = loginResult.getAccessToken();
-
-                // Log.e(TAG, "FB Token : " + UserSession.facebookToken.getToken());
-            }
-
-            @Override
-            public void onCancel() {
-                Toast.makeText(mContext, "취소하셨습니다.", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-                Log.e(TAG, error.toString());
-                Toast.makeText(mContext, "네트워크 에러입니다. 잠시 후에 다시 시도해 주세요.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        twitterLoginButton.setCallback(new Callback<TwitterSession>() {
-            @Override
-            public void success(Result<TwitterSession> result) {
-                twitterLoginButton.setEnabled(false);
-
-                Log.e(TAG, "Success Twitter Login");
-
-                UserSession.TwitterToken = result.data;
-            }
-
-            @Override
-            public void failure(TwitterException exception) {
-                Log.e(TAG, exception.toString());
-            }
-        });
-    }
 
 }

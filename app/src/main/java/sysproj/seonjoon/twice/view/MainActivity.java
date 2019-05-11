@@ -8,6 +8,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -47,6 +50,7 @@ import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
 import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TwitterParser;
+import sysproj.seonjoon.twice.staticdata.StaticAppData;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class MainActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener, OnHashtagClickListener {
@@ -136,7 +140,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                     parsedTime = 0;
                 } else {
                     super.onBackPressed();
-                    finishAffinity();
                     System.runFinalization();
                     System.exit(0);
                 }
@@ -344,10 +347,17 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                         .apply(RequestOptions.circleCropTransform())
                         .into(repreProfileImage);
 
-                if (UserSession.FacebookToken != null)
-                    facebookStatus.setAlpha(1.0f);
-                if (UserSession.TwitterToken != null)
-                    twitterStatus.setAlpha(1.0f);
+                if (UserSession.FacebookToken == null)
+                    facebookStatus.setColorFilter(StaticAppData.Gray_filter);
+                else
+                    facebookStatus.clearColorFilter();
+
+                if (UserSession.TwitterToken == null)
+                    twitterStatus.setColorFilter(StaticAppData.Gray_filter);
+                else
+                    twitterStatus.clearColorFilter();
+
+                instagramStatus.setColorFilter(StaticAppData.Gray_filter);
             }
 
             loadProfileAsync = null;

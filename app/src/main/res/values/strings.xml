@@ -55,6 +55,10 @@
     <string name="app_setting_title">설정</string>
     <string name="app_about_title">About Twice</string>
 
+    <string name="link_sns_facebook_title">Facebook</string>
+    <string name="link_sns_twitter_title">Twitter</string>
+    <string name="link_sns_instagram_title">Instagram</string>
+
     <!-- Preference Strings -->
     <string name="pref_title_load_item_per_once_facebook">Facebook</string>
     <string name="pref_title_load_item_per_once_twitter">Twitter</string>

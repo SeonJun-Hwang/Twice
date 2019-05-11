@@ -27,4 +27,7 @@
     <color name="actionBarText">#03A9F4</color>
     <color name="actionBarBackground">#FFFFFF</color>
 
+    <!-- Original Color -->
+    <color name="black">#000000</color>
+
 </resources>
