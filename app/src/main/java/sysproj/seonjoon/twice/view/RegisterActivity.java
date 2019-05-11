@@ -70,7 +70,7 @@ public class RegisterActivity extends Activity {
         nextButton = (Button) findViewById(R.id.twice_next);
 
         headText.setText(getString(R.string.twice_form_head));
-        nextButton.setText(getString(R.string.share_next_tag));
+        nextButton.setText(getString(R.string.share_register_tag));
 
         setListener();
     }
@@ -118,7 +118,7 @@ public class RegisterActivity extends Activity {
                         }
                     });
                 } else
-                    Toast.makeText(mContext, "Password 칸이 비어 있습니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "Password는 8글자 이상이여야 합니다.", Toast.LENGTH_SHORT).show();
             }
         });
     }

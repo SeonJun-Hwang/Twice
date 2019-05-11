@@ -11,6 +11,8 @@
     <string name="share_password_tag">Password</string>
     <string name="share_email_tag">E-mail</string>
     <string name="share_next_tag">다음</string>
+    <string name="share_register_tag">가입</string>
+
 
     <!-- Strings related to login -->
     <string name="prompt_email">ID</string>
@@ -153,4 +155,10 @@
 
     <string name="pref_title_vibrate">Vibrate</string>
 
+    <!-- SNS 개인정보 관련 string-->
+    <string name="clickthebuttonSNS">Twice의 원활한 사용을 위하여 SNS를 연동합니다.\n 해당 페이지에서 SNS 연동을 관리할 수 있습니다. \n 연동이후 우측 하단의 완료 버튼을 눌러주세요</string>
+    <string name="authwithSNS">각 계정은 개인정보 동의사항에 동의한 후에 연동할 수 있습니다. \n아래의 버튼을 눌러 SNS계정과 연동할수 있습니다.</string>
+    <string name="facebookConnect">Facebook의 계정을 연결하시려면 여기를 눌러주세요</string>
+    <string name="instagramConnect">Instargram 계정을 연결하시려면 여기를 눌러주세요</string>
+    <string name="twitterConnect">Twitter 계정을 연결하시려면 여기를 눌러주세요</string>
 </resources>
