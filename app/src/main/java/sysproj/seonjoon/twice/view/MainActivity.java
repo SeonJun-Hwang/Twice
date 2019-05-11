@@ -141,7 +141,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 } else {
                     super.onBackPressed();
                     System.runFinalization();
-                    System.exit(0);
+                    finishAffinity();
                 }
             }
         }

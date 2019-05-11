@@ -28,12 +28,9 @@
     <color name="actionBarText">#03A9F4</color>
     <color name="actionBarBackground">#FFFFFF</color>
 
-<<<<<<< HEAD
     <!-- Original Color -->
     <color name="black">#000000</color>
-=======
     <!-- SNS register Color -->
     <color name="SNSRegister">#ededff</color>
->>>>>>> e6a643d70b25840d0e4b274cb813a4e62b45b37f
 
 </resources>

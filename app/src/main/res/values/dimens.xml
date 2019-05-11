@@ -24,15 +24,13 @@
     <!-- main navigation drawer item -->
     <dimen name="drawer_image_size">30dp</dimen>
 
-<<<<<<< HEAD
     <!-- Link SNS Activity item -->
     <dimen name="link_sns_image_size">40dp</dimen>
     <dimen name="link_sns_padding_between_image_text">10dp</dimen>
     <dimen name="link_sns_margin_between_items">20dp</dimen>
     <dimen name="link_sns_text_size">18sp</dimen>
 
-=======
+
     <!-- Register -->
     <dimen name="register_padding">20dp</dimen>
->>>>>>> e6a643d70b25840d0e4b274cb813a4e62b45b37f
 </resources>
