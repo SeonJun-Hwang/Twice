@@ -16,13 +16,16 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
 import sysproj.seonjoon.twice.DBAccessResultCallback;
 import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.staticdata.SNSTag;
+import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class DBManager {
 
@@ -153,7 +156,7 @@ public class DBManager {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.e(TAG, "Create User : " + task.isSuccessful());
-                            if (task.isSuccessful()) {
+                        if (task.isSuccessful()) {
                             Log.e(TAG, task.getResult().getUser().getUid());
                             callback.AccessCallback(true);
                         } else {
@@ -192,10 +195,10 @@ public class DBManager {
                     }
                 });
 
-        while (locking);
+        while (locking) ;
     }
 
-    public void checkDuplicateUser(String id, final DBAccessResultCallback callback){
+    public void checkDuplicateUser(String id, final DBAccessResultCallback callback) {
 
         if (firebaseAuth == null)
             firebaseAuth = FirebaseAuth.getInstance();
@@ -208,7 +211,7 @@ public class DBManager {
                         boolean result = true;
 
                         if (providers != null)
-                            result= providers.isEmpty();
+                            result = providers.isEmpty();
 
                         callback.AccessCallback(result);
                     }
@@ -220,5 +223,41 @@ public class DBManager {
             instance = new DBManager();
 
         return instance;
+    }
+
+    public void saveFacebookToken(final String collection, String doc, final DBAccessResultCallback callback) {
+        if (db == null)
+            db = FirebaseFirestore.getInstance();
+
+        if (UserSession.FacebookToken != null) {
+            Map<String, Object> data = new HashMap<>();
+
+            data.put(SNSTag.FacebookUIDTag, UserSession.FacebookToken.getUserId());
+            data.put(SNSTag.FacebookTokenTag, UserSession.FacebookToken.getToken());
+            data.put(SNSTag.FacebookAIDTag, UserSession.FacebookToken.getApplicationId());
+            data.put(SNSTag.FacebookPermissionTag, Set2String(UserSession.FacebookToken.getPermissions()));
+            data.put(SNSTag.FacebookDPermissionTag, Set2String(UserSession.FacebookToken.getDeclinedPermissions()));
+            data.put(SNSTag.FacebookTokenSourceTag, UserSession.FacebookToken.getSource().toString());
+            data.put(SNSTag.FacebookExpTimeTag, UserSession.FacebookToken.getExpires().toString());
+            data.put(SNSTag.FacebookLastTimeTag, UserSession.FacebookToken.getLastRefresh().toString());
+            data.put(SNSTag.FacebookDataAccExpTimeTag, UserSession.FacebookToken.getDataAccessExpirationTime().toString());
+
+            db.collection(collection).document(doc)
+                    .update(data)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            callback.AccessCallback(task.isSuccessful());
+                        }
+                    });
+        }
+    }
+
+    private String Set2String(Set<String> input) {
+        String result = new String();
+
+        for (String item : input)
+            result += item + '\t';
+        return result;
     }
 }

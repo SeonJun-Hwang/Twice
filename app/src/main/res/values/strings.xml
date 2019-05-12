@@ -60,6 +60,7 @@
     <string name="link_sns_facebook_title">Facebook</string>
     <string name="link_sns_twitter_title">Twitter</string>
     <string name="link_sns_instagram_title">Instagram</string>
+    <string name="link_sns_instagram_login_text">Instagram으로 로그인</string>
 
     <!-- Preference Strings -->
     <string name="pref_title_load_item_per_once_facebook">Facebook</string>

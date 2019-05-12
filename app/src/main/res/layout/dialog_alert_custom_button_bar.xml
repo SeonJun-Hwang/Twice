@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.ButtonBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/buttonPanel"
+    style="?attr/buttonBarStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:layoutDirection="locale"
+    android:orientation="horizontal"
+    android:paddingLeft="12dp"
+    android:paddingTop="4dp"
+    android:paddingRight="12dp"
+    android:paddingBottom="4dp"
+    app:allowStacking="true">
+
+    <com.facebook.login.widget.LoginButton
+        android:id="@+id/alert_facebook_login"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:enabled="false"
+        android:visibility="gone" />
+
+    <com.twitter.sdk.android.core.identity.TwitterLoginButton
+        android:id="@+id/alert_twitter_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:enabled="false"
+        android:visibility="gone" />
+
+    <sysproj.seonjoon.twice.view.InstagramLoginButton
+        android:id="@+id/alert_instagram_login"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:padding="4dp"
+        android:visibility="gone"
+        app:elevation="3dp" />
+
+    <android.support.v4.widget.Space
+        android:id="@+id/spacer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/alert_negative"
+        style="?attr/buttonBarNegativeButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="취소" />
+
+</android.support.v7.widget.ButtonBarLayout>

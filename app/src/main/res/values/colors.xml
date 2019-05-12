@@ -30,6 +30,8 @@
 
     <!-- Original Color -->
     <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="whiteGray">#949494</color>
     <!-- SNS register Color -->
     <color name="SNSRegister">#ededff</color>
 

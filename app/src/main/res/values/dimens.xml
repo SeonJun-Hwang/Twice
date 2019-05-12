@@ -31,6 +31,13 @@
     <dimen name="link_sns_text_size">18sp</dimen>
 
 
+    <!-- instagram login button -->
+    <dimen name="instagram_login_btn_drawable_padding">4dp</dimen>
+    <dimen name="instagram_login_btn_left_padding">8dp</dimen>
+    <dimen name="instagram_login_button_radius">5dp</dimen>
+    <dimen name="instagram_login_button_right_padding">12dp</dimen>
+    <dimen name="instagram_login_text_size">15sp</dimen>
+
     <!-- Register -->
     <dimen name="register_padding">20dp</dimen>
 </resources>

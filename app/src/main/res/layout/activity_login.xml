@@ -15,6 +15,8 @@
         android:id="@+id/login_form"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:outlineProvider="bounds"
+        android:clipToPadding="false"
         android:paddingHorizontal="20dp"
         android:paddingTop="90dp">
 
@@ -23,7 +25,10 @@
             android:id="@+id/email_login_form"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingVertical="20dp"
+            android:paddingBottom="10dp"
+            android:paddingHorizontal="10dp">
 
 
             <ImageView
@@ -91,7 +96,7 @@
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
-                    android:background="@drawable/loginbuttonstyle"
+                    android:background="@drawable/login_button_style"
                     android:text="@string/action_sign_in"
                     android:textColor="#ffffff"
                     android:textStyle="bold" />
@@ -101,27 +106,26 @@
                     style="?android:textAppearanceButton"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/loginbuttonstyle"
+                    android:background="@drawable/login_button_style"
                     android:text="@string/login_button_register"
                     android:textColor="#ffffff"
                     android:textStyle="bold" />
 
             </LinearLayout>
 
-
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginHorizontal="10dp"
                 android:text="login with social network service"
+                android:gravity="center"
                 android:textColor="#999494" />
 
             <com.google.android.gms.common.SignInButton
                 android:id="@+id/login_google_login_button"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="20dp"/>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
