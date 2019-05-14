@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.GravityCompat;
@@ -72,6 +73,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     private EditText topEditText;
     private Fragment[] fragments = new Fragment[]{null, null};
     private String[] fragmentsTags = new String[]{"Home", "Search"};
+    private BottomNavigationView bottomNavigationView;
 
     private ImageView repreProfileImage;
     private TextView repreName;
@@ -170,8 +172,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
         openMenuButton = (ImageView) findViewById(R.id.main_profile_setting);
 
-        homeButton = (RadioButton) findViewById(R.id.main_bottom_home_button);
-        searchButton = (RadioButton) findViewById(R.id.main_bottom_search_button);
+        //homeButton = (RadioButton) findViewById(R.id.main_bottom_home_button);
+        //searchButton = (RadioButton) findViewById(R.id.main_bottom_search_button);
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.main_bottom);
 
         View headerView = personNavigation.getHeaderView(0);
 
@@ -221,24 +224,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             }
         });
 
-        homeButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    showHomeFragment();
-                }
-            }
-        });
-
-        searchButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-                if (b) {
-                    showSearchFragment();
-                }
-            }
-        });
-
         // Drawer Set
         openMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -246,6 +231,23 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 Log.e(TAG, "Click Open Menu Button");
                 if (!personDrawer.isDrawerOpen(GravityCompat.START))
                     personDrawer.openDrawer(Gravity.LEFT);
+            }
+        });
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.main_bottom_home:
+                        Log.e(TAG, "Select Home Button");
+                        showHomeFragment();
+                        break;
+                    case R.id.main_bottom_search:
+                        Log.e(TAG, "Select Search Button");
+                        showSearchFragment();
+                        break;
+                }
+                return true;
             }
         });
 

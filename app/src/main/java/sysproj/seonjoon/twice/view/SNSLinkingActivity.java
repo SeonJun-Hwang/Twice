@@ -299,7 +299,6 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
         super.onActivityResult(requestCode, resultCode, data);
         if (SNSLogin instanceof TwitterLoginButton) {
             ((TwitterLoginButton) SNSLogin).onActivityResult(requestCode, resultCode, data);
-            SNSLogin.setEnabled(false);
         } else if (SNSLogin instanceof LoginButton) {
             facebookCallback.onActivityResult(requestCode, resultCode, data);
         }
@@ -442,13 +441,12 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
                         Toast.makeText(context, "Facebook 에러입니다. 잠시후에 다시 시도해주시기 바랍니다.", Toast.LENGTH_LONG).show();
                     }
                 });
-            } else if (snsTag == SNSTag.Twitter) {
+            }
+            else if (snsTag == SNSTag.Twitter) {
                 SNSLogin = (TwitterLoginButton) view.findViewById(R.id.alert_twitter_login);
                 ((TwitterLoginButton) SNSLogin).setCallback(new Callback<TwitterSession>() {
                     @Override
                     public void success(final Result<TwitterSession> result) {
-
-                        SNSLogin.setEnabled(false);
                         Log.e(TAG, "Twitter Login Success");
 
                         UserSession.TwitterToken = result.data;
@@ -458,6 +456,7 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
                             public void AccessCallback(boolean isSuccess) {
                                 if (isSuccess) {
                                     Toast.makeText(mContext, "연동 되었습니다.", Toast.LENGTH_SHORT).show();
+                                    SNSLogin.setEnabled(false);
                                 } else {
                                     Toast.makeText(mContext, "연동에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                                     UserSession.TwitterToken = null;

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/main_bottom_home"
+        android:icon="@drawable/home_selector"
+        android:title="Home"/>
+
+    <item
+        android:id="@+id/main_bottom_search"
+        android:icon="@drawable/search_selector"
+        android:title="Search"/>
+</menu>
