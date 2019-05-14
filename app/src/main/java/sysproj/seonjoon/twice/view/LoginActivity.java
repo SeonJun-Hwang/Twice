@@ -272,7 +272,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     @Override
     protected void onStop() {
         super.onStop();
-        LoginManager.getInstance().SignOut();
     }
 
     /**

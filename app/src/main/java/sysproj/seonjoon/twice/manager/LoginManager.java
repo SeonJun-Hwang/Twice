@@ -11,6 +11,7 @@ import com.twitter.sdk.android.core.TwitterSession;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DBAccessResultCallback;
 import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.parser.FacebookTokenParser;
@@ -32,7 +33,7 @@ public class LoginManager {
     public void FacebookLogin(String uid, DBLoadSuccessCallback callback) {
         Log.e(TAG, "Facebook Login Start");
 
-        DBManager.getInstance().getDB(uid, SNSTag.FacebookDocTag, callback);
+        DBManager.getInstance().getDB(uid, BuildConfig.FacebookDocTag, callback);
 
         if (loginResult)
             Log.e(TAG, "Facebook Login Success");
@@ -43,7 +44,7 @@ public class LoginManager {
     public void TwitterLogin(String uid, DBLoadSuccessCallback callback) {
         Log.e(TAG, "Twitter Login Start");
 
-        DBManager.getInstance().getDB(uid, SNSTag.TwitterDocTag, callback);
+        DBManager.getInstance().getDB(uid, BuildConfig.TwitterDocTag, callback);
     }
 
     public boolean TwiceLogin(Activity activity, String id, String password) {
@@ -59,10 +60,19 @@ public class LoginManager {
         return loginResult;
     }
 
-    public void SignOut(){
+    public void SignOut() {
         FirebaseAuth.getInstance().signOut();
-        TwitterCore.getInstance().getSessionManager().clearActiveSession();
-        AccessToken.setCurrentAccessToken(null);
+
+        if (UserSession.TwitterToken != null) {
+            UserSession.TwitterToken = null;
+            TwitterCore.getInstance().getSessionManager().clearActiveSession();
+        }
+        if (UserSession.FacebookToken != null) {
+            UserSession.FacebookToken = null;
+            AccessToken.setCurrentAccessToken(null);
+        }
+
+
     }
 
     public static LoginManager getInstance() {

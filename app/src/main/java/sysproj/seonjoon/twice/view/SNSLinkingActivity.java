@@ -1,5 +1,6 @@
 package sysproj.seonjoon.twice.view;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -25,15 +26,17 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.google.android.gms.common.SignInButton;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.twitter.sdk.android.core.Callback;
+import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterSession;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.io.BufferedReader;
@@ -52,7 +55,7 @@ import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class SNSLinkingActivity extends AppCompatActivity implements CompoundButton.OnClickListener {
 
-    private static final String TAG = "SNSFrag";
+    private static final String TAG = "SNSLinkingActivity";
     private static final int userAddReq = 10001;
 
     private Context mContext;
@@ -61,7 +64,8 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
     private Switch twitterSwitch;
     private Switch instagramSwitch;
     private CallbackManager facebookCallback;
-
+    private Button SNSLogin;
+    private SNSDialog snsDialog;
     private FacebookAsync facebookAuth;
     private TwitterAsync twitterAuth;
     private InstagramAsync instagramAuth;
@@ -77,37 +81,16 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
         twitterSwitch = (Switch) findViewById(R.id.link_twitter_switch);
         instagramSwitch = (Switch) findViewById(R.id.link_instagram_switch);
 
-        if (UserSession.FacebookToken != null) {
+        if (UserSession.FacebookToken != null)
             facebookSwitch.setChecked(true);
-        }
+        if (UserSession.TwitterToken != null)
+            twitterSwitch.setChecked(true);
 
         facebookSwitch.setOnClickListener(this);
         twitterSwitch.setOnClickListener(this);
         instagramSwitch.setOnClickListener(this);
 
-        if (UserSession.TwitterToken != null) {
-            twitterSwitch.setChecked(true);
-        }
-
         facebookCallback = CallbackManager.Factory.create();
-
-        LoginManager.getInstance().registerCallback(facebookCallback, new FacebookCallback<LoginResult>() {
-            @Override
-            public void onSuccess(LoginResult loginResult) {
-
-            }
-
-            @Override
-            public void onCancel() {
-
-            }
-
-            @Override
-            public void onError(FacebookException error) {
-
-            }
-        });
-
         setListener();
         setActionBar();
     }
@@ -122,24 +105,11 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
 
     @Override
     public void onClick(View view) {
-
-        int resId = view.getId();
+        final int resId = view.getId();
         final CompoundButton compoundButton = (CompoundButton) view;
         final boolean checkStatus = !compoundButton.isChecked();
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        compoundButton.setChecked(!checkStatus);
-                    }
-                })
-                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        compoundButton.setChecked(checkStatus);
-                    }
-                }).create();
+        AlertDialog dialog = createAskingDialog(compoundButton, checkStatus, resId);
 
         switch (resId) {
             case R.id.link_facebook_switch:
@@ -177,6 +147,7 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
 
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class FacebookAsync extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... voids) {
@@ -212,14 +183,15 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
 
             facebookAuth = null;
 
-            SNSDialog dialog = new SNSDialog(mContext, SNSTag.Facebook);
-            dialog.setTitle("Facebook 연동");
-            dialog.setIcon(R.drawable.facebook);
-            dialog.setMessage(s);
-            dialog.show();
+            snsDialog = new SNSDialog(mContext, SNSTag.Facebook);
+            snsDialog.setTitle("Facebook 연동");
+            snsDialog.setIcon(R.drawable.facebook);
+            snsDialog.setMessage(s);
+            snsDialog.show();
         }
     }
 
+    @SuppressLint("StaticFieldLeak")
     private class TwitterAsync extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... voids) {
@@ -256,15 +228,16 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
 
             twitterAuth = null;
 
-            SNSDialog dialog = new SNSDialog(mContext, SNSTag.Twitter);
-            dialog.setTitle("Twitter 연동");
-            dialog.setIcon(R.drawable.twitter);
-            dialog.setMessage(s);
-            dialog.show();
+            snsDialog = new SNSDialog(mContext, SNSTag.Twitter);
+            snsDialog.setTitle("Twitter 연동");
+            snsDialog.setIcon(R.drawable.twitter);
+            snsDialog.setMessage(s);
+            snsDialog.show();
         }
     }
     //http://100.24.24.64:3366/twitter
 
+    @SuppressLint("StaticFieldLeak")
     private class InstagramAsync extends AsyncTask<Void, Void, String> {
         @Override
         protected String doInBackground(Void... voids) {
@@ -300,11 +273,11 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
             super.onPostExecute(s);
             instagramAuth = null;
 
-            SNSDialog dialog = new SNSDialog(mContext, SNSTag.Instagram);
-            dialog.setTitle("Instagram 연동");
-            dialog.setIcon(R.drawable.instagram);
-            dialog.setMessage(s);
-            dialog.show();
+            snsDialog = new SNSDialog(mContext, SNSTag.Instagram);
+            snsDialog.setTitle("Instagram 연동");
+            snsDialog.setIcon(R.drawable.instagram);
+            snsDialog.setMessage(s);
+            snsDialog.show();
         }
 
     }
@@ -323,12 +296,59 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        facebookCallback.onActivityResult(requestCode, resultCode, data);
         super.onActivityResult(requestCode, resultCode, data);
+        if (SNSLogin instanceof TwitterLoginButton) {
+            ((TwitterLoginButton) SNSLogin).onActivityResult(requestCode, resultCode, data);
+            SNSLogin.setEnabled(false);
+        } else if (SNSLogin instanceof LoginButton) {
+            facebookCallback.onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     private void setListener() {
 
+    }
+
+    private AlertDialog createAskingDialog(final CompoundButton compoundButton, final boolean checkStatus, final int resId) {
+        return new AlertDialog.Builder(this)
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        compoundButton.setChecked(!checkStatus);
+
+                        String uid = DBManager.getInstance().getUser().getUid();
+                        final Toast sToast = Toast.makeText(mContext, "연동 해제 되었습니다.", Toast.LENGTH_SHORT);
+                        final Toast fToast = Toast.makeText(mContext, "오류가 발생하였습니다.\n 잠시후에 다시 시도해 주세요", Toast.LENGTH_SHORT);
+
+                        DBAccessResultCallback callback = new DBAccessResultCallback() {
+                            @Override
+                            public void AccessCallback(boolean isSuccess) {
+                                if (isSuccess) sToast.show();
+                                else fToast.show();
+                            }
+                        };
+
+                        switch (resId) {
+                            case R.id.link_facebook_switch:
+                                DBManager.getInstance().removeFacebookToken(uid, callback);
+                                UserSession.FacebookToken = null;
+                                break;
+                            case R.id.link_twitter_switch:
+                                DBManager.getInstance().removeTwitterToken(uid, callback);
+                                UserSession.TwitterToken = null;
+                                break;
+                            case R.id.link_instagram_switch:
+                                //DBManager.getInstance().removeInstagramToken(uid, callBack);
+                                break;
+                        }
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        compoundButton.setChecked(checkStatus);
+                    }
+                }).create();
     }
 
     private class SNSDialog extends Dialog {
@@ -338,12 +358,11 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
         private ImageView icon;
         private TextView message;
         private CheckBox argumentAgree;
-        private Button SNSLogin;
         private Button negativeButton;
 
         int snsTag;
 
-        protected SNSDialog(Context context, int snsTag) {
+        SNSDialog(Context context, int snsTag) {
             super(context, snsTag);
             this.context = context;
             this.snsTag = snsTag;
@@ -385,23 +404,30 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
         }
 
         private void setSNSButton(View view, int snsTag) {
+
+            final FirebaseUser user = DBManager.getInstance().getUser();
+
             if (snsTag == SNSTag.Facebook) {
                 SNSLogin = (LoginButton) view.findViewById(R.id.alert_facebook_login);
                 ((LoginButton) SNSLogin).setReadPermissions(SNSPermission.getFacebookPermission());
                 ((LoginButton) SNSLogin).registerCallback(facebookCallback, new FacebookCallback<LoginResult>() {
                     @Override
-                    public void onSuccess(LoginResult loginResult) {
+                    public void onSuccess(final LoginResult loginResult) {
                         UserSession.FacebookToken = loginResult.getAccessToken();
-                        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
                         if (user != null) {
-                            DBManager.getInstance().saveFacebookToken(user.getUid(), SNSTag.FacebookDocTag, new DBAccessResultCallback() {
+                            DBManager.getInstance().saveFacebookToken(user.getUid(), new DBAccessResultCallback() {
                                 @Override
                                 public void AccessCallback(boolean isSuccess) {
-                                    if (isSuccess)
+                                    if (isSuccess) {
                                         Toast.makeText(context, "저장되었습니다.", Toast.LENGTH_LONG).show();
-                                    else
+                                    } else {
                                         Toast.makeText(context, "잠시 후에 다시 시도해 주시기 바랍니다.", Toast.LENGTH_LONG).show();
+                                        AccessToken.setCurrentAccessToken(null);
+                                        UserSession.FacebookToken = null;
+                                    }
+                                    snsDialog.dismiss();
+                                    snsDialog = null;
                                 }
                             });
                         }
@@ -409,7 +435,6 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
 
                     @Override
                     public void onCancel() {
-
                     }
 
                     @Override
@@ -417,18 +442,43 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
                         Toast.makeText(context, "Facebook 에러입니다. 잠시후에 다시 시도해주시기 바랍니다.", Toast.LENGTH_LONG).show();
                     }
                 });
-
-            }
-            else if ( snsTag == SNSTag.Twitter){
+            } else if (snsTag == SNSTag.Twitter) {
                 SNSLogin = (TwitterLoginButton) view.findViewById(R.id.alert_twitter_login);
+                ((TwitterLoginButton) SNSLogin).setCallback(new Callback<TwitterSession>() {
+                    @Override
+                    public void success(final Result<TwitterSession> result) {
 
-            }
-            else if (snsTag == SNSTag.Instagram){
+                        SNSLogin.setEnabled(false);
+                        Log.e(TAG, "Twitter Login Success");
+
+                        UserSession.TwitterToken = result.data;
+
+                        DBManager.getInstance().saveTwitterToken(user.getUid(), new DBAccessResultCallback() {
+                            @Override
+                            public void AccessCallback(boolean isSuccess) {
+                                if (isSuccess) {
+                                    Toast.makeText(mContext, "연동 되었습니다.", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    Toast.makeText(mContext, "연동에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                                    UserSession.TwitterToken = null;
+                                }
+                                snsDialog.dismiss();
+                                snsDialog = null;
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void failure(TwitterException exception) {
+                        Log.e(TAG, exception.toString());
+                    }
+                });
+            } else if (snsTag == SNSTag.Instagram) {
                 SNSLogin = (InstagramLoginButton) view.findViewById(R.id.alert_instagram_login);
                 SNSLogin.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(mContext, "Instagram Login", Toast.LENGTH_SHORT).show();;
+                        Toast.makeText(mContext, "Instagram Login", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -455,14 +505,13 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
                 Log.e(TAG, "Title Is Empty");
         }
 
-        public void setMessage(@Nullable CharSequence message) {
+        void setMessage(@Nullable CharSequence message) {
             this.message.setText(message);
         }
 
-        public void setIcon(int iconId) {
+        void setIcon(int iconId) {
             this.icon.setImageResource(iconId);
         }
-
     }
 
 }

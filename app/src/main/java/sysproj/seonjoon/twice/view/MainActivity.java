@@ -35,6 +35,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -151,7 +152,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     protected void onStop() {
         super.onStop();
 
-        LoginManager.getInstance().SignOut();
     }
 
     @Override
@@ -195,6 +195,13 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 topEditText.setVisibility(View.VISIBLE);
                 break;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "OnDestory called");
+        LoginManager.getInstance().SignOut();
     }
 
     private void setListener() {
@@ -255,7 +262,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                         FirebaseAuth.getInstance().signOut();
                         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(intent);
-
                         finish();
                     }
                 }).create().show();
@@ -266,7 +272,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         startActivity(intent);
     }
 
-    private void gotoLinkingActivity(){
+    private void gotoLinkingActivity() {
         Intent intent = new Intent(MainActivity.this, SNSLinkingActivity.class);
         startActivity(intent);
     }
@@ -308,28 +314,29 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
         @Override
         protected Void doInBackground(Void... voids) {
-            final CountDownLatch countDownLatch = new CountDownLatch(1);
+            if (UserSession.TwitterToken != null) {
+                final CountDownLatch countDownLatch = new CountDownLatch(1);
+                DataLoader loader = new TwitterLoader(mContext);
+                loader.LoadUserProfileData(new DataLoadCompleteCallback() {
+                    @Override
+                    public void Complete(boolean isSuccess, JSONObject result) {
+                        if (isSuccess) {
+                            try {
+                                SNSParser parser = new TwitterParser();
+                                profile = ((TwitterParser) parser).parseUserProfile(result);
 
-            DataLoader loader = new TwitterLoader(mContext);
-            loader.LoadUserProfileData(new DataLoadCompleteCallback() {
-                @Override
-                public void Complete(boolean isSuccess, JSONObject result) {
-                    if (isSuccess) {
-                        try {
-                            SNSParser parser = new TwitterParser();
-                            profile = ((TwitterParser) parser).parseUserProfile(result);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
+                        countDownLatch.countDown();
                     }
-                    countDownLatch.countDown();
-                }
-            });
+                });
 
-            try {
-                countDownLatch.await();
-            } catch (InterruptedException e) {
+                try {
+                    countDownLatch.await();
+                } catch (InterruptedException e) {
+                }
             }
             return null;
         }
@@ -339,8 +346,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             super.onPostExecute(avoid);
 
             if (profile != null) {
-                Log.e(TAG, repreName != null ? "not null" : "null");
-
                 repreName.setText(profile.getName());
                 Glide.with(MainActivity.this)
                         .load(profile.getProfileImage())
@@ -357,6 +362,12 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 else
                     twitterStatus.clearColorFilter();
 
+                instagramStatus.setColorFilter(StaticAppData.Gray_filter);
+            } else {
+                repreName.setText("대표 SNS를 선택해주세요");
+                repreEmail.setText("");
+                facebookStatus.setColorFilter(StaticAppData.Gray_filter);
+                twitterStatus.setColorFilter(StaticAppData.Gray_filter);
                 instagramStatus.setColorFilter(StaticAppData.Gray_filter);
             }
 

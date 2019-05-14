@@ -15,7 +15,6 @@ public class SNSTag {
     public static final int Extension = 10;
 
     // Facebook Tag
-    public static final String FacebookDocTag = "Facebook";
     public static final String FacebookTokenTag = "FbTk";
     public static final String FacebookUIDTag = "FbUID";
     public static final String FacebookAIDTag = "FbAID";
@@ -32,7 +31,6 @@ public class SNSTag {
     public static final String TWITTER_URL_TIMELINE = "/statuses/home_timeline.json";
     public static final String TWITTER_URL_SEARCH = "/search/tweets.json";
     public static final String TWITTER_URL_USER_INFO= "/account/verify_credentials.json";
-    public static final String TwitterDocTag = "Twitter";
     public static final String TwitterTokenTag = "TwTk";
     public static final String TwitterTokenSecretTag = "TwTkScrt";
     public static final String TwitterUIDTag = "TwUID";

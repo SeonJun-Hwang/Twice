@@ -69,6 +69,10 @@
         <activity
             android:name=".view.SNSLinkingActivity"
             android:label="@string/app_linkage_title"/>
+
+        <activity
+            android:name=".InstagramActivity"
+            />
     </application>
 
 </manifest>

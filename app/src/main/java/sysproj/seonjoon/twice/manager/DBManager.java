@@ -11,6 +11,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -22,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 
+import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DBAccessResultCallback;
 import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.staticdata.SNSTag;
@@ -33,6 +35,7 @@ public class DBManager {
     private static DBManager instance = null;
     private static FirebaseFirestore db = null;
     private static FirebaseAuth firebaseAuth = null;
+    private static FirebaseUser user;
     private static Map mResult;
     private static boolean locking;
 
@@ -78,7 +81,7 @@ public class DBManager {
     }
 
     // Async Processing
-    public void getDB(String collection, String doc, @Nullable final DBLoadSuccessCallback callback) {
+    void getDB(String collection, String doc, final DBLoadSuccessCallback callback) {
         Log.e(TAG, "Start Load Data");
 
         if (db == null)
@@ -110,6 +113,7 @@ public class DBManager {
         Log.e(TAG, "End Load Data");
     }
 
+    @Deprecated
     public void addDB(final String collection, final String doc, Map<String, Object> data, @Nullable final DBAccessResultCallback callback) {
         if (db == null)
             db = FirebaseFirestore.getInstance();
@@ -184,6 +188,7 @@ public class DBManager {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            user = task.getResult().getUser();
                             Log.e(TAG, "Login Success");
                             callback.AccessCallback(true);
                         } else {
@@ -225,7 +230,7 @@ public class DBManager {
         return instance;
     }
 
-    public void saveFacebookToken(final String collection, String doc, final DBAccessResultCallback callback) {
+    public void saveFacebookToken(final String collection, final DBAccessResultCallback callback) {
         if (db == null)
             db = FirebaseFirestore.getInstance();
 
@@ -242,15 +247,100 @@ public class DBManager {
             data.put(SNSTag.FacebookLastTimeTag, UserSession.FacebookToken.getLastRefresh().toString());
             data.put(SNSTag.FacebookDataAccExpTimeTag, UserSession.FacebookToken.getDataAccessExpirationTime().toString());
 
-            db.collection(collection).document(doc)
-                    .update(data)
+            db.collection(collection).document(BuildConfig.FacebookDocTag)
+                    .set(data)
+                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Log.e(TAG, "Facebook Success : " + "Success");
+
+                            callback.AccessCallback(true);
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, e.toString());
+                            callback.AccessCallback(false);
+                        }
+                    });
+
+        } else
+            Log.e(TAG, "Facebook Token is Null");
+    }
+
+    public void saveTwitterToken(final String collection, final DBAccessResultCallback callback) {
+
+        if (db == null)
+            db = FirebaseFirestore.getInstance();
+
+        if (UserSession.TwitterToken != null) {
+            Map<String, Object> data = new HashMap<>();
+
+            data.put(SNSTag.TwitterTokenTag, UserSession.TwitterToken.getAuthToken().token);
+            data.put(SNSTag.TwitterTokenSecretTag, UserSession.TwitterToken.getAuthToken().secret);
+            data.put(SNSTag.TwitterUNameTag, UserSession.TwitterToken.getUserName());
+            data.put(SNSTag.TwitterUIDTag, UserSession.TwitterToken.getUserId());
+
+            Log.e(TAG, "Facebook Save");
+
+            db.collection(collection).document(BuildConfig.TwitterDocTag)
+                    .set(data)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
+                            Log.e(TAG, "Facebook Success : " + task.isSuccessful());
                             callback.AccessCallback(task.isSuccessful());
                         }
                     });
         }
+
+    }
+
+    public void removeFacebookToken(final String collection, final DBAccessResultCallback callback)
+    {
+        if (db == null)
+            db = FirebaseFirestore.getInstance();
+
+        db.collection(collection).document(BuildConfig.FacebookDocTag)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        callback.AccessCallback(true);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.AccessCallback(false);
+                    }
+                });
+    }
+
+    public void removeTwitterToken(final String collection, final DBAccessResultCallback callback)
+    {
+        if (db == null)
+            db = FirebaseFirestore.getInstance();
+
+        db.collection(collection).document(BuildConfig.TwitterDocTag)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        callback.AccessCallback(true);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.AccessCallback(false);
+                    }
+                });
+    }
+
+    public FirebaseUser getUser() {
+        return user;
     }
 
     private String Set2String(Set<String> input) {

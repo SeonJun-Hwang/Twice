@@ -41,7 +41,7 @@ import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class TwitterLoader implements DataLoader {
 
-    private final String TAG = "Twitter_Looader";
+    private final String TAG = "TwitterLoader";
     private final String USER_AGENT = "Mozilla/5.0";
     private final String VERSION = "1.0";
     private final String SIGNATURE_METHOD = "HMAC-SHA1";
@@ -93,10 +93,7 @@ public class TwitterLoader implements DataLoader {
 
     private String generateSignature(String signatureBase) {
         try {
-            final String key = new StringBuilder().
-                    append(UrlUtils.urlEncode(context.getString(R.string.CONSUMER_SECRET))).
-                    append('&').
-                    append(UrlUtils.urlEncode(UserSession.TwitterToken.getAuthToken().secret)).toString();
+            final String key = UrlUtils.urlEncode(context.getString(R.string.CONSUMER_SECRET)) + '&' + UrlUtils.urlEncode(UserSession.TwitterToken.getAuthToken().secret);
 
             // Calculate the signature by passing both the signature base and signing key to the
             // HMAC-SHA1 hashing algorithm
@@ -308,7 +305,10 @@ public class TwitterLoader implements DataLoader {
     @Override
     public void LoadSearchData(String searchTag, DataLoadCompleteCallback callback) {
         try {
-            String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_SEARCH + "?count=30&q=" + searchTag;
+            String restURL = SNSTag.TWITTER_BASE_URL
+                    + SNSTag.TWITTER_URL_SEARCH
+                    + "?count=" + PreferenceLoader.loadPreference(context, PreferenceLoader.KEY_TWITTER)
+                    +" &q=" + searchTag;
 
             String nonce = generateNonce();
             String timestamp = Long.toString(System.currentTimeMillis() / 1000);

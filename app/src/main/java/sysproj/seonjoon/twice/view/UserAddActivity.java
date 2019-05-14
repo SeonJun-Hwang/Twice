@@ -102,15 +102,15 @@ public class UserAddActivity extends Activity {
                 data.put(SNSTag.FacebookLastTimeTag, UserSession.FacebookToken.getLastRefresh().toString());
                 data.put(SNSTag.FacebookDataAccExpTimeTag, UserSession.FacebookToken.getDataAccessExpirationTime().toString());
 
-                DBManager.getInstance()
-                        .addDB(user.getUid(), SNSTag.FacebookDocTag ,data, new DBAccessResultCallback() {
-                            @Override
-                            public void AccessCallback(boolean result) {
-                                Log.e(TAG, "Facebook Result : " + result);
-                                status[0] = result;
-                                locking = false;
-                            }
-                        });
+//                DBManager.getInstance()
+//                        .addDB(user.getUid(), SNSTag.FacebookDocTag ,data, new DBAccessResultCallback() {
+//                            @Override
+//                            public void AccessCallback(boolean result) {
+//                                Log.e(TAG, "Facebook Result : " + result);
+//                                status[0] = result;
+//                                locking = false;
+//                            }
+//                        });
             }
             else
                 locking = false;
@@ -130,15 +130,15 @@ public class UserAddActivity extends Activity {
                 data.put(SNSTag.TwitterUNameTag, UserSession.TwitterToken.getUserName());
                 data.put(SNSTag.TwitterUIDTag, UserSession.TwitterToken.getUserId());
 
-                DBManager.getInstance()
-                        .addDB(user.getUid(), SNSTag.TwitterDocTag, data, new DBAccessResultCallback() {
-                            @Override
-                            public void AccessCallback(boolean isSuccess) {
-                                Log.e(TAG, "Twitter Result" + isSuccess);
-                                status[1] = isSuccess;
-                                locking = false;
-                            }
-                        });
+//                DBManager.getInstance()
+//                        .addDB(user.getUid(), SNSTag.TwitterDocTag, data, new DBAccessResultCallback() {
+//                            @Override
+//                            public void AccessCallback(boolean isSuccess) {
+//                                Log.e(TAG, "Twitter Result" + isSuccess);
+//                                status[1] = isSuccess;
+//                                locking = false;
+//                            }
+//                        });
             }
             else
                 locking= false;
