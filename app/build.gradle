@@ -16,6 +16,7 @@ android {
         buildConfigField "String", "PwdPreferenceKey", "\"load_pwd_key\""
         buildConfigField "String", "FacebookDocTag", "\"Facebook\""
         buildConfigField "String", "TwitterDocTag", "\"Twitter\""
+        buildConfigField "String", "ServerIP", "\"http://100.24.24.64:8090/\""
     }
     buildTypes {
         release {
@@ -41,9 +42,10 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    implementation "android.arch.work:work-runtime:1.0.1"
 
     implementation 'com.twitter.sdk.android:twitter:3.1.1'
-    implementation 'com.facebook.android:facebook-login:[4,5)'
+    implementation 'com.facebook.android:facebook-login:4.42.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.google.firebase:firebase-firestore:18.0.1'
     implementation 'com.google.firebase:firebase-auth:16.1.0'

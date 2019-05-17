@@ -12,11 +12,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
-
-import jp.wasabeef.glide.transformations.RoundedCornersTransformation;
 import sysproj.seonjoon.twice.R;
 
 public class PostImageAdapter extends PagerAdapter {
@@ -66,11 +65,9 @@ public class PostImageAdapter extends PagerAdapter {
             ImageView item = (ImageView) view.findViewById(R.id.post_create_image);
 
             Glide.with(context)
-                    .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCornersTransformation(context, 50, 10)))
+                    .applyDefaultRequestOptions(RequestOptions.bitmapTransform(new RoundedCorners(16)))
                     .load(uriList.get(position))
                     .dontAnimate()
-                    .centerCrop()
-                    .placeholder(context.getResources().getDrawable(R.drawable.search_active))
                     .into(item);
         }
 
@@ -78,4 +75,5 @@ public class PostImageAdapter extends PagerAdapter {
 
         return view;
     }
+
 }
