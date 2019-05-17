@@ -48,6 +48,9 @@ import sysproj.seonjoon.twice.staticdata.UserSession;
 public class InitActivity extends AppCompatActivity {
 
     private final static String TAG = "InitActivity";
+    private static final int PERMISSION_READ_CONTACT = 1001;
+    private static final int PERMISSION_WRITE_CONTACT = 1002;
+    private static final int PERMISSION_READ_EXTERNAL_STORAGE = 1003;
 
     private Context mContext;
     private String uID;
@@ -123,12 +126,17 @@ public class InitActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
-            case StaticAppData.PERMISSION_WRITE_CONTACT:
+            case PERMISSION_WRITE_CONTACT:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.e("Init", "Write Contact Permission Granted");
                 }
                 break;
-            case StaticAppData.PERMISSION_READ_CONTACT:
+            case PERMISSION_READ_CONTACT:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.e("Init", "Read Contact Permission Granted");
+                }
+                break;
+            case PERMISSION_READ_EXTERNAL_STORAGE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Log.e("Init", "Read Contact Permission Granted");
                 }
@@ -138,8 +146,8 @@ public class InitActivity extends AppCompatActivity {
 
     private void checkPermissions() {
         // Permission List
-        String[] permissionList = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS};
-        int[] permissionCodeList = {StaticAppData.PERMISSION_READ_CONTACT, StaticAppData.PERMISSION_WRITE_CONTACT};
+        String[] permissionList = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE};
+        int[] permissionCodeList = {PERMISSION_READ_CONTACT, PERMISSION_WRITE_CONTACT, PERMISSION_READ_EXTERNAL_STORAGE};
 
         // Check Permissions
         for (int i = 0; i < permissionCodeList.length; i++) {

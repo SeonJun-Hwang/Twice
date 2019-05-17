@@ -1,4 +1,4 @@
-package sysproj.seonjoon.twice.view;
+package sysproj.seonjoon.twice.view.custom;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -7,13 +7,13 @@ import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class TimelineImagePager extends ViewPager {
+public class PostImagePager extends ViewPager {
 
-    public TimelineImagePager(@NonNull Context context) {
+    public PostImagePager(@NonNull Context context) {
         super(context);
     }
 
-    public TimelineImagePager(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public PostImagePager(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 

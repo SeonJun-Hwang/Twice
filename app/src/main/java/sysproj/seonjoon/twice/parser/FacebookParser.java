@@ -107,8 +107,15 @@ public class FacebookParser extends SNSParser {
     }
 
     @Override
-    protected UserProfile parseUserProfile(JSONObject jsonObject) throws JSONException {
-        return new UserProfile.Builder(jsonObject.getString("id").split("_")[0]).build();
+    protected UserProfile parseUserProfile(JSONObject jsonObject){
+        String name;
+        try {
+            name = parseName(jsonObject);
+        } catch (JSONException e) {
+            name = "Unknown";
+        }
+
+        return new UserProfile.Builder(name).build();
     }
 
     @Override
@@ -119,5 +126,13 @@ public class FacebookParser extends SNSParser {
     @Override
     protected long parseID(JSONObject jsonObject) throws JSONException {
         return Long.parseLong(jsonObject.getString("id").split("_")[1]);
+    }
+
+    protected String parseName(JSONObject jsonObject) throws JSONException{
+        return jsonObject.getString("name");
+    }
+
+    protected String parseMedia(JSONObject jsonObject) throws JSONException{
+        return jsonObject.getString("full_picture");
     }
 }

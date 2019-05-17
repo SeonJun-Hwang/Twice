@@ -13,8 +13,9 @@ public class ViewHolderFactory {
         int extension = Post.calExtensionType(type);
         int content = Post.calContentType(type);
 
-        if (platform == SNSTag.Facebook)
+        if (platform == SNSTag.Facebook){
             res = R.layout.card_timeline;
+        }
         else if (platform == SNSTag.Twitter) {
             if (extension == SNSTag.None) {
                 if (content == SNSTag.Origin)

@@ -1,26 +1,14 @@
 package sysproj.seonjoon.twice.viewholder;
 
-import android.content.ClipData;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
-import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostMedia;
-import sysproj.seonjoon.twice.view.TimelineImagePager;
 import sysproj.seonjoon.twice.view.TimelinePageImageAdapter;
 
 public class TIIViewHolder extends BaseViewHolder{

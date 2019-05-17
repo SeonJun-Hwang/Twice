@@ -4,40 +4,59 @@ public class UserProfile {
 
     private String name;
     private String profileImage;
+    private String email;
 
-    private UserProfile() {}
-
-    private UserProfile(Builder b){
-        name = b.name;
-        profileImage = b.profileImage;
+    private UserProfile() {
     }
 
-    public String getName () { return name ; }
-    public String getProfileImage() {return profileImage ; }
+    private UserProfile(Builder b) {
+        name = b.name;
+        profileImage = b.profileImage;
+        email = b.email;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public String getEmail() {
+        return email;
+    }
 
     @Override
     public String toString() {
         return "UserProfile{" +
-                "name='" + name + '\'' +
+                "name=\'" + name + '\'' +
+                "email=\'" + email + "\'" +
                 ", profileImage='" + profileImage + '\'' +
                 '}';
     }
 
-    public static class Builder{
+    public static class Builder {
 
         private String name;
         private String profileImage = null;
+        private String email = null;
 
-        public Builder(String name){
+        public Builder(String name) {
             this.name = name;
         }
 
-        public Builder profileImage(String profileImage){
+        public Builder profileImage(String profileImage) {
             this.profileImage = profileImage;
             return this;
         }
 
-        public UserProfile build(){
+        public Builder userEmail(String email){
+            this.email = email;
+            return this;
+        }
+
+        public UserProfile build() {
             return new UserProfile(this);
         }
     }

@@ -133,7 +133,7 @@ public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefre
                 Log.e(TAG, "Start Facebook Async");
 
                 // TODO : Make Time Line Loader
-                DataLoader loader = new FacebookLoader();
+                DataLoader loader = new FacebookLoader(mContext);
                 loader.LoadTimeLineData(new DataLoadCompleteCallback() {
                     @Override
                     public void Complete(boolean isSuccess, JSONObject result) {

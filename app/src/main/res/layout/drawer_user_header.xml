@@ -20,11 +20,11 @@
         android:id="@+id/drawer_user_head_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:gravity="center_vertical"
         android:text="Header - User Name"
         android:textColor="@color/navigationHeaderNameColor"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintLeft_toRightOf="@id/drawer_profile_image"
         app:layout_constraintTop_toTopOf="@id/drawer_profile_image" />
@@ -33,13 +33,14 @@
         android:id="@+id/drawer_user_head_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
+        android:layout_marginStart="10dp"
         android:gravity="center_vertical"
         android:text="Header - User Email"
         android:textColor="@color/navigationHeaderEmailColor"
-        android:textSize="16sp"
+        android:textSize="12sp"
         app:layout_constraintLeft_toRightOf="@id/drawer_profile_image"
-        app:layout_constraintTop_toBottomOf="@id/drawer_user_head_name" />
+        app:layout_constraintTop_toBottomOf="@id/drawer_user_head_name"
+        app:layout_constraintBottom_toBottomOf="@id/drawer_profile_image"/>
 
     <ImageView
         android:id="@+id/drawer_status_facebook_image"

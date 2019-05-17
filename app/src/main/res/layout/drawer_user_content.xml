@@ -17,7 +17,6 @@
             android:id="@+id/main_profile_setting"
             android:layout_width="@dimen/timeline_height"
             android:layout_height="match_parent"
-            android:padding="5dp"
             android:scaleType="fitXY"
             android:paddingHorizontal="5dp"
             android:paddingVertical="2dp"
@@ -25,10 +24,11 @@
 
         <TextView
             android:id="@+id/main_top_home_text"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="5dp"
-            android:layout_toRightOf="@id/main_profile_setting"
+            android:layout_toEndOf="@id/main_profile_setting"
+            android:layout_toStartOf="@id/main_top_post_edit"
             android:clickable="true"
             android:gravity="center_vertical"
             android:padding="2dp"
@@ -40,14 +40,24 @@
             android:id="@+id/main_top_search_edit"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="5dp"
-            android:layout_toRightOf="@id/main_profile_setting"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/main_profile_setting"
             android:background="@drawable/edittext_background"
             android:hint="Search"
             android:imeOptions="actionSearch"
             android:paddingHorizontal="10sp"
             android:singleLine="true"
             android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/main_top_post_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="2dp"
+            android:src ="@drawable/edit"/>
 
     </RelativeLayout>
 
@@ -70,49 +80,5 @@
         app:menu="@menu/main_bottom">
 
     </android.support.design.widget.BottomNavigationView>
-
-    <!-- Fragment Move Button Layout -->
-    <!--<LinearLayout-->
-        <!--android:id="@+id/main_bottom"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_alignParentBottom="true"-->
-        <!--android:background="@color/timelineThemeBackWhite"-->
-        <!--android:elevation="10dp"-->
-        <!--android:orientation="horizontal"-->
-        <!--android:padding="3dp"-->
-        <!--android:weightSum="2">-->
-
-
-
-        <!--<RadioGroup-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_weight="2"-->
-            <!--android:orientation="horizontal">-->
-
-            <!--<RadioButton-->
-                <!--android:id="@+id/main_bottom_home_button"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:background="@drawable/home_selector"-->
-                <!--android:button="@null"-->
-                <!--android:checked="true"-->
-                <!--android:gravity="center" />-->
-
-            <!--<RadioButton-->
-                <!--android:id="@+id/main_bottom_search_button"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_marginLeft="5dp"-->
-                <!--android:layout_weight="1"-->
-                <!--android:background="@drawable/search_selector"-->
-                <!--android:button="@null"-->
-                <!--android:gravity="center" />-->
-
-        <!--</RadioGroup>-->
-
-    <!--</LinearLayout>-->
 
 </RelativeLayout>

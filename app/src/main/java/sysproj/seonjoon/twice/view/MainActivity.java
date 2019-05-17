@@ -35,6 +35,8 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -48,6 +50,7 @@ import sysproj.seonjoon.twice.OnHashtagClickListener;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.UserProfile;
 import sysproj.seonjoon.twice.loader.DataLoader;
+import sysproj.seonjoon.twice.loader.FacebookLoader;
 import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
 import sysproj.seonjoon.twice.parser.SNSParser;
@@ -67,13 +70,12 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     private DrawerLayout personDrawer;
     private NavigationView personNavigation;
     private ImageView openMenuButton;
-    private RadioButton homeButton;
-    private RadioButton searchButton;
     private TextView topHomeText;
     private EditText topEditText;
     private Fragment[] fragments = new Fragment[]{null, null};
     private String[] fragmentsTags = new String[]{"Home", "Search"};
     private BottomNavigationView bottomNavigationView;
+    private ImageView createPostImage;
 
     private ImageView repreProfileImage;
     private TextView repreName;
@@ -81,6 +83,8 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     private ImageView facebookStatus;
     private ImageView instagramStatus;
     private ImageView twitterStatus;
+
+    private UserProfile profile;
 
     private long parsedTime = 0;
     private static int showingFragment;
@@ -166,14 +170,14 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         topHomeText = (TextView) findViewById(R.id.main_top_home_text);
         topEditText = (EditText) findViewById(R.id.main_top_search_edit);
 
+        createPostImage = (ImageView) findViewById(R.id.main_top_post_edit);
+
         personDrawer = (DrawerLayout) findViewById(R.id.main_drawer_user);
         personNavigation = (NavigationView) findViewById(R.id.drawer_user_navigation);
         personDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         openMenuButton = (ImageView) findViewById(R.id.main_profile_setting);
 
-        //homeButton = (RadioButton) findViewById(R.id.main_bottom_home_button);
-        //searchButton = (RadioButton) findViewById(R.id.main_bottom_search_button);
         bottomNavigationView = (BottomNavigationView) findViewById(R.id.main_bottom);
 
         View headerView = personNavigation.getHeaderView(0);
@@ -209,15 +213,22 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     private void setListener() {
 
+        createPostImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent ( MainActivity.this, PostingActivity.class);
+                intent.putExtra("profile_url", profile.getProfileImage());
+                startActivity(intent);
+            }
+        });
+
         topEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
 
-                switch (actionId) {
-                    case EditorInfo.IME_ACTION_SEARCH:
-                        String searchTag = textView.getText().toString();
-                        ((FragmentSearch) getFragmentManager().findFragmentByTag(fragmentsTags[1])).startSearch(searchTag);
-                        break;
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String searchTag = textView.getText().toString();
+                    ((FragmentSearch) getFragmentManager().findFragmentByTag(fragmentsTags[1])).startSearch(searchTag);
                 }
 
                 return false;
@@ -230,7 +241,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             public void onClick(View view) {
                 Log.e(TAG, "Click Open Menu Button");
                 if (!personDrawer.isDrawerOpen(GravityCompat.START))
-                    personDrawer.openDrawer(Gravity.LEFT);
+                    personDrawer.openDrawer(Gravity.START);
             }
         });
 
@@ -312,11 +323,42 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     }
 
     private class LoadProfileAsync extends AsyncTask<Void, Void, Void> {
-        private UserProfile profile;
-
         @Override
         protected Void doInBackground(Void... voids) {
-            if (UserSession.TwitterToken != null) {
+
+            if (UserSession.FacebookToken != null) {
+                GraphRequest request = GraphRequest.newGraphPathRequest(UserSession.FacebookToken,
+                        "/me/", null);
+
+                Bundle params = new Bundle();
+                params.putString("fields", "name,email,picture{url}");
+                request.setParameters(params);
+                GraphResponse response = request.executeAndWait();
+                JSONObject object = response.getJSONObject();
+
+                String name;
+                String email;
+                String profileImage;
+
+                try {
+                    name = object.getString("name");
+                } catch (JSONException e) {
+                    name = "Unknown";
+                }
+                try {
+                    email = object.getString("email");
+                } catch (JSONException e) {
+                    email = "Hello@world.com";
+                }
+                try {
+                    profileImage = object.getJSONObject("picture").getJSONObject("data").getString("url");
+                } catch (JSONException e) {
+                    profileImage = null;
+                }
+
+                profile = new UserProfile.Builder(name).userEmail(email).profileImage(profileImage).build();
+
+            } else if (UserSession.TwitterToken != null) {
                 final CountDownLatch countDownLatch = new CountDownLatch(1);
                 DataLoader loader = new TwitterLoader(mContext);
                 loader.LoadUserProfileData(new DataLoadCompleteCallback() {
@@ -324,8 +366,8 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                     public void Complete(boolean isSuccess, JSONObject result) {
                         if (isSuccess) {
                             try {
-                                SNSParser parser = new TwitterParser();
-                                profile = ((TwitterParser) parser).parseUserProfile(result);
+                                TwitterParser parser = new TwitterParser();
+                                profile = parser.parseUserProfile(result);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -337,7 +379,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
                 try {
                     countDownLatch.await();
-                } catch (InterruptedException e) {
+                } catch (InterruptedException ignored) {
                 }
             }
             return null;
@@ -349,6 +391,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
             if (profile != null) {
                 repreName.setText(profile.getName());
+                repreEmail.setText(profile.getEmail());
                 Glide.with(MainActivity.this)
                         .load(profile.getProfileImage())
                         .apply(RequestOptions.circleCropTransform())

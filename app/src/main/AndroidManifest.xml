@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.INTERNET" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
@@ -17,17 +18,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        android:usesCleartextTraffic="true"> <!-- androidpermission intentnet - usesCleartextTraffic -->
+        android:usesCleartextTraffic="true">
+        <activity android:name=".view.PostingActivity"
+            android:label="글 작성하기"
+            android:windowSoftInputMode="adjustResize"/>
 
+        <!-- androidpermission intentnet - usesCleartextTraffic -->
         <activity
             android:name=".view.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".view.InitActivity"
             android:theme="@style/SplashTheme">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -65,14 +70,13 @@
         <activity
             android:name=".view.UserAddActivity"
             android:theme="@style/NoDisplay" />
-
         <activity
             android:name=".view.SNSLinkingActivity"
-            android:label="@string/app_linkage_title"/>
+            android:label="@string/app_linkage_title" />
+        <activity android:name=".view.InstagramActivity" />
 
-        <activity
-            android:name=".InstagramActivity"
-            />
+        <activity android:name=".view.custom.TwiceGallery.GalleryActivity"
+            android:label="@string/gallery_label"/>
     </application>
 
 </manifest>

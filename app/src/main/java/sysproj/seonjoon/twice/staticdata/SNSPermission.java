@@ -1,7 +1,11 @@
 package sysproj.seonjoon.twice.staticdata;
 
+import android.content.Context;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import sysproj.seonjoon.twice.loader.PreferenceLoader;
 
 public class SNSPermission {
 
@@ -24,11 +28,23 @@ public class SNSPermission {
         return permissions;
     }
 
-    public static List<String> getTwitterPermission()
-    {
+    public static List<String> getTwitterPermission() {
         List<String> permissions = new ArrayList<>();
 
         return permissions;
+    }
+
+    public static ArrayList<String> getFacebookField(Context context){
+        ArrayList<String> fields = new ArrayList<>();
+
+        fields.add("feed.limits(" + PreferenceLoader.loadPreference(context, PreferenceLoader.KEY_FACEBOOK) + ")");
+        fields.add("id");
+        fields.add("name");
+        fields.add("full_picture");
+        fields.add("created_time");
+        fields.add("comments");
+
+        return fields;
     }
 
 }

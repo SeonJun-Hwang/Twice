@@ -30,8 +30,6 @@ public class TimelinePageImageAdapter extends PagerAdapter {
     public TimelinePageImageAdapter(Context context, ArrayList<PostMedia> imageList){
         this.context = context;
         this.imageList = imageList;
-
-        Log.e(TAG, "Count : "  + imageList.size());
     }
 
     @Override
