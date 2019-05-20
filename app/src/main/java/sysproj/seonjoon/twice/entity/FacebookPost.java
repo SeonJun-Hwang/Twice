@@ -1,17 +1,11 @@
 package sysproj.seonjoon.twice.entity;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-
-import sysproj.seonjoon.twice.entity.Post.Builder;
-import sysproj.seonjoon.twice.staticdata.SNSTag;
 
 public class FacebookPost extends Post {
 

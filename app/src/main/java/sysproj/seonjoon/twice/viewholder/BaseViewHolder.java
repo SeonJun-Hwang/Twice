@@ -3,10 +3,9 @@ package sysproj.seonjoon.twice.viewholder;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.text.Html;
-import android.text.Spannable;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;

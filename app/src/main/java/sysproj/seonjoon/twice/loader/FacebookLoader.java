@@ -11,6 +11,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
+import sysproj.seonjoon.twice.entity.FacebookPageVO;
 import sysproj.seonjoon.twice.staticdata.SNSPermission;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
@@ -31,29 +32,6 @@ public class FacebookLoader implements DataLoader {
     @Override
     public void LoadUserProfileData(DataLoadCompleteCallback callback) {
 
-    }
-
-    public void CreateFeed() {
-
-        GraphRequest request = null;
-        try {
-            request = GraphRequest.newPostRequest(
-                    UserSession.FacebookToken,
-                    '/' + UserSession.FacebookToken.getUserId() + "/feed",
-                    new JSONObject("{\"message\":\"Awesome! Facebook API!\"}"),
-                    new GraphRequest.Callback() {
-                        @Override
-                        public void onCompleted(GraphResponse response) {
-                            try {
-                                Log.e(TAG, response.getJSONObject().toString(2));
-                            } catch (JSONException e) {
-                                Log.e(TAG, "Fail");
-                            }
-                        }
-                    });
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
     /* Load Data */
@@ -85,18 +63,6 @@ public class FacebookLoader implements DataLoader {
     public void LoadTimeLineData(DataLoadCompleteCallback callback, long maxId) {
         Log.e(TAG, "Start Facebook Loading More");
 
-//        GraphRequest request = GraphRequest.newGraphPathRequest(
-//                UserSession.FacebookToken,
-//                "/me/feed",
-//                null);
-//
-//        GraphResponse response = request.executeAndWait();
-//
-//        if (response != null)
-//            callback.Complete(true, response.getJSONObject());
-//        else
-//            callback.Complete(false, null);
-
         callback.Complete(false, null);
 
         Log.e(TAG, "End Facebook Loading");
@@ -105,6 +71,32 @@ public class FacebookLoader implements DataLoader {
     @Override
     public void LoadSearchData(String searchTag, DataLoadCompleteCallback callback) {
         callback.Complete(true, null);
+    }
+
+    public void LoadPagelist(DataLoadCompleteCallback callback){
+
+        GraphRequest request = GraphRequest.newGraphPathRequest(
+                UserSession.FacebookToken,
+                "/me/accounts",
+                null);
+
+        GraphResponse response = request.executeAndWait();
+
+        Log.e(TAG, request.getParameters().toString());
+
+        if (response != null) {
+            try {
+                Log.e(TAG, response.getJSONObject().toString(2));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            callback.Complete(true, response.getJSONObject());
+        }
+        else
+            callback.Complete(false, null);
+
+        Log.e(TAG, "End Facebook Loading");
+
     }
 
 

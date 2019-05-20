@@ -1,15 +1,12 @@
 package sysproj.seonjoon.twice.view;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.nfc.Tag;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
 import android.app.LoaderManager.LoaderCallbacks;
 
 import android.content.CursorLoader;
@@ -18,7 +15,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
@@ -46,12 +42,8 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
 import com.twitter.sdk.android.core.TwitterCore;
-import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,7 +55,6 @@ import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.loader.PreferenceLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
-import sysproj.seonjoon.twice.manager.PreferenceManager;
 import sysproj.seonjoon.twice.parser.FacebookTokenParser;
 import sysproj.seonjoon.twice.parser.TokenParser;
 import sysproj.seonjoon.twice.parser.TwitterTokenParser;

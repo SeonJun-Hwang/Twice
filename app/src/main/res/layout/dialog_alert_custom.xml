@@ -31,7 +31,7 @@
                 android:scaleType="fitCenter"
                 android:src="@null" />
 
-            <android.support.v7.widget.DialogTitle
+            <androidx.appcompat.widget.DialogTitle
                 android:id="@+id/alert_title"
                 style="?attr/android:windowTitleStyle"
                 android:layout_width="match_parent"
@@ -58,7 +58,7 @@
             android:background="?attr/colorControlHighlight"
             android:visibility="gone" />
 
-        <android.support.v4.widget.NestedScrollView
+        <androidx.core.widget.NestedScrollView
             android:id="@+id/scrollView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -92,7 +92,7 @@
                     android:gravity="center"
                     android:text="상기 내용을 확인하였으며 위의 내용에 동의합니다." />
             </LinearLayout>
-        </android.support.v4.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
 
         <View
             android:id="@+id/scrollIndicatorDown"

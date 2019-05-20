@@ -4,11 +4,11 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +29,6 @@ import sysproj.seonjoon.twice.parser.FacebookParser;
 import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TwitterParser;
 import sysproj.seonjoon.twice.staticdata.LastUpdate;
-import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefreshListener {

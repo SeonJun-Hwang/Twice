@@ -8,10 +8,10 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.appcompat.app.AppCompatActivity;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -31,18 +31,12 @@ import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import sysproj.seonjoon.twice.BuildConfig;
-import sysproj.seonjoon.twice.DBAccessResultCallback;
 import sysproj.seonjoon.twice.DBLoadSuccessCallback;
-import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.loader.PreferenceLoader;
-import sysproj.seonjoon.twice.manager.DBManager;
 import sysproj.seonjoon.twice.manager.LoginManager;
-import sysproj.seonjoon.twice.manager.PreferenceManager;
 import sysproj.seonjoon.twice.parser.FacebookTokenParser;
 import sysproj.seonjoon.twice.parser.TokenParser;
 import sysproj.seonjoon.twice.parser.TwitterTokenParser;
-import sysproj.seonjoon.twice.staticdata.SNSTag;
-import sysproj.seonjoon.twice.staticdata.StaticAppData;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class InitActivity extends AppCompatActivity {

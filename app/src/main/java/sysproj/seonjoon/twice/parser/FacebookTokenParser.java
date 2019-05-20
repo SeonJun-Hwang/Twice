@@ -1,6 +1,6 @@
 package sysproj.seonjoon.twice.parser;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenSource;

@@ -6,14 +6,14 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 
 import sysproj.seonjoon.twice.R;
 
-public class InstagramLoginButton extends android.support.v7.widget.AppCompatButton {
+public class InstagramLoginButton extends androidx.appcompat.widget.AppCompatButton {
 
     private static final String TAG = "InstagramLogin";
     private OnClickListener onClickListener;

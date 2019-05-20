@@ -69,7 +69,7 @@
         android:layout_above="@id/main_bottom"
         android:layout_below="@id/main_top" />
 
-    <android.support.design.widget.BottomNavigationView
+    <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/main_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -79,6 +79,6 @@
         android:background="?android:attr/windowBackground"
         app:menu="@menu/main_bottom">
 
-    </android.support.design.widget.BottomNavigationView>
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </RelativeLayout>

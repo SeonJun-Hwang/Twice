@@ -4,30 +4,22 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Parcelable;
-import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.viewpager.widget.ViewPager;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,20 +27,19 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 import sysproj.seonjoon.twice.BuildConfig;
+import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.R;
-import sysproj.seonjoon.twice.staticdata.UserSession;
+import sysproj.seonjoon.twice.entity.FacebookPageVO;
+import sysproj.seonjoon.twice.loader.FacebookLoader;
+import sysproj.seonjoon.twice.parser.FacebookParser;
 import sysproj.seonjoon.twice.view.custom.PostImageAdapter;
-import sysproj.seonjoon.twice.view.custom.PostImagePager;
 import sysproj.seonjoon.twice.view.custom.TwiceGallery.GalleryActivity;
 
 public class PostingActivity extends AppCompatActivity {
@@ -57,7 +48,6 @@ public class PostingActivity extends AppCompatActivity {
     private static final String TAG = "PostingActivity";
 
     private EditText postMessage;
-    private ImageView profileImage;
     private ImageButton loadImage;
     private RadioButton postReserveRadio;
     private Context mContext;
@@ -65,6 +55,8 @@ public class PostingActivity extends AppCompatActivity {
     private ViewPager postImagePager;
     private PostImageAdapter postImageAdapter;
     private SendQueryAsync async;
+
+    private ArrayList<FacebookPageVO> pages;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,13 +66,31 @@ public class PostingActivity extends AppCompatActivity {
         mContext = this;
         selectedImage = new ArrayList<>();
 
+        FacebookLoader loader = new FacebookLoader();
+        loader.LoadPagelist(new DataLoadCompleteCallback() {
+            @Override
+            public void Complete(boolean isSuccess, JSONObject result) {
+
+                Log.e(TAG, isSuccess + "result");
+
+                if (isSuccess) {
+                    FacebookParser parser = new FacebookParser();
+                    pages = parser.parsePageList(result);
+
+                    for (int i = 0; i < pages.size(); i++){
+                        Log.e(TAG, pages.get(i).getName() + " / " + pages.get(i).getPageId());
+                    }
+                } else
+                    pages = null;
+            }
+        });
+
         initLayout();
         initListener();
     }
 
     private void initLayout() {
         postMessage = (EditText) findViewById(R.id.create_post_edit_text);
-        profileImage = (ImageView) findViewById(R.id.create_post_profile_image);
         loadImage = (ImageButton) findViewById(R.id.post_include_image);
         postReserveRadio = (RadioButton) findViewById(R.id.post_reserve_radio);
         postImagePager = (ViewPager) findViewById(R.id.create_post_image_pager);
@@ -88,11 +98,6 @@ public class PostingActivity extends AppCompatActivity {
 
         postImagePager.setAdapter(postImageAdapter);
         postImagePager.setPageMargin(20);
-
-        Intent intent = getIntent();
-        String profileUrl = intent.getStringExtra("profile_url");
-
-        Glide.with(mContext).applyDefaultRequestOptions(RequestOptions.circleCropTransform()).load(profileUrl).into(profileImage);
     }
 
     private void initListener() {
@@ -183,6 +188,9 @@ public class PostingActivity extends AppCompatActivity {
 
             boolean res = true;
             String urls = BuildConfig.ServerIP + "facebook_post";
+
+            Log.e(TAG, urls);
+
             try {
                 URL url = new URL(urls);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -195,6 +203,8 @@ public class PostingActivity extends AppCompatActivity {
                 osw.write(makeJSON());
                 osw.flush();
                 osw.close();
+
+                Log.e(TAG, "Response : " + connection.getResponseCode());
 
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
                     res = false;
@@ -229,21 +239,28 @@ public class PostingActivity extends AppCompatActivity {
             JSONArray facebookData = new JSONArray();
 
             try {
-                facebookObject.put("token", UserSession.FacebookToken.getToken());
+                // Each Page
+                if (pages != null) {
+                    for (int pageNum = 0; pageNum < pages.size(); pageNum++) {
+                        FacebookPageVO pageVO = pages.get(pageNum);
 
-                JSONObject item = new JSONObject();
-                item.put("message", postMessage.getText().toString());
+                        JSONObject item = new JSONObject();
+                        JSONArray imageArray = new JSONArray();
 
-                JSONArray imageArray = new JSONArray();
+                        item.put("token", pageVO.getAccessToken());
+                        item.put("message", postMessage.getText().toString());
+                        item.put("page_id", pageVO.getPageId());
 
-                for (int i = 0; i < selectedImage.size(); i++) {
-                    String filePath = selectedImage.get(i);
-                    String endcoded = Base64.encodeToString(readFile(filePath), Base64.NO_WRAP | Base64.URL_SAFE);
-                    imageArray.put(endcoded);
+                        for (int i = 0; i < selectedImage.size(); i++) {
+                            String filePath = selectedImage.get(i);
+                            String endcoded = Base64.encodeToString(readFile(filePath), Base64.NO_WRAP | Base64.URL_SAFE);
+                            imageArray.put(endcoded);
+                        }
+
+                        item.put("images", imageArray);
+                        facebookData.put(item);
+                    }
                 }
-
-                item.put("images", imageArray);
-                facebookData.put(item);
                 facebookObject.put("data", facebookData);
                 sendObject.put("facebook", facebookObject);
 

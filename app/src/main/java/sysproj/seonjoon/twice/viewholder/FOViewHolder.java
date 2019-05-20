@@ -1,20 +1,17 @@
 package sysproj.seonjoon.twice.viewholder;
 
-import android.content.ClipData;
-import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.viewpager.widget.ViewPager;
+import androidx.cardview.widget.CardView;
+
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.Post;
-import sysproj.seonjoon.twice.staticdata.StaticAppData;
 
 public class FOViewHolder extends BaseViewHolder {
     private CardView cardview;

@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import sysproj.seonjoon.twice.entity.FacebookPageVO;
 import sysproj.seonjoon.twice.entity.FacebookPost;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostRFS;
@@ -50,7 +51,7 @@ public class FacebookParser extends SNSParser {
                 String message = null;
                 String createdTime = parseCreatedDate(jsonObject);
                 UserProfile userProfile = parseUserProfile(jsonObject);
-                long id = parseID(jsonObject);
+                long id = parseIDPost(jsonObject);
 
                 if (!jsonObject.isNull("message"))
                     message = jsonObject.getString("message");
@@ -58,7 +59,7 @@ public class FacebookParser extends SNSParser {
                 if (userProfile.getName() == null || userProfile.getName().isEmpty())
                     userProfile = new UserProfile.Builder("Unknown").build();
 
-                Post post = new FacebookPost.Builder( id,SNSTag.Facebook * SNSTag.Platform + SNSTag.Origin,  userProfile, message, createdTime, new PostRFS()).build();
+                Post post = new FacebookPost.Builder(id, SNSTag.Facebook * SNSTag.Platform + SNSTag.Origin, userProfile, message, createdTime, new PostRFS()).build();
 
                 resultList.add(post);
             }
@@ -86,7 +87,7 @@ public class FacebookParser extends SNSParser {
                 String message = null;
                 String createdTime = parseCreatedDate(jsonObject);
                 UserProfile userProfile = parseUserProfile(jsonObject);
-                long id = parseID(jsonObject);
+                long id = parseIDPost(jsonObject);
 
                 if (!jsonObject.isNull("message"))
                     message = jsonObject.getString("message");
@@ -94,7 +95,7 @@ public class FacebookParser extends SNSParser {
                 if (userProfile.getName() == null || userProfile.getName().isEmpty())
                     userProfile = new UserProfile.Builder("Unknown").build();
 
-                Post post = new FacebookPost.Builder( id, SNSTag.Facebook * SNSTag.Platform + SNSTag.Origin,  userProfile, message, createdTime, new PostRFS()).build();
+                Post post = new FacebookPost.Builder(id, SNSTag.Facebook * SNSTag.Platform + SNSTag.Origin, userProfile, message, createdTime, new PostRFS()).build();
 
                 resultList.add(post);
             }
@@ -106,8 +107,38 @@ public class FacebookParser extends SNSParser {
         return resultList;
     }
 
+    public ArrayList<FacebookPageVO> parsePageList(JSONObject object) {
+        if (object == null)
+            return null;
+
+        ArrayList<FacebookPageVO> returnList = new ArrayList<>();
+
+        try {
+            Log.e(TAG, object.toString(2));
+
+            JSONArray dataArray = object.getJSONArray("data");
+
+            for (int i = 0; i < dataArray.length(); i++) {
+                JSONObject data = dataArray.getJSONObject(i);
+
+                String token = parseToken(data);
+                String name = parseName(data);
+                long id = parseID(data);
+
+
+
+                returnList.add(new FacebookPageVO(token, name, id));
+            }
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Missing Data - " + e.getMessage());
+        }
+
+        return returnList;
+    }
+
     @Override
-    protected UserProfile parseUserProfile(JSONObject jsonObject){
+    protected UserProfile parseUserProfile(JSONObject jsonObject) {
         String name;
         try {
             name = parseName(jsonObject);
@@ -125,14 +156,23 @@ public class FacebookParser extends SNSParser {
 
     @Override
     protected long parseID(JSONObject jsonObject) throws JSONException {
+        return Long.parseLong(jsonObject.getString("id"));
+    }
+
+    protected long parseIDPost(JSONObject jsonObject) throws JSONException {
         return Long.parseLong(jsonObject.getString("id").split("_")[1]);
     }
 
-    protected String parseName(JSONObject jsonObject) throws JSONException{
+    protected String parseName(JSONObject jsonObject) throws JSONException {
         return jsonObject.getString("name");
     }
 
-    protected String parseMedia(JSONObject jsonObject) throws JSONException{
+    protected String parseMedia(JSONObject jsonObject) throws JSONException {
         return jsonObject.getString("full_picture");
     }
+
+    protected String parseToken(JSONObject jsonObject) throws JSONException {
+        return jsonObject.getString("access_token");
+    }
+
 }

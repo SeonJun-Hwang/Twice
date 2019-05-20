@@ -1,6 +1,5 @@
 package sysproj.seonjoon.twice.view;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -8,17 +7,14 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+import androidx.annotation.NonNull;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+import androidx.fragment.app.FragmentActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -26,10 +22,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
-import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +32,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -50,10 +43,8 @@ import sysproj.seonjoon.twice.OnHashtagClickListener;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.UserProfile;
 import sysproj.seonjoon.twice.loader.DataLoader;
-import sysproj.seonjoon.twice.loader.FacebookLoader;
 import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
-import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TwitterParser;
 import sysproj.seonjoon.twice.staticdata.StaticAppData;
 import sysproj.seonjoon.twice.staticdata.UserSession;
@@ -217,7 +208,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent ( MainActivity.this, PostingActivity.class);
-                intent.putExtra("profile_url", profile.getProfileImage());
                 startActivity(intent);
             }
         });
