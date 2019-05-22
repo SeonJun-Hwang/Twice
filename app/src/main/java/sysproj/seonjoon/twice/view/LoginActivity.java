@@ -40,7 +40,9 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.twitter.sdk.android.core.TwitterCore;
@@ -72,6 +74,7 @@ import sysproj.seonjoon.twice.parser.FacebookTokenParser;
 import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TokenParser;
 import sysproj.seonjoon.twice.parser.TwitterTokenParser;
+import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.StaticAppData;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
@@ -317,10 +320,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
         }
 
         if (cancel) {
@@ -341,12 +340,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     private void attemptRegister() {
         Intent loginToRegister = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(loginToRegister);
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        //return email.contains("@");
-        return true;
     }
 
     private boolean isPasswordValid(String password) {
@@ -413,7 +406,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected Boolean doInBackground(final Void... params) {
             // TODO: attempt authentication against a network service.
-            boolean login = LoginManager.getInstance().TwiceLogin((LoginActivity) mContext, mID, mPassword);
+            boolean login = LoginManager.getInstance().TwiceLogin(LoginActivity.this, mID, mPassword);
 
             if (login) {
                 Log.e(TAG, "Login Success");

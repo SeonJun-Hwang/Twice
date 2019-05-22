@@ -172,14 +172,17 @@ public class DBManager {
         Log.e(TAG, "End Create User");
     }
 
-    public void loginUser(Activity activity, String id, String password, @Nullable final DBAccessResultCallback callback) {
-        locking = true;
+    public void loginUser(Activity activity, String id, String password,final DBAccessResultCallback callback) {
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
         String authID = id + SNSTag.TWICE_EMAIL_TAIL;
 
         Log.e(TAG, authID);
+
+        Log.e(TAG, firebaseAuth.toString() + " " + authID + " " + password);
+
+        final CountDownLatch latch = new CountDownLatch(1);
 
         firebaseAuth.signInWithEmailAndPassword(authID, password)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -190,15 +193,18 @@ public class DBManager {
                             Log.e(TAG, "Login Success");
                             callback.AccessCallback(true);
                         } else {
-                            Log.e(TAG, "Login Fail");
-                            Log.e(TAG, task.getException().toString());
+                            Log.e(TAG, "Login Fail" + '\n' + task.getException());
                             callback.AccessCallback(false);
                         }
-                        locking = false;
+                        latch.countDown();
                     }
                 });
 
-        while (locking) ;
+        try {
+            latch.await();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void checkDuplicateUser(String id, final DBAccessResultCallback callback) {

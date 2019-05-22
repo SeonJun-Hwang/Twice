@@ -183,7 +183,7 @@ public class InitActivity extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(final Void... params) {
             // TODO: attempt authentication against a network service.
-            boolean login = LoginManager.getInstance().TwiceLogin((LoginActivity) mContext, mID, mPassword);
+            boolean login = LoginManager.getInstance().TwiceLogin(InitActivity.this, mID, mPassword);
 
             if (login) {
                 Log.e(TAG, "Login Success");
