@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class FacebookPost extends Post {
@@ -32,6 +33,11 @@ public class FacebookPost extends Post {
             }
 
             return res;
+        }
+
+        @Override
+        public Post.Builder imageList(ArrayList imageList) {
+            return super.imageList(imageList);
         }
 
         @Override

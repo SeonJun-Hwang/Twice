@@ -1,8 +1,10 @@
 package sysproj.seonjoon.twice.manager;
 
 import android.app.Activity;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -14,6 +16,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 // import com.google.firebase.auth.ProviderQueryResult;
 import com.google.firebase.auth.ProviderQueryResult;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -34,8 +37,6 @@ public class DBManager {
 
     private final static String TAG = "DB_Manager";
     private static DBManager instance = null;
-    private static FirebaseFirestore db = null;
-    private static FirebaseAuth firebaseAuth = null;
     private static FirebaseUser user;
     private static Map mResult;
     private static boolean locking;
@@ -49,8 +50,7 @@ public class DBManager {
 
         locking = true;
 
-        if (db == null)
-            db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         mResult = null;
         DocumentReference docRef = db.collection(collection).document(doc);
@@ -85,8 +85,8 @@ public class DBManager {
     void getDB(String collection, String doc, final DBLoadSuccessCallback callback) {
         Log.e(TAG, "Start Load Data");
 
-        if (db == null)
-            db = FirebaseFirestore.getInstance();
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         mResult = null;
         DocumentReference docRef = db.collection(collection).document(doc);
@@ -116,8 +116,7 @@ public class DBManager {
 
     @Deprecated
     public void addDB(final String collection, final String doc, Map<String, Object> data, @Nullable final DBAccessResultCallback callback) {
-        if (db == null)
-            db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         Log.e(TAG, "Insert Add DB");
 
@@ -153,8 +152,7 @@ public class DBManager {
     public void createUser(Activity activity, String id, String password, @Nullable final DBAccessResultCallback callback) {
         Log.e(TAG, "Start Create User");
 
-        if (firebaseAuth == null)
-            firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
         firebaseAuth.createUserWithEmailAndPassword(id, password)
                 .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
@@ -177,8 +175,7 @@ public class DBManager {
     public void loginUser(Activity activity, String id, String password, @Nullable final DBAccessResultCallback callback) {
         locking = true;
 
-        if (firebaseAuth == null)
-            firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
         String authID = id + SNSTag.TWICE_EMAIL_TAIL;
 
@@ -206,8 +203,7 @@ public class DBManager {
 
     public void checkDuplicateUser(String id, final DBAccessResultCallback callback) {
 
-        if (firebaseAuth == null)
-            firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
         firebaseAuth.fetchProvidersForEmail(id + SNSTag.TWICE_EMAIL_TAIL)
                 .addOnCompleteListener(new OnCompleteListener<ProviderQueryResult>() {
@@ -232,8 +228,7 @@ public class DBManager {
     }
 
     public void saveFacebookToken(final String collection, final DBAccessResultCallback callback) {
-        if (db == null)
-            db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (UserSession.FacebookToken != null) {
             Map<String, Object> data = new HashMap<>();
@@ -272,8 +267,7 @@ public class DBManager {
 
     public void saveTwitterToken(final String collection, final DBAccessResultCallback callback) {
 
-        if (db == null)
-            db = FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (UserSession.TwitterToken != null) {
             Map<String, Object> data = new HashMap<>();
@@ -298,10 +292,8 @@ public class DBManager {
 
     }
 
-    public void removeFacebookToken(final String collection, final DBAccessResultCallback callback)
-    {
-        if (db == null)
-            db = FirebaseFirestore.getInstance();
+    public void removeFacebookToken(final String collection, final DBAccessResultCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection(collection).document(BuildConfig.FacebookDocTag)
                 .delete()
@@ -319,10 +311,8 @@ public class DBManager {
                 });
     }
 
-    public void removeTwitterToken(final String collection, final DBAccessResultCallback callback)
-    {
-        if (db == null)
-            db = FirebaseFirestore.getInstance();
+    public void removeTwitterToken(final String collection, final DBAccessResultCallback callback) {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection(collection).document(BuildConfig.TwitterDocTag)
                 .delete()

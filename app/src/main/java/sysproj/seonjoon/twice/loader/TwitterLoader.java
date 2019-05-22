@@ -187,13 +187,18 @@ public class TwitterLoader implements DataLoader {
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
                 String line = br.readLine();
 
-                Log.e(TAG,line);
+                Log.e(TAG, line);
                 callback.Complete(false, null);
             }
         } catch (Exception e) {
             e.printStackTrace();
             Log.e(TAG, e.toString());
         }
+    }
+
+    @Override
+    public JSONObject LoadUserProfileData() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -239,14 +244,19 @@ public class TwitterLoader implements DataLoader {
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
                 String line = br.readLine();
 
-                Log.e(TAG,line);
+                Log.e(TAG, line);
                 callback.Complete(false, null);
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             Log.e(TAG, "IO Exception ");
         } catch (JSONException e) {
             Log.e(TAG, "JSON Exception");
         }
+    }
+
+    @Override
+    public JSONObject LoadTimeLineData() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -293,7 +303,7 @@ public class TwitterLoader implements DataLoader {
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
                 String line = br.readLine();
 
-                Log.e(TAG,line);
+                Log.e(TAG, line);
                 callback.Complete(false, null);
             }
         } catch (Exception e) {
@@ -308,7 +318,7 @@ public class TwitterLoader implements DataLoader {
             String restURL = SNSTag.TWITTER_BASE_URL
                     + SNSTag.TWITTER_URL_SEARCH
                     + "?count=" + PreferenceLoader.loadPreference(context, PreferenceLoader.KEY_TWITTER)
-                    +" &q=" + searchTag;
+                    + " &q=" + searchTag;
 
             String nonce = generateNonce();
             String timestamp = Long.toString(System.currentTimeMillis() / 1000);
@@ -344,7 +354,7 @@ public class TwitterLoader implements DataLoader {
                 BufferedReader br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
                 String line = br.readLine();
 
-                Log.e(TAG,line);
+                Log.e(TAG, line);
                 callback.Complete(false, null);
             }
         } catch (Exception e) {

@@ -1,5 +1,6 @@
 package sysproj.seonjoon.twice.view;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
@@ -9,12 +10,16 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -36,15 +41,25 @@ import com.google.firebase.auth.FirebaseAuth;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.CountDownLatch;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.OnHashtagClickListener;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.UserProfile;
 import sysproj.seonjoon.twice.loader.DataLoader;
+import sysproj.seonjoon.twice.loader.FacebookLoader;
 import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
+import sysproj.seonjoon.twice.parser.FacebookParser;
 import sysproj.seonjoon.twice.parser.TwitterParser;
 import sysproj.seonjoon.twice.staticdata.StaticAppData;
 import sysproj.seonjoon.twice.staticdata.UserSession;
@@ -90,14 +105,16 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         setContentView(R.layout.activity_main);
 
         mContext = this;
+        loadProfileAsync = new LoadProfileAsync();
+        loadProfileAsync.execute();
+
         fm = getFragmentManager();
 
         setLayout();
         setListener();
         showHomeFragment();
 
-        loadProfileAsync = new LoadProfileAsync();
-        loadProfileAsync.execute();
+        // (new LoadAccounts()).execute();
     }
 
     @Override
@@ -207,7 +224,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         createPostImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent ( MainActivity.this, PostingActivity.class);
+                Intent intent = new Intent(MainActivity.this, PostingActivity.class);
                 startActivity(intent);
             }
         });
@@ -231,7 +248,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             public void onClick(View view) {
                 Log.e(TAG, "Click Open Menu Button");
                 if (!personDrawer.isDrawerOpen(GravityCompat.START))
-                    personDrawer.openDrawer(Gravity.START);
+                    personDrawer.openDrawer(GravityCompat.START);
             }
         });
 
@@ -315,38 +332,14 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     private class LoadProfileAsync extends AsyncTask<Void, Void, Void> {
         @Override
         protected Void doInBackground(Void... voids) {
-
             if (UserSession.FacebookToken != null) {
-                GraphRequest request = GraphRequest.newGraphPathRequest(UserSession.FacebookToken,
-                        "/me/", null);
+                DataLoader dataLoader = new FacebookLoader(mContext);
+                JSONObject userJSON = dataLoader.LoadUserProfileData();
 
-                Bundle params = new Bundle();
-                params.putString("fields", "name,email,picture{url}");
-                request.setParameters(params);
-                GraphResponse response = request.executeAndWait();
-                JSONObject object = response.getJSONObject();
+                FacebookParser snsParser = new FacebookParser();
+                UserSession.FacebookProfile = snsParser.parseUserProfile(userJSON);
 
-                String name;
-                String email;
-                String profileImage;
-
-                try {
-                    name = object.getString("name");
-                } catch (JSONException e) {
-                    name = "Unknown";
-                }
-                try {
-                    email = object.getString("email");
-                } catch (JSONException e) {
-                    email = "Hello@world.com";
-                }
-                try {
-                    profileImage = object.getJSONObject("picture").getJSONObject("data").getString("url");
-                } catch (JSONException e) {
-                    profileImage = null;
-                }
-
-                profile = new UserProfile.Builder(name).userEmail(email).profileImage(profileImage).build();
+                profile = UserSession.FacebookProfile;
 
             } else if (UserSession.TwitterToken != null) {
                 final CountDownLatch countDownLatch = new CountDownLatch(1);
@@ -407,6 +400,44 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             }
 
             loadProfileAsync = null;
+        }
+    }
+
+    private class LoadAccounts extends AsyncTask<Void, Void, Void>{
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            String urls = "https://graph.facebook.com/me/accounts?access_token=" + UserSession.FacebookToken.getToken();
+
+            try{
+                URL url = new URL(urls);
+
+                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
+
+                conn.setRequestMethod("GET");
+                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+                conn.setConnectTimeout(3000);
+                conn.setReadTimeout(3000);
+
+                String line = null;
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK)
+                    br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
+
+                Log.e(TAG, "Account Result : " + conn.getResponseCode());
+
+                while ( (line = br.readLine()) != null)
+                    Log.e(TAG, line);
+
+                br.close();
+                conn.disconnect();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
         }
     }
 }

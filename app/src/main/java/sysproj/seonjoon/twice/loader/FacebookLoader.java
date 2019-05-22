@@ -11,17 +11,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
-import sysproj.seonjoon.twice.entity.FacebookPageVO;
 import sysproj.seonjoon.twice.staticdata.SNSPermission;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class FacebookLoader implements DataLoader {
 
     private Context context;
-
-    public FacebookLoader(){
-        context = null;
-    }
 
     public FacebookLoader(Context context) {
         this.context = context;
@@ -31,13 +26,44 @@ public class FacebookLoader implements DataLoader {
 
     @Override
     public void LoadUserProfileData(DataLoadCompleteCallback callback) {
+        Log.e(TAG, "facebook profile load async start");
 
+        GraphRequest request = GraphRequest.newGraphPathRequest(UserSession.FacebookToken,
+                "/me", null);
+
+        Bundle params = new Bundle();
+        params.putString("fields", "name,email,picture{url}");
+
+        request.setParameters(params);
+        GraphResponse response = request.executeAndWait();
+        JSONObject object = response.getJSONObject();
+
+        callback.Complete(true, object);
+
+        Log.e(TAG, "facebook profile load async start");
     }
 
-    /* Load Data */
+    @Override
+    public JSONObject LoadUserProfileData() {
+        Log.e(TAG, "facebook profile load sync start");
+        GraphRequest request = GraphRequest.newGraphPathRequest(UserSession.FacebookToken,
+                "/me", null);
+
+        Bundle params = new Bundle();
+        params.putString("fields", "name,email,picture{url}");
+        request.setParameters(params);
+        GraphResponse response = request.executeAndWait();
+
+        Log.e(TAG, response.toString());
+
+        Log.e(TAG, "facebook profile load sync over");
+
+        return response.getJSONObject();
+    }
+
     @Override
     public void LoadTimeLineData(DataLoadCompleteCallback callback) {
-        Log.e(TAG, "Start Facebook Loading");
+        Log.e(TAG, "facebook timeline load async");
 
         GraphRequest request = GraphRequest.newGraphPathRequest(
                 UserSession.FacebookToken,
@@ -45,18 +71,35 @@ public class FacebookLoader implements DataLoader {
                 null);
 
         Bundle parameters = new Bundle();
-        parameters.putStringArrayList("fields", SNSPermission.getFacebookField(context));
+        parameters.putString("fields", SNSPermission.getFacebookField());
+        parameters.putString("limit", PreferenceLoader.loadPreference(context, PreferenceLoader.KEY_FACEBOOK));
+        request.setParameters(parameters);
+        GraphResponse response = request.executeAndWait();
+        JSONObject object = response.getJSONObject();
+
+        callback.Complete(true, object);
+
+        Log.e(TAG, "facebook timeline load async over");
+    }
+
+    @Override
+    public JSONObject LoadTimeLineData() {
+        Log.e(TAG, "facebook timeline load sync start");
+
+        GraphRequest request = GraphRequest.newGraphPathRequest(
+                UserSession.FacebookToken,
+                "/me/feed",
+                null);
+
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", SNSPermission.getFacebookField());
+        parameters.putString("limit", PreferenceLoader.loadPreference(context, PreferenceLoader.KEY_FACEBOOK));
         request.setParameters(parameters);
         GraphResponse response = request.executeAndWait();
 
-        Log.e(TAG, request.getParameters().toString());
+        Log.e(TAG, "facebook timeline load sync end");
 
-        if (response != null)
-            callback.Complete(true, response.getJSONObject());
-        else
-            callback.Complete(false, null);
-
-        Log.e(TAG, "End Facebook Loading");
+        return response.getJSONObject();
     }
 
     @Override
@@ -73,26 +116,23 @@ public class FacebookLoader implements DataLoader {
         callback.Complete(true, null);
     }
 
-    public void LoadPagelist(DataLoadCompleteCallback callback){
+    public void LoadPagelist(DataLoadCompleteCallback callback) {
 
         GraphRequest request = GraphRequest.newGraphPathRequest(
                 UserSession.FacebookToken,
-                "/me/accounts",
+                "/me",
                 null);
 
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "accounts");
+        request.setParameters(parameters);
         GraphResponse response = request.executeAndWait();
 
         Log.e(TAG, request.getParameters().toString());
 
         if (response != null) {
-            try {
-                Log.e(TAG, response.getJSONObject().toString(2));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
             callback.Complete(true, response.getJSONObject());
-        }
-        else
+        } else
             callback.Complete(false, null);
 
         Log.e(TAG, "End Facebook Loading");

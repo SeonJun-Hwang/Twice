@@ -51,7 +51,7 @@
                     android:inputType="textEmailAddress"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="test1" />
+                    android:text="testuser" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -70,7 +70,7 @@
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:text="helloworld" />
+                    android:text="test1234" />
 
             </com.google.android.material.textfield.TextInputLayout>
 

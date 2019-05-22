@@ -34,17 +34,14 @@ public class SNSPermission {
         return permissions;
     }
 
-    public static ArrayList<String> getFacebookField(Context context){
-        ArrayList<String> fields = new ArrayList<>();
+    public static String getFacebookField(){
 
-        fields.add("feed.limits(" + PreferenceLoader.loadPreference(context, PreferenceLoader.KEY_FACEBOOK) + ")");
-        fields.add("id");
-        fields.add("name");
-        fields.add("full_picture");
-        fields.add("created_time");
-        fields.add("comments");
+        return "name" + ',' +
+                "message" + ','+
+                "type" + ',' +
+                "created_time" + ',' +
+                "attachments";
 
-        return fields;
     }
 
 }

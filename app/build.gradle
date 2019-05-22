@@ -17,6 +17,11 @@ android {
         buildConfigField "String", "FacebookDocTag", "\"Facebook\""
         buildConfigField "String", "TwitterDocTag", "\"Twitter\""
         buildConfigField "String", "ServerIP", "\"100.24.24.64:8090/\""
+
+        ndk {
+            // config you want to support device
+            abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'x86'
+        }
     }
     buildTypes {
         release {
@@ -40,8 +45,8 @@ dependencies {
     implementation 'jp.wasabeef:glide-transformations:2.0.1'
     implementation 'com.google.firebase:firebase-database:16.0.4'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.0'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
     implementation "android.arch.work:work-runtime:1.0.1"
 
     implementation 'com.twitter.sdk.android:twitter:3.1.1'
@@ -52,6 +57,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:16.0.7'
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
+
+    // Stetho
+    implementation 'com.facebook.stetho:stetho:1.4.1'
+    implementation 'com.facebook.stetho:stetho-js-rhino:1.4.2'
+
+    // Github Video Player
+    implementation 'com.github.tcking:giraffeplayer2:0.1.25'
 }
 
 apply plugin: 'com.google.gms.google-services'

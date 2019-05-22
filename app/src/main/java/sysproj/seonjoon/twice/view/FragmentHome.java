@@ -133,15 +133,10 @@ public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefre
 
                 // TODO : Make Time Line Loader
                 DataLoader loader = new FacebookLoader(mContext);
-                loader.LoadTimeLineData(new DataLoadCompleteCallback() {
-                    @Override
-                    public void Complete(boolean isSuccess, JSONObject result) {
-                        if (isSuccess) {
-                            SNSParser snsParser = new FacebookParser();
-                            facebookTimeline = snsParser.parseTimeline(result);
-                        }
-                    }
-                });
+                JSONObject jsonObject = loader.LoadTimeLineData();
+
+                SNSParser snsParser = new FacebookParser();
+                facebookTimeline = snsParser.parseTimeline(jsonObject);
             } else
                 Log.e(TAG, "Facebook Token is Null");
 

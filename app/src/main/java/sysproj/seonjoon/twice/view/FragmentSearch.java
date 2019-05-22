@@ -103,7 +103,7 @@ public class FragmentSearch extends Fragment {
                 Log.e(TAG, "Start Facebook Async");
 
                 // TODO : Make Time Line Loader
-                DataLoader loader = new FacebookLoader();
+                DataLoader loader = new FacebookLoader(mContext);
                 loader.LoadSearchData(searchTag, new DataLoadCompleteCallback() {
                     @Override
                     public void Complete(boolean isSuccess, JSONObject result) {

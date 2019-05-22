@@ -34,10 +34,13 @@ import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.loader.PreferenceLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
+import sysproj.seonjoon.twice.manager.PreferenceManager;
 import sysproj.seonjoon.twice.parser.FacebookTokenParser;
 import sysproj.seonjoon.twice.parser.TokenParser;
 import sysproj.seonjoon.twice.parser.TwitterTokenParser;
 import sysproj.seonjoon.twice.staticdata.UserSession;
+
+import static com.facebook.stetho.Stetho.initializeWithDefaults;
 
 public class InitActivity extends AppCompatActivity {
 
@@ -58,6 +61,9 @@ public class InitActivity extends AppCompatActivity {
         // Initialize Context N Key
         mContext = this;
 
+        // Init stetho
+        initializeWithDefaults(this);
+
         loadSharedPreference();
         twitterInitialize();
         facebookInitialize();
@@ -70,7 +76,7 @@ public class InitActivity extends AppCompatActivity {
         }
         else
         {
-            final  Intent intent = new Intent(InitActivity.this, LoginActivity.class);
+            final Intent intent = new Intent(InitActivity.this, LoginActivity.class);
 
             if (!uID.isEmpty())
                 intent.putExtra(UserSession.UserIDTag, uID);

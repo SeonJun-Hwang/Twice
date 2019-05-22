@@ -66,7 +66,7 @@ public class PostingActivity extends AppCompatActivity {
         mContext = this;
         selectedImage = new ArrayList<>();
 
-        FacebookLoader loader = new FacebookLoader();
+        FacebookLoader loader = new FacebookLoader(mContext);
         loader.LoadPagelist(new DataLoadCompleteCallback() {
             @Override
             public void Complete(boolean isSuccess, JSONObject result) {

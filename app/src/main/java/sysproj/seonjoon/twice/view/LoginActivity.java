@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 
 import androidx.annotation.NonNull;
+
 import android.app.LoaderManager.LoaderCallbacks;
 
 import android.content.CursorLoader;
@@ -45,6 +46,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -53,9 +63,13 @@ import java.util.concurrent.CountDownLatch;
 import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.R;
+import sysproj.seonjoon.twice.loader.DataLoader;
+import sysproj.seonjoon.twice.loader.FacebookLoader;
 import sysproj.seonjoon.twice.loader.PreferenceLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
+import sysproj.seonjoon.twice.parser.FacebookParser;
 import sysproj.seonjoon.twice.parser.FacebookTokenParser;
+import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TokenParser;
 import sysproj.seonjoon.twice.parser.TwitterTokenParser;
 import sysproj.seonjoon.twice.staticdata.StaticAppData;
@@ -317,7 +331,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
 
-            if (mAuthTask == null){
+            if (mAuthTask == null) {
                 mAuthTask = new UserLoginTask(email, password);
                 mAuthTask.execute();
             }
@@ -416,6 +430,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                             if (isSuccess) {
                                 TokenParser tokenParser = new FacebookTokenParser();
                                 UserSession.FacebookToken = (AccessToken) tokenParser.map2Token(result);
+
+                                Log.e(TAG, UserSession.FacebookToken.getUserId());
+
                             }
                             countDownLatch.countDown();
                         }
@@ -434,7 +451,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         }
                     });
 
-                    try{
+                    try {
                         countDownLatch.await();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
@@ -450,7 +467,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
 
-            if (progressDialog != null){
+            if (progressDialog != null) {
                 progressDialog.dismiss();
                 progressDialog = null;
             }
@@ -458,7 +475,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             if (success) {
                 user = FirebaseAuth.getInstance().getCurrentUser();
 
-                if (mSaveIDCheck.isChecked()){
+                if (mSaveIDCheck.isChecked()) {
                     PreferenceLoader.savePreference(mContext, BuildConfig.IDPreferenceKey, mID);
                 }
                 if (mAutoLoginCheck.isChecked()) {
