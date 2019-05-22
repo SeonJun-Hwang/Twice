@@ -18,10 +18,7 @@ android {
         buildConfigField "String", "TwitterDocTag", "\"Twitter\""
         buildConfigField "String", "ServerIP", "\"100.24.24.64:8090/\""
 
-        ndk {
-            // config you want to support device
-            abiFilters 'arm64-v8a', 'armeabi', 'armeabi-v7a', 'x86'
-        }
+
     }
     buildTypes {
         release {
@@ -64,6 +61,10 @@ dependencies {
 
     // Github Video Player
     implementation 'com.github.tcking:giraffeplayer2:0.1.25'
+    implementation 'com.github.tcking:ijkplayer-arm64:0.8.8' //support arm64
+    implementation 'com.github.tcking:ijkplayer-armv5:0.8.8' //support armv5
+    implementation 'com.github.tcking:ijkplayer-x86:0.8.8' //support x86
+    implementation 'com.github.tcking:ijkplayer-x86_64:0.8.8' //support x86_64
 }
 
 apply plugin: 'com.google.gms.google-services'
