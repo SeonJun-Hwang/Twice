@@ -135,9 +135,6 @@ public class FacebookParser extends SNSParser {
     }
 
     public ArrayList<FacebookPageVO> parsePageList(JSONObject object) {
-        if (object == null)
-            return null;
-
         ArrayList<FacebookPageVO> returnList = new ArrayList<>();
 
         try {
@@ -152,12 +149,13 @@ public class FacebookParser extends SNSParser {
                 String name = parseName(data);
                 long id = parseID(data);
 
-
                 returnList.add(new FacebookPageVO(token, name, id));
             }
 
         } catch (JSONException e) {
             Log.e(TAG, "Missing Data - " + e.getMessage());
+        } catch (NullPointerException e){
+            Log.e(TAG, "page is Null");
         }
 
         return returnList;

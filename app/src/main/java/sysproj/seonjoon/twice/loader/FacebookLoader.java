@@ -128,8 +128,6 @@ public class FacebookLoader implements DataLoader {
         request.setParameters(parameters);
         GraphResponse response = request.executeAndWait();
 
-        Log.e(TAG, request.getParameters().toString());
-
         if (response != null) {
             callback.Complete(true, response.getJSONObject());
         } else

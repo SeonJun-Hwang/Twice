@@ -65,6 +65,9 @@ dependencies {
     implementation 'com.github.tcking:ijkplayer-armv5:0.8.8' //support armv5
     implementation 'com.github.tcking:ijkplayer-x86:0.8.8' //support x86
     implementation 'com.github.tcking:ijkplayer-x86_64:0.8.8' //support x86_64
+
+    // TdePermission
+    implementation 'gun0912.ted:tedpermission:2.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

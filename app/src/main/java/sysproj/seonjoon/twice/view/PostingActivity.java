@@ -70,9 +70,7 @@ public class PostingActivity extends AppCompatActivity {
         loader.LoadPagelist(new DataLoadCompleteCallback() {
             @Override
             public void Complete(boolean isSuccess, JSONObject result) {
-
                 Log.e(TAG, isSuccess + "result");
-
                 if (isSuccess) {
                     FacebookParser parser = new FacebookParser();
                     pages = parser.parsePageList(result);
