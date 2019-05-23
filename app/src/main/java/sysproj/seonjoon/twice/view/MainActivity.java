@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import android.preference.Preference;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -51,12 +52,14 @@ import java.util.concurrent.CountDownLatch;
 
 import javax.net.ssl.HttpsURLConnection;
 
+import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.OnHashtagClickListener;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.UserProfile;
 import sysproj.seonjoon.twice.loader.DataLoader;
 import sysproj.seonjoon.twice.loader.FacebookLoader;
+import sysproj.seonjoon.twice.loader.PreferenceLoader;
 import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
 import sysproj.seonjoon.twice.parser.FacebookParser;
@@ -280,6 +283,9 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         FirebaseAuth.getInstance().signOut();
+                        UserSession.FacebookProfile = null;
+                        PreferenceLoader.removePreference(mContext, BuildConfig.IDPreferenceKey);
+                        PreferenceLoader.removePreference(mContext, BuildConfig.PwdPreferenceKey);
                         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();

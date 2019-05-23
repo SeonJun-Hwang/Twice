@@ -18,6 +18,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import sysproj.seonjoon.twice.entity.FacebookLinkVO;
 import sysproj.seonjoon.twice.entity.FacebookPageVO;
 import sysproj.seonjoon.twice.entity.FacebookPost;
 import sysproj.seonjoon.twice.entity.Post;
@@ -53,6 +54,7 @@ public class FacebookParser extends SNSParser {
                 int snsType = SNSTag.Facebook * SNSTag.Platform;
 
                 ArrayList<PostMedia> mediaList = null;
+                FacebookLinkVO link = null;
                 JSONObject jsonObject = dataArray.getJSONObject(i);
 
                 String message = null;
@@ -80,9 +82,15 @@ public class FacebookParser extends SNSParser {
                         snsType += SNSTag.Video;
                         mediaList = parseVideoList(jsonObject);
                         break;
+                    case "link":
+                        snsType += SNSTag.Link;
+                        link = parseLink(jsonObject);
                 }
 
-                Post post = new FacebookPost.Builder(id, snsType, userProfile, message, createdTime, new PostRFS()).imageList(mediaList).build();
+                Post post = new FacebookPost.Builder(id, snsType, userProfile, message, createdTime, new PostRFS())
+                        .shareLink(link)
+                        .imageList(mediaList)
+                        .build();
 
                 resultList.add(post);
 
@@ -154,7 +162,7 @@ public class FacebookParser extends SNSParser {
 
         } catch (JSONException e) {
             Log.e(TAG, "Missing Data - " + e.getMessage());
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             Log.e(TAG, "page is Null");
         }
 
@@ -212,6 +220,14 @@ public class FacebookParser extends SNSParser {
         return jsonObject.getString("access_token");
     }
 
+    private String parseDescription(JSONObject jsonObject) throws JSONException {
+        return jsonObject.getString("description");
+    }
+
+    private String parseTitle(JSONObject jsonObject) throws JSONException {
+        return jsonObject.getString("title");
+    }
+
     private JSONArray parseAttachmentsData(JSONObject jsonObject) throws JSONException {
         return jsonObject.getJSONObject("attachments").getJSONArray("data");
     }
@@ -222,6 +238,10 @@ public class FacebookParser extends SNSParser {
 
     private String parseSource(JSONObject jsonObject) throws JSONException {
         return jsonObject.getString("source");
+    }
+
+    private String parseUrl(JSONObject jsonObject) throws JSONException {
+        return jsonObject.getString("url");
     }
 
     private ArrayList<PostMedia> parseImageList(JSONObject jsonObject) {
@@ -270,4 +290,24 @@ public class FacebookParser extends SNSParser {
         return resultList;
     }
 
+    private FacebookLinkVO parseLink(JSONObject jsonObject) {
+        FacebookLinkVO link = null;
+
+        try {
+            JSONArray data = parseAttachmentsData(jsonObject);
+            JSONObject linkData = data.getJSONObject(0);
+
+            link = new FacebookLinkVO.Builder()
+                    .description(parseDescription(linkData))
+                    .imageSrc(parseSrc(parseImage(parseMedia(linkData))))
+                    .title(parseTitle(linkData))
+                    .linkSrc(parseUrl(linkData))
+                    .build();
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        return link;
+    }
 }

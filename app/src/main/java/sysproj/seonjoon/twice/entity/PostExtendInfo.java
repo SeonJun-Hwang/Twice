@@ -5,6 +5,8 @@ public class PostExtendInfo {
     public static final int HASH_TAG = 1;
     public static final int MENTION = 2;
     public static final int URLS = 3;
+    public static final int TITLE = 4;
+    public static final int LINK = 5;
 
     private int postTag;
     private String keyword;

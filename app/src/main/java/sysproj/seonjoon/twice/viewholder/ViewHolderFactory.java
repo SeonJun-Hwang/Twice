@@ -27,6 +27,8 @@ public class ViewHolderFactory {
                 res = R.layout.card_timeline_facebook_fim;
             else if (content == SNSTag.Video)
                 res = R.layout.card_timeline_facebook_fiv;
+            else if (content == SNSTag.Link)
+                res = R.layout.card_timeline_facebook_fl;
         } else if (platform == SNSTag.Twitter) {
             if (extension == SNSTag.None) {
                 if (content == SNSTag.Origin)
@@ -59,6 +61,8 @@ public class ViewHolderFactory {
                 res = new FIMViewHolder(view);
             else if (content == SNSTag.Video)
                 res = new FIVViewHolder(view);
+            else if (content == SNSTag.Link)
+                res = new FLViewHolder(view);
         } else if (platform == SNSTag.Twitter) {
             if (extension == SNSTag.None) {
                 if (content == SNSTag.Origin)

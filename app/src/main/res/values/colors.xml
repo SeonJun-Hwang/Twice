@@ -23,6 +23,8 @@
     <color name="colorFacebook">#3860ff</color>
     <color name="colorTwitter">#66bdff</color>
     <color name="colorInstagram">#d3ff88ed</color>
+    <color name="colorFacebookShareBackground">#CACACA</color>
+
 
     <!-- Appbar Theme Color -->
     <color name="actionBarText">#03A9F4</color>
@@ -32,6 +34,7 @@
     <color name="black">#000000</color>
     <color name="white">#ffffff</color>
     <color name="whiteGray">#949494</color>
+
     <!-- SNS register Color -->
     <color name="SNSRegister">#ededff</color>
 

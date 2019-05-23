@@ -22,11 +22,19 @@ public class PreferenceLoader {
         return preferences.getString(key,"");
     }
 
+    public static void removePreference(Context context, String key){
+
+        SharedPreferences preferences = context.getSharedPreferences(key, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove(key);
+        editor.apply();
+    }
+
     public static void savePreference(Context context, String key, String value){
 
         SharedPreferences preferences = context.getSharedPreferences(key, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(key, value);
-        editor.commit();
+        editor.apply();
     }
 }

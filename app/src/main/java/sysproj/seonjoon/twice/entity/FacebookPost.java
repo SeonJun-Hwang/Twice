@@ -1,6 +1,7 @@
 package sysproj.seonjoon.twice.entity;
 
 import androidx.annotation.Nullable;
+
 import android.util.Log;
 
 import java.text.ParseException;
@@ -12,11 +13,22 @@ public class FacebookPost extends Post {
 
     private final static String TAG = "FacebookPost";
 
+    private FacebookLinkVO shareLink;
+
     private FacebookPost(Builder b) {
         super(b);
+
+        this.shareLink = b.shareLink;
     }
 
+    public FacebookLinkVO getShareLink() {
+        return shareLink;
+    }
+
+
     public static class Builder extends Post.Builder {
+
+        private FacebookLinkVO shareLink;
 
         public Builder(long id, int type, UserProfile user, String contentText, String createTime, PostRFS postRFS) {
             super(id, type, user, contentText, createTime, postRFS);
@@ -38,6 +50,11 @@ public class FacebookPost extends Post {
         @Override
         public Post.Builder imageList(ArrayList imageList) {
             return super.imageList(imageList);
+        }
+
+        public Post.Builder shareLink(FacebookLinkVO shareLink) {
+            this.shareLink = shareLink;
+            return this;
         }
 
         @Override
