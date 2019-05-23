@@ -8,12 +8,13 @@ import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
+
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.DialogTitle;
+
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,8 +35,10 @@ import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseUser;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
+import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.io.BufferedReader;
@@ -45,6 +48,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
+import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DBAccessResultCallback;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.manager.DBManager;
@@ -154,7 +158,7 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
             HttpURLConnection fconnection = null;
             StringBuilder sb = new StringBuilder();
             try {
-                facebookauthURL = new URL("http://100.24.24.64:3366/facebook");
+                facebookauthURL = new URL(BuildConfig.ServerArgumentIP + "facebook");
 
                 fconnection = (HttpURLConnection) facebookauthURL.openConnection();
                 fconnection.setRequestMethod("GET");
@@ -198,7 +202,7 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
             HttpURLConnection tconnection = null;
             StringBuilder sb = new StringBuilder();
             try {
-                tauthURL = new URL("http://100.24.24.64:3366/twitter");
+                tauthURL = new URL(BuildConfig.ServerArgumentIP + "twitter");
 
                 tconnection = (HttpURLConnection) tauthURL.openConnection();
                 tconnection.setRequestMethod("GET");
@@ -244,7 +248,7 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
             HttpURLConnection tconnection = null;
             StringBuilder sb = new StringBuilder();
             try {
-                tauthURL = new URL("http://100.24.24.64:3366/instagram");
+                tauthURL = new URL(BuildConfig.ServerArgumentIP + "instagram");
 
                 tconnection = (HttpURLConnection) tauthURL.openConnection();
                 tconnection.setRequestMethod("GET");
@@ -440,8 +444,7 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
                         Toast.makeText(context, "Facebook 에러입니다. 잠시후에 다시 시도해주시기 바랍니다.", Toast.LENGTH_LONG).show();
                     }
                 });
-            }
-            else if (snsTag == SNSTag.Twitter) {
+            } else if (snsTag == SNSTag.Twitter) {
                 SNSLogin = (TwitterLoginButton) view.findViewById(R.id.alert_twitter_login);
                 ((TwitterLoginButton) SNSLogin).setCallback(new Callback<TwitterSession>() {
                     @Override
@@ -512,4 +515,11 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
         }
     }
 
+    @Override
+    protected void onDestroy() {
+
+        AccessToken.setCurrentAccessToken(null);
+
+        super.onDestroy();
+    }
 }

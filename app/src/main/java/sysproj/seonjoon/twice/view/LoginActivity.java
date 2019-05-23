@@ -394,6 +394,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             progressDialog = new ProgressDialog(mContext);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setMessage("로그인 중입니다.");
+            progressDialog.setCancelable(false);
         }
 
         @Override

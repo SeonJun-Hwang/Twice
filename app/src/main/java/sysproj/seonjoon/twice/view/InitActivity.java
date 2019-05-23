@@ -20,6 +20,8 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -27,6 +29,7 @@ import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -145,16 +148,36 @@ public class InitActivity extends AppCompatActivity {
     }
 
     private void checkPermissions() {
-        // Permission List
-        String[] permissionList = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE};
-        int[] permissionCodeList = {PERMISSION_READ_CONTACT, PERMISSION_WRITE_CONTACT, PERMISSION_READ_EXTERNAL_STORAGE};
 
-        // Check Permissions
-        for (int i = 0; i < permissionCodeList.length; i++) {
-            if (ContextCompat.checkSelfPermission(this, permissionList[i]) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(this, new String[]{permissionList[i]}, permissionCodeList[i]);
+        PermissionListener permissionListener = new PermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+
             }
-        }
+
+            @Override
+            public void onPermissionDenied(ArrayList<String> deniedPermissions) {
+
+            }
+        };
+
+        TedPermission.with(this)
+                .setPermissionListener(permissionListener)
+                .setRationaleMessage("자동 로그인 및 구글 로그인을 위해 해당 권한이 필요합니다.")
+                .setDeniedCloseButtonText("해당 권한을 거부하셨기 때문에 어플리케이션이 종료됩니다.")
+                .setPermissions(Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE)
+                .check();
+
+//        // Permission List
+//        String[] permissionList = {Manifest.permission.READ_CONTACTS, Manifest.permission.WRITE_CONTACTS, Manifest.permission.READ_EXTERNAL_STORAGE};
+//        int[] permissionCodeList = {PERMISSION_READ_CONTACT, PERMISSION_WRITE_CONTACT, PERMISSION_READ_EXTERNAL_STORAGE};
+//
+//        // Check Permissions
+//        for (int i = 0; i < permissionCodeList.length; i++) {
+//            if (ContextCompat.checkSelfPermission(this, permissionList[i]) != PackageManager.PERMISSION_GRANTED) {
+//                ActivityCompat.requestPermissions(this, new String[]{permissionList[i]}, permissionCodeList[i]);
+//            }
+//        }
     }
 
     private class AutoLoginTask extends AsyncTask<Void, Void, Boolean> {
@@ -172,6 +195,7 @@ public class InitActivity extends AppCompatActivity {
             progressDialog = new ProgressDialog(mContext);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setMessage("로그인 중입니다.");
+            progressDialog.setCancelable(false);
         }
 
         @Override

@@ -46,11 +46,7 @@ public class FacebookParser extends SNSParser {
         try {
             JSONArray dataArray = object.getJSONArray("data");
 
-            Log.e(TAG, "DataArray Size : " + dataArray.length());
-
             for (int i = 0; i < dataArray.length(); i++) {
-                Log.e(TAG, "Data Array Checker " + (i + 1) + "Start");
-
                 int snsType = SNSTag.Facebook * SNSTag.Platform;
 
                 ArrayList<PostMedia> mediaList = null;
@@ -93,8 +89,6 @@ public class FacebookParser extends SNSParser {
                         .build();
 
                 resultList.add(post);
-
-                Log.e(TAG, "Data Array Checker " + (i + 1) + "End");
             }
 
         } catch (JSONException e) {

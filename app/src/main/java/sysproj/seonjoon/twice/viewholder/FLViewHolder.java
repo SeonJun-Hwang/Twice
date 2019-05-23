@@ -1,12 +1,10 @@
 package sysproj.seonjoon.twice.viewholder;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.FacebookLinkVO;
@@ -54,22 +52,31 @@ public class FLViewHolder extends BaseViewHolder {
     }
 
     private void setShareData(FacebookLinkVO linkVO) {
-        Glide.with(context)
-                .load(linkVO.getImageSrc())
-                .fitCenter()
-                .into(linkImage);
 
-        String originLink = linkVO.getLinkSrc();
-        String linkUrl = originLink.substring(originLink.indexOf("u="));
-        int startPos = linkUrl.indexOf("%3A%2F%2F") + "%3A%2F%2F".length();
-        int endPos = linkUrl.indexOf("%2F", startPos);
-        if (endPos > 0)
-            linkUrl = linkUrl.substring(startPos, endPos);
-        else
-            linkUrl = linkUrl.substring(startPos);
+        if (linkVO.getImageSrc() != null && !linkVO.getImageSrc().isEmpty()) {
+            Glide.with(context)
+                    .load(linkVO.getImageSrc())
+                    .fitCenter()
+                    .into(linkImage);
+        }
 
-        linkTitle.setText(linkVO.getTitle());
-        linkDescription.setText(linkVO.getDescription());
-        linkURL.setText(linkUrl);
+        if (linkVO.getLinkSrc() != null && !linkVO.getLinkSrc().isEmpty()) {
+            String originLink = linkVO.getLinkSrc();
+            String linkUrl = originLink.substring(originLink.indexOf("u="));
+            int startPos = linkUrl.indexOf("%3A%2F%2F") + "%3A%2F%2F".length();
+            int endPos = linkUrl.indexOf("%2F", startPos);
+            if (endPos > 0)
+                linkUrl = linkUrl.substring(startPos, endPos);
+            else
+                linkUrl = linkUrl.substring(startPos);
+            linkURL.setText(linkUrl);
+        }
+
+        if (linkVO.getTitle() != null && !linkVO.getTitle().isEmpty())
+            linkTitle.setText(linkVO.getTitle());
+
+        if (linkVO.getDescription() != null && !linkVO.getDescription().isEmpty())
+            linkDescription.setText(linkVO.getDescription());
+
     }
 }

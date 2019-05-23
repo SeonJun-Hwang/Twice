@@ -12,9 +12,6 @@ public class ViewHolderFactory {
     private final static String TAG = "ViewHolderFactory";
 
     public static int getLayoutResId(int type) {
-
-        Log.e(TAG, "Type : " + type);
-
         int res = 0;
         int platform = Post.calPlatformType(type);
         int extension = Post.calExtensionType(type);

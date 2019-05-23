@@ -17,8 +17,7 @@ android {
         buildConfigField "String", "FacebookDocTag", "\"Facebook\""
         buildConfigField "String", "TwitterDocTag", "\"Twitter\""
         buildConfigField "String", "ServerIP", "\"100.24.24.64:8090/\""
-
-
+        buildConfigField "String", "ServerArgumentIP", "\"http://100.24.24.64:3366/\""
     }
     buildTypes {
         release {

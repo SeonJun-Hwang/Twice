@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +17,7 @@ import androidx.annotation.NonNull;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -72,6 +74,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     private static final String TAG = "MAIN_ACTIVITY";
     private static final int HOME = 0;
     private static final int SEARCH = 1;
+    private static final int LINK_SNS_CODE = 1000;
 
     private Context mContext;
     private FragmentManager fm;
@@ -123,6 +126,19 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == LINK_SNS_CODE)
+                if (loadProfileAsync == null) {
+                    loadProfileAsync = new LoadProfileAsync();
+                    loadProfileAsync.execute();
+                }
+        }
     }
 
     @Override
@@ -300,7 +316,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     private void gotoLinkingActivity() {
         Intent intent = new Intent(MainActivity.this, SNSLinkingActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, LINK_SNS_CODE);
     }
 
     private void showHomeFragment() {
@@ -336,6 +352,16 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     }
 
     private class LoadProfileAsync extends AsyncTask<Void, Void, Void> {
+
+        private ProgressDialog dialog;
+
+        LoadProfileAsync() {
+            dialog = new ProgressDialog(mContext);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("프로필 갱신 중입니다.");
+            dialog.setCancelable(false);
+        }
+
         @Override
         protected Void doInBackground(Void... voids) {
             if (UserSession.FacebookToken != null) {
@@ -375,6 +401,12 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.show();
+        }
+
+        @Override
         protected void onPostExecute(Void avoid) {
             super.onPostExecute(avoid);
 
@@ -405,17 +437,19 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 instagramStatus.setColorFilter(StaticAppData.Gray_filter);
             }
 
+            dialog.dismiss();
+            dialog = null;
             loadProfileAsync = null;
         }
     }
 
-    private class LoadAccounts extends AsyncTask<Void, Void, Void>{
+    private class LoadAccounts extends AsyncTask<Void, Void, Void> {
 
         @Override
         protected Void doInBackground(Void... voids) {
             String urls = "https://graph.facebook.com/me/accounts?access_token=" + UserSession.FacebookToken.getToken();
 
-            try{
+            try {
                 URL url = new URL(urls);
 
                 HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -433,7 +467,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
                 Log.e(TAG, "Account Result : " + conn.getResponseCode());
 
-                while ( (line = br.readLine()) != null)
+                while ((line = br.readLine()) != null)
                     Log.e(TAG, line);
 
                 br.close();
