@@ -16,7 +16,6 @@ import sysproj.seonjoon.twice.R;
 public class InstagramLoginButton extends androidx.appcompat.widget.AppCompatButton {
 
     private static final String TAG = "InstagramLogin";
-    private OnClickListener onClickListener;
 
     public InstagramLoginButton(@NonNull Context context) {
         this(context, null);
@@ -60,10 +59,5 @@ public class InstagramLoginButton extends androidx.appcompat.widget.AppCompatBut
         } else {
             throw new IllegalStateException("No Activity");
         }
-    }
-
-    @Override
-    public void setOnClickListener(OnClickListener onClickListener) {
-        this.onClickListener = onClickListener;
     }
 }
