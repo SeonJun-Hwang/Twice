@@ -61,10 +61,13 @@ import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.UserProfile;
 import sysproj.seonjoon.twice.loader.DataLoader;
 import sysproj.seonjoon.twice.loader.FacebookLoader;
+import sysproj.seonjoon.twice.loader.InstagramLoader;
 import sysproj.seonjoon.twice.loader.PreferenceLoader;
 import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
 import sysproj.seonjoon.twice.parser.FacebookParser;
+import sysproj.seonjoon.twice.parser.InstagramParser;
+import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TwitterParser;
 import sysproj.seonjoon.twice.staticdata.StaticAppData;
 import sysproj.seonjoon.twice.staticdata.UserSession;
@@ -396,6 +399,14 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                     countDownLatch.await();
                 } catch (InterruptedException ignored) {
                 }
+            } else if (UserSession.InstagramToekn != null) {
+                final CountDownLatch countDownLatch = new CountDownLatch(1);
+                DataLoader loader = new InstagramLoader();
+                InstagramParser parser = new InstagramParser();
+
+                profile = parser.parseUserProfile(loader.LoadUserProfileData());
+
+                loader.LoadUserProfileData();
             }
             return null;
         }
@@ -418,7 +429,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                         .apply(RequestOptions.circleCropTransform())
                         .into(repreProfileImage);
             } else {
-                repreName.setText("대표 SNS를 선택해주세요");
+                repreName.setText("연동이 되어 있지 않습니다.");
                 repreEmail.setText("");
             }
             if (UserSession.FacebookToken == null)
