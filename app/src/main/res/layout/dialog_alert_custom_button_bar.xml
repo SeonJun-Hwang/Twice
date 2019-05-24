@@ -30,10 +30,11 @@
         android:enabled="false"
         android:visibility="gone" />
 
-    <sysproj.seonjoon.twice.view.InstagramLoginButton
+    <sysproj.seonjoon.twice.view.custom.InstagramLogin.InstagramLoginButton
         android:id="@+id/alert_instagram_login"
         android:layout_width="250dp"
         android:layout_height="35dp"
+        android:enabled="false"
         android:padding="4dp"
         android:visibility="gone"
         app:elevation="3dp" />

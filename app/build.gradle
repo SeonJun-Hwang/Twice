@@ -11,13 +11,17 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", 'TwitterAPI', '"H3qNM38a3TzDXpWz6yY1hknFy"'
-        buildConfigField "String", 'TwitterAPISecret', "\"GU4uxItEP3ZM926o1NcUP2gGbBoivm4cWge9dzxsvpJFLHLzRe\""
-        buildConfigField "String", "IDPreferenceKey", "\"load_id_key\""
-        buildConfigField "String", "PwdPreferenceKey", "\"load_pwd_key\""
-        buildConfigField "String", "FacebookDocTag", "\"Facebook\""
-        buildConfigField "String", "TwitterDocTag", "\"Twitter\""
-        buildConfigField "String", "ServerIP", "\"100.24.24.64:8090/\""
-        buildConfigField "String", "ServerArgumentIP", "\"http://100.24.24.64:3366/\""
+        buildConfigField "String", 'TwitterAPISecret', '"GU4uxItEP3ZM926o1NcUP2gGbBoivm4cWge9dzxsvpJFLHLzRe"'
+        buildConfigField "String", "InstagramClient", '"0193edda4dd44b14876ef8440b2fc38a"'
+        buildConfigField "String", "InstagramClientSecret", '"1daa69a83fbb410a85edd338043caf30"'
+        buildConfigField "String", "InstagramRedirectionURL", '"https://girlfriend-yerin.tistory.com"'
+        buildConfigField "String", "IDPreferenceKey", '"load_id_key"'
+        buildConfigField "String", "PwdPreferenceKey", '"load_pwd_key"'
+        buildConfigField "String", "FacebookDocTag", '"Facebook"'
+        buildConfigField "String", "TwitterDocTag", '"Twitter"'
+        buildConfigField "String", "InstagramDocTag", '"Instagram"'
+        buildConfigField "String", "ServerIP", '"100.24.24.64:8090/"'
+        buildConfigField "String", "ServerArgumentIP", '"http://100.24.24.64:3366/"'
     }
     buildTypes {
         release {

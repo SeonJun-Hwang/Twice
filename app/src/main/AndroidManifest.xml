@@ -74,7 +74,7 @@
         <activity
             android:name=".view.SNSLinkingActivity"
             android:label="@string/app_linkage_title" />
-        <activity android:name=".view.InstagramActivity" />
+        <activity android:name=".view.custom.InstagramLogin.InstagramActivity" />
 
         <activity android:name=".view.custom.TwiceGallery.GalleryActivity"
             android:label="@string/gallery_label"/>

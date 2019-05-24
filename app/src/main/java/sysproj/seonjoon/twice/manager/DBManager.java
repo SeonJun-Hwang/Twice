@@ -85,7 +85,6 @@ public class DBManager {
     void getDB(String collection, String doc, final DBLoadSuccessCallback callback) {
         Log.e(TAG, "Start Load Data");
 
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         mResult = null;
@@ -283,7 +282,7 @@ public class DBManager {
             data.put(SNSTag.TwitterUNameTag, UserSession.TwitterToken.getUserName());
             data.put(SNSTag.TwitterUIDTag, UserSession.TwitterToken.getUserId());
 
-            Log.e(TAG, "Facebook Save");
+            Log.e(TAG, "Twitter Save");
 
             db.collection(collection).document(BuildConfig.TwitterDocTag)
                     .set(data)
@@ -296,6 +295,28 @@ public class DBManager {
                     });
         }
 
+    }
+
+    public void saveInstagramToken(final String collection, final DBAccessResultCallback callback){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        if (UserSession.InstagramToekn != null) {
+            Map<String, Object> data = new HashMap<>();
+
+            data.put(SNSTag.InstagramTokenTag, UserSession.InstagramToekn);
+
+            Log.e(TAG, "Instagram Save");
+
+            db.collection(collection).document(BuildConfig.InstagramDocTag)
+                    .set(data)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            Log.e(TAG, "Instagram Success : " + task.isSuccessful());
+                            callback.AccessCallback(task.isSuccessful());
+                        }
+                    });
+        }
     }
 
     public void removeFacebookToken(final String collection, final DBAccessResultCallback callback) {
@@ -334,6 +355,27 @@ public class DBManager {
                         callback.AccessCallback(false);
                     }
                 });
+    }
+
+    public void removeInstagramToken(final String collection, final DBAccessResultCallback callback){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection(collection).document(BuildConfig.InstagramDocTag)
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        callback.AccessCallback(true);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.AccessCallback(false);
+                    }
+                });
+
     }
 
     public FirebaseUser getUser() {

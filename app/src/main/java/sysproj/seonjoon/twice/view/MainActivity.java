@@ -132,13 +132,13 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == LINK_SNS_CODE)
-                if (loadProfileAsync == null) {
-                    loadProfileAsync = new LoadProfileAsync();
-                    loadProfileAsync.execute();
-                }
-        }
+        Log.e(TAG, requestCode + " / " + resultCode);
+
+        if (requestCode == LINK_SNS_CODE)
+            if (loadProfileAsync == null) {
+                loadProfileAsync = new LoadProfileAsync();
+                loadProfileAsync.execute();
+            }
     }
 
     @Override
@@ -417,25 +417,24 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                         .load(profile.getProfileImage())
                         .apply(RequestOptions.circleCropTransform())
                         .into(repreProfileImage);
-
-                if (UserSession.FacebookToken == null)
-                    facebookStatus.setColorFilter(StaticAppData.Gray_filter);
-                else
-                    facebookStatus.clearColorFilter();
-
-                if (UserSession.TwitterToken == null)
-                    twitterStatus.setColorFilter(StaticAppData.Gray_filter);
-                else
-                    twitterStatus.clearColorFilter();
-
-                instagramStatus.setColorFilter(StaticAppData.Gray_filter);
             } else {
                 repreName.setText("대표 SNS를 선택해주세요");
                 repreEmail.setText("");
-                facebookStatus.setColorFilter(StaticAppData.Gray_filter);
-                twitterStatus.setColorFilter(StaticAppData.Gray_filter);
-                instagramStatus.setColorFilter(StaticAppData.Gray_filter);
             }
+            if (UserSession.FacebookToken == null)
+                facebookStatus.setColorFilter(StaticAppData.Gray_filter);
+            else
+                facebookStatus.clearColorFilter();
+
+            if (UserSession.TwitterToken == null)
+                twitterStatus.setColorFilter(StaticAppData.Gray_filter);
+            else
+                twitterStatus.clearColorFilter();
+
+            if (UserSession.InstagramToekn == null)
+                instagramStatus.setColorFilter(StaticAppData.Gray_filter);
+            else
+                instagramStatus.clearColorFilter();
 
             dialog.dismiss();
             dialog = null;

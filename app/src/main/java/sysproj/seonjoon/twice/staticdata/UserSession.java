@@ -10,6 +10,7 @@ public class UserSession {
     public static AccessToken FacebookToken = null;
     public static UserProfile FacebookProfile = null;
     public static TwitterSession TwitterToken = null;
+    public static String InstagramToekn = null;
 
     public static final String UserFileName = "AuthFile";
     public static final String UserIDTag = "AuthUID";

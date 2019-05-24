@@ -47,6 +47,12 @@ public class LoginManager {
         DBManager.getInstance().getDB(uid, BuildConfig.TwitterDocTag, callback);
     }
 
+    public void InstagramLogin(String uid, DBLoadSuccessCallback callback){
+        Log.e(TAG, "Instagram Login Start");
+
+        DBManager.getInstance().getDB(uid, BuildConfig.InstagramDocTag, callback);
+    }
+
     public boolean TwiceLogin(Activity activity, String id, String password) {
         loginResult = false;
 
@@ -71,7 +77,9 @@ public class LoginManager {
             UserSession.FacebookToken = null;
             AccessToken.setCurrentAccessToken(null);
         }
-
+        if(UserSession.InstagramToekn != null){
+            UserSession.InstagramToekn = null;
+        }
 
     }
 
