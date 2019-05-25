@@ -3,7 +3,7 @@ package sysproj.seonjoon.twice.viewholder;
 import android.view.View;
 import sysproj.seonjoon.twice.entity.Post;
 
-public class TOViewHolder extends BaseViewHolder {
+public class TOViewHolder extends TwitterViewHolder {
 
     private static final String TAG = "TOHolder";
 

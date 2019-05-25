@@ -32,6 +32,11 @@ android {
     dataBinding {
         enabled = true
     }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -62,15 +67,11 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.4.1'
     implementation 'com.facebook.stetho:stetho-js-rhino:1.4.2'
 
-    // Github Video Player
-    implementation 'com.github.tcking:giraffeplayer2:0.1.25'
-    implementation 'com.github.tcking:ijkplayer-arm64:0.8.8' //support arm64
-    implementation 'com.github.tcking:ijkplayer-armv5:0.8.8' //support armv5
-    implementation 'com.github.tcking:ijkplayer-x86:0.8.8' //support x86
-    implementation 'com.github.tcking:ijkplayer-x86_64:0.8.8' //support x86_64
-
-    // TdePermission
-    implementation 'gun0912.ted:tedpermission:2.0.0'
+    // Exo Player
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.10.1'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.10.1'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.10.1'
 }
 
 apply plugin: 'com.google.gms.google-services'

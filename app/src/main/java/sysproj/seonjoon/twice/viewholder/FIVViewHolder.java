@@ -1,26 +1,29 @@
 package sysproj.seonjoon.twice.viewholder;
 
-import android.graphics.Color;
 import android.net.Uri;
 import android.util.Log;
 import android.view.View;
+
+import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.SimpleExoPlayer;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.ui.PlayerView;
+
 import java.util.ArrayList;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostMedia;
-import tcking.github.com.giraffeplayer2.VideoInfo;
-import tcking.github.com.giraffeplayer2.VideoView;
 
-public class FIVViewHolder extends BaseViewHolder {
+public class FIVViewHolder extends FacebookViewHolder {
 
     private final static String TAG = "FIVViewHolder";
 
-    private VideoView videoPlayer;
+    private PlayerView videoPlayer;
 
     public FIVViewHolder(View itemView) {
         super(itemView);
 
-        videoPlayer = (VideoView) itemView.findViewById(R.id.card_video_player);
+        videoPlayer = (PlayerView) itemView.findViewById(R.id.card_video_player);
     }
 
     @Override
@@ -33,8 +36,14 @@ public class FIVViewHolder extends BaseViewHolder {
             Log.e(TAG, "Thumbnail " + imageList.get(0).getMediaURL());
             Log.e(TAG, "Video " + imageList.get(1).getMediaURL());
 
-            videoPlayer.getVideoInfo().setBgColor(Color.WHITE).setAspectRatio(VideoInfo.AR_ASPECT_FIT_PARENT);//.setVideoPath(imageList.get(1).getMediaURL()).setAc;
-            videoPlayer.setVideoPath(imageList.get(1).getMediaURL()).setFingerprint(getAdapterPosition()).getPlayer().start();
+            SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context);
+
+            videoPlayer.setPlayer(player);
+
+            MediaSource source = buildMediaSource(Uri.parse(imageList.get(1).getMediaURL()));
+
+            player.prepare(source,true, false);
+            player.setPlayWhenReady(true);
         }
     }
 

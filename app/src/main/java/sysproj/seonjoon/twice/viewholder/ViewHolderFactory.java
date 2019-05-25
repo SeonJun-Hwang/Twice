@@ -38,8 +38,14 @@ public class ViewHolderFactory {
                 else if (content == SNSTag.Image)
                     res = R.layout.card_timeline_twitter_tii_rt;
             }
-        } else
-            res = R.layout.card_timeline;
+        } else {
+            if (content == SNSTag.Video)
+                res = R.layout.card_timeline_instagram_video;
+            else if (content == SNSTag.Image)
+                res = R.layout.card_timeline_instagram_image;
+            else if (content == SNSTag.Carousel)
+                res = R.layout.card_timeline_instagram_carousel;
+        }
 
         return res;
     }
@@ -72,8 +78,14 @@ public class ViewHolderFactory {
                 else if (content == SNSTag.Image)
                     res = new RTIIViewHolder(view);
             }
-        } else
-            res = new TOViewHolder(view);
+        } else {
+            if (content == SNSTag.Image)
+                res = new IIViewHolder(view);
+            else if (content == SNSTag.Video)
+                res = new IVViewHolder(view);
+            else if (content == SNSTag.Carousel)
+                res = new ICViewHolder(view);
+        }
 
         return res;
     }

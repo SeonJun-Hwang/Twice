@@ -84,6 +84,7 @@ public class InstagramLoader implements DataLoader {
             line = br.readLine();
 
             res = new JSONObject(line);
+
             br.close();
             urlConnection.disconnect();
         } catch (IOException e) {

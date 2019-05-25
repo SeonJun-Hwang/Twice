@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.net.Uri;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextPaint;
@@ -15,12 +16,16 @@ import android.text.style.URLSpan;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.android.exoplayer2.source.ExtractorMediaSource;
+import com.google.android.exoplayer2.source.MediaSource;
+import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
+import com.google.android.exoplayer2.util.Util;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +38,6 @@ import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.FacebookPost;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostExtendInfo;
-import sysproj.seonjoon.twice.entity.PostRFS;
 import sysproj.seonjoon.twice.entity.TwitterPost;
 import sysproj.seonjoon.twice.staticdata.LastUpdate;
 import sysproj.seonjoon.twice.view.MainActivity;
@@ -47,11 +51,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     protected ImageView profileImage;
     protected TextView titleText;
     protected TextView contentText;
-    protected TextView contentTime;
-
-    protected Button reply;
-    protected Button thumbsUp;
-    protected Button share;
+    protected TextView subTitleText;
 
     public BaseViewHolder(View itemView) {
         super(itemView);
@@ -61,22 +61,16 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         snsLogo = (ImageView) itemView.findViewById(R.id.card_title_logo);
         profileImage = (ImageView) itemView.findViewById(R.id.card_profile_image);
         titleText = (TextView) itemView.findViewById(R.id.card_title_text);
-        contentTime = (TextView) itemView.findViewById(R.id.card_title_time);
+        subTitleText = (TextView) itemView.findViewById(R.id.card_subtitle);
         contentText = (TextView) itemView.findViewById(R.id.card_content_text);
-
-        reply = (Button) itemView.findViewById(R.id.card_reply);
-        thumbsUp = (Button) itemView.findViewById(R.id.card_thumbs_up);
-        share = (Button) itemView.findViewById(R.id.card_share);
     }
 
     public void bind(Post item) {
-        //innerLinearLayout.setBackgroundColor(context.getColor(R.color.timelineThemeBackWhite));
 
         snsLogo.setImageDrawable(getLogo(item));
-        contentTime.setText(calTime(item.getCreateDate()));
         titleText.setText(item.getUser().getName());
 
-        setRFSField(item);
+        setSubTitle(item);
         setContent(item.getContentText(), item.getExtendInfo());
         setProfileImage(item);
         setImageContent(item);
@@ -97,28 +91,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         return result;
     }
 
-    private String calTime(Date time) {
-        Date curTime = LastUpdate.getTime(MainActivity.getShowingFragmentNumber());
-        long diff = (curTime.getTime() - time.getTime()) / 1000;
-
-//        Log.e("TimelineRecycler", diff + " / " + curTime.toString() + " / " + time.toString());
-
-        if (diff < 10) // Before 10 Second
-            return "a Moment ago";
-        else if (diff < 60) // Before 1 Minute
-            return diff + " seconds";
-        else if (diff < (60 * 60)) // Before 1 Hour
-            return (diff / 60) + " Minutes";
-        else if (diff < (60 * 60 * 24)) // Before 1 Day
-            return (diff / (60 * 60)) + " Hours";
-        else if (diff < (60 * 60 * 24 * 2)) // Yesterday
-            return "Yesterday";
-
-        if (curTime.getYear() == time.getYear())
-            return (new SimpleDateFormat("MMM dd 'at' k:mm a", Locale.US)).format(time);
-
-        return (new SimpleDateFormat("MMM dd yyyy', at' k:mm a", Locale.US)).format(time);
-    }
+    protected abstract void setSubTitle(Post item);
 
     private void setContent(String content, ArrayList<PostExtendInfo> post) {
 
@@ -171,29 +144,9 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
-    private void setRFSField(final Post post) {
-
-        if (post instanceof FacebookPost) {
-            thumbsUp.setText("Thumbs Up!");
-            reply.setText("Comment");
-            share.setText("Share");
-        } else if (post instanceof TwitterPost) {
-            PostRFS rfs = post.getRFS();
-
-            int favorCount = rfs.getFavoriteCount();
-            int replyCount = rfs.getRepleCount();
-            int retweetCount = rfs.getSharedCount();
-
-            thumbsUp.setText("Favorite " + (favorCount > 9999 ? String.format("%.1f", favorCount / 1000f) + " K" : favorCount));
-            reply.setText("Reple " + (replyCount > 9999 ? String.format("%.1f", replyCount / 1000f) + " K" : replyCount));
-            share.setText("Retweet " + (retweetCount > 9999 ? String.format("%.1f", retweetCount / 1000f) + "K" : retweetCount));
-        }
-    }
-
     private void setProfileImage(Post post) {
         if (post.getUser().getProfileImage() != null)
             Glide.with(context).applyDefaultRequestOptions(RequestOptions.circleCropTransform()).load(post.getUser().getProfileImage()).into(profileImage);
-            //Glide.with(context).load("https://upload.wikimedia.org/wikipedia/ko/c/cb/Unification_flag_of_Korea_%28Cropped%29.PNG").into(profileImage);
         else
             Glide.with(context).applyDefaultRequestOptions(RequestOptions.circleCropTransform()).load(R.drawable.default_user).into(profileImage);
     }
@@ -258,6 +211,34 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         }
     }
 
+    final String calTime(Date time) {
+        Date curTime = LastUpdate.getTime(MainActivity.getShowingFragmentNumber());
+        long diff = (curTime.getTime() - time.getTime()) / 1000;
+
+        if (diff < 10) // Before 10 Second
+            return "a Moment ago";
+        else if (diff < 60) // Before 1 Minute
+            return diff + " seconds";
+        else if (diff < (60 * 60)) // Before 1 Hour
+            return (diff / 60) + " Minutes";
+        else if (diff < (60 * 60 * 24)) // Before 1 Day
+            return (diff / (60 * 60)) + " Hours";
+        else if (diff < (60 * 60 * 24 * 2)) // Yesterday
+            return "Yesterday";
+
+        if (curTime.getYear() == time.getYear())
+            return (new SimpleDateFormat("MMM dd 'at' k:mm a", Locale.US)).format(time);
+
+        return (new SimpleDateFormat("MMM dd yyyy', at' k:mm a", Locale.US)).format(time);
+    }
+
+    final MediaSource buildMediaSource(Uri uri) {
+
+        String userAgent = Util.getUserAgent(context, "Twice");
+
+        return new ProgressiveMediaSource.Factory(new DefaultHttpDataSourceFactory(userAgent))
+                .createMediaSource(uri);
+    }
 }
 
 

@@ -11,7 +11,7 @@ import sysproj.seonjoon.twice.entity.FacebookLinkVO;
 import sysproj.seonjoon.twice.entity.FacebookPost;
 import sysproj.seonjoon.twice.entity.Post;
 
-public class FLViewHolder extends BaseViewHolder {
+public class FLViewHolder extends FacebookViewHolder {
 
     private static final String TAG = "FLViewHolder";
 

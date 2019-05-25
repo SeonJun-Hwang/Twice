@@ -27,6 +27,7 @@ import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TwitterParser;
 import sysproj.seonjoon.twice.staticdata.LastUpdate;
 import sysproj.seonjoon.twice.staticdata.UserSession;
+import sysproj.seonjoon.twice.view.custom.TimelineRecyclerAdapter;
 
 public class FragmentSearch extends Fragment {
 

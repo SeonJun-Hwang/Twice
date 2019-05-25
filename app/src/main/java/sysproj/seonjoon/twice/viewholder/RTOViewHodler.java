@@ -9,7 +9,7 @@ import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.TwitterPost;
 import sysproj.seonjoon.twice.entity.UserProfile;
 
-public class RTOViewHodler extends BaseViewHolder {
+public class RTOViewHodler extends TwitterViewHolder {
 
     private TextView retweetText;
     private static final String TAG = "RTOHolder";

@@ -11,7 +11,6 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.util.Log;
@@ -22,8 +21,6 @@ import com.facebook.FacebookSdk;
 import com.facebook.appevents.AppEventsLogger;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.gun0912.tedpermission.PermissionListener;
-import com.gun0912.tedpermission.TedPermission;
 import com.twitter.sdk.android.core.DefaultLogger;
 import com.twitter.sdk.android.core.Twitter;
 import com.twitter.sdk.android.core.TwitterAuthConfig;
@@ -31,7 +28,6 @@ import com.twitter.sdk.android.core.TwitterConfig;
 import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -39,7 +35,6 @@ import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.loader.PreferenceLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
-import sysproj.seonjoon.twice.manager.PreferenceManager;
 import sysproj.seonjoon.twice.parser.FacebookTokenParser;
 import sysproj.seonjoon.twice.parser.InstagramTokenParser;
 import sysproj.seonjoon.twice.parser.TokenParser;

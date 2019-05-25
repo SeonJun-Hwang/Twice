@@ -366,55 +366,29 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         }
 
         @Override
-        protected Void doInBackground(Void... voids) {
-            if (UserSession.FacebookToken != null) {
-                DataLoader dataLoader = new FacebookLoader(mContext);
-                JSONObject userJSON = dataLoader.LoadUserProfileData();
-
-                FacebookParser snsParser = new FacebookParser();
-                UserSession.FacebookProfile = snsParser.parseUserProfile(userJSON);
-
-                profile = UserSession.FacebookProfile;
-
-            } else if (UserSession.TwitterToken != null) {
-                final CountDownLatch countDownLatch = new CountDownLatch(1);
-                DataLoader loader = new TwitterLoader(mContext);
-                loader.LoadUserProfileData(new DataLoadCompleteCallback() {
-                    @Override
-                    public void Complete(boolean isSuccess, JSONObject result) {
-                        if (isSuccess) {
-                            try {
-                                TwitterParser parser = new TwitterParser();
-                                profile = parser.parseUserProfile(result);
-
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        countDownLatch.countDown();
-                    }
-                });
-
-                try {
-                    countDownLatch.await();
-                } catch (InterruptedException ignored) {
-                }
-            } else if (UserSession.InstagramToekn != null) {
-                final CountDownLatch countDownLatch = new CountDownLatch(1);
-                DataLoader loader = new InstagramLoader();
-                InstagramParser parser = new InstagramParser();
-
-                profile = parser.parseUserProfile(loader.LoadUserProfileData());
-
-                loader.LoadUserProfileData();
-            }
-            return null;
-        }
-
-        @Override
         protected void onPreExecute() {
             super.onPreExecute();
             dialog.show();
+        }
+
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+            loadFacebookProfile();
+            loadInstagramProfile();
+            loadTwitterProfile();
+
+            if (UserSession.FacebookProfile != null){
+                profile = UserSession.FacebookProfile;
+            }
+            else if (UserSession.TwitterProfile != null){
+                profile = UserSession.TwitterProfile;
+            }
+            else if (UserSession.InstagramProfile != null){
+                profile = UserSession.InstagramProfile;
+            }
+
+            return null;
         }
 
         @Override
@@ -450,6 +424,61 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             dialog.dismiss();
             dialog = null;
             loadProfileAsync = null;
+        }
+
+        private void loadFacebookProfile() {
+
+            if (UserSession.FacebookToken != null) {
+                profile = UserSession.FacebookProfile;
+
+                DataLoader dataLoader = new FacebookLoader(mContext);
+                JSONObject userJSON = dataLoader.LoadUserProfileData();
+
+                FacebookParser snsParser = new FacebookParser();
+                UserSession.FacebookProfile = snsParser.parseUserProfile(userJSON);
+            }
+        }
+
+        private void loadTwitterProfile() {
+
+            if (UserSession.TwitterToken != null) {
+                final CountDownLatch countDownLatch = new CountDownLatch(1);
+                DataLoader loader = new TwitterLoader(mContext);
+                loader.LoadUserProfileData(new DataLoadCompleteCallback() {
+                    @Override
+                    public void Complete(boolean isSuccess, JSONObject result) {
+                        if (isSuccess) {
+                            try {
+                                TwitterParser parser = new TwitterParser();
+                                UserSession.TwitterProfile = parser.parseUserProfile(result);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        countDownLatch.countDown();
+                    }
+                });
+
+                try {
+                    countDownLatch.await();
+                } catch (InterruptedException ignored) {
+                }
+            }
+
+        }
+
+        private void loadInstagramProfile() {
+
+            if (UserSession.InstagramToekn != null) {
+                DataLoader loader = new InstagramLoader();
+                InstagramParser parser = new InstagramParser();
+
+                UserSession.InstagramProfile  = parser.parseUserProfile(loader.LoadUserProfileData());
+
+                loader.LoadUserProfileData();
+            }
+
         }
     }
 
