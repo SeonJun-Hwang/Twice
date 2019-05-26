@@ -81,8 +81,6 @@ public class CarouselAdapter extends PagerAdapter {
 
                 videoView.setPlayer(player);
 
-                player.addListener(new ExoPlayerEventListener(videoView));
-
                 String userAgent = Util.getUserAgent(context, "Twice");
 
                 MediaSource source = new ProgressiveMediaSource.Factory(new DefaultHttpDataSourceFactory(userAgent))
