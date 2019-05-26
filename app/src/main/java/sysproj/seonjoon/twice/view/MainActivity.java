@@ -61,10 +61,13 @@ import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.UserProfile;
 import sysproj.seonjoon.twice.loader.DataLoader;
 import sysproj.seonjoon.twice.loader.FacebookLoader;
+import sysproj.seonjoon.twice.loader.InstagramLoader;
 import sysproj.seonjoon.twice.loader.PreferenceLoader;
 import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
 import sysproj.seonjoon.twice.parser.FacebookParser;
+import sysproj.seonjoon.twice.parser.InstagramParser;
+import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TwitterParser;
 import sysproj.seonjoon.twice.staticdata.StaticAppData;
 import sysproj.seonjoon.twice.staticdata.UserSession;
@@ -132,13 +135,13 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == LINK_SNS_CODE)
-                if (loadProfileAsync == null) {
-                    loadProfileAsync = new LoadProfileAsync();
-                    loadProfileAsync.execute();
-                }
-        }
+        Log.e(TAG, requestCode + " / " + resultCode);
+
+        if (requestCode == LINK_SNS_CODE)
+            if (loadProfileAsync == null) {
+                loadProfileAsync = new LoadProfileAsync();
+                loadProfileAsync.execute();
+            }
     }
 
     @Override
@@ -370,17 +373,82 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         }
 
         @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.show();
+        }
+
+
+        @Override
         protected Void doInBackground(Void... voids) {
+            loadFacebookProfile();
+            loadInstagramProfile();
+            loadTwitterProfile();
+
+            if (UserSession.FacebookProfile != null){
+                profile = UserSession.FacebookProfile;
+            }
+            else if (UserSession.TwitterProfile != null){
+                profile = UserSession.TwitterProfile;
+            }
+            else if (UserSession.InstagramProfile != null){
+                profile = UserSession.InstagramProfile;
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void avoid) {
+            super.onPostExecute(avoid);
+
+            if (profile != null) {
+                repreName.setText(profile.getName());
+                repreEmail.setText(profile.getEmail());
+                Glide.with(MainActivity.this)
+                        .load(profile.getProfileImage())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(repreProfileImage);
+            } else {
+                repreName.setText("연동이 되어 있지 않습니다.");
+                repreEmail.setText("");
+            }
+            if (UserSession.FacebookToken == null)
+                facebookStatus.setColorFilter(StaticAppData.Gray_filter);
+            else
+                facebookStatus.clearColorFilter();
+
+            if (UserSession.TwitterToken == null)
+                twitterStatus.setColorFilter(StaticAppData.Gray_filter);
+            else
+                twitterStatus.clearColorFilter();
+
+            if (UserSession.InstagramToekn == null)
+                instagramStatus.setColorFilter(StaticAppData.Gray_filter);
+            else
+                instagramStatus.clearColorFilter();
+
+            dialog.dismiss();
+            dialog = null;
+            loadProfileAsync = null;
+        }
+
+        private void loadFacebookProfile() {
+
             if (UserSession.FacebookToken != null) {
+                profile = UserSession.FacebookProfile;
+
                 DataLoader dataLoader = new FacebookLoader(mContext);
                 JSONObject userJSON = dataLoader.LoadUserProfileData();
 
                 FacebookParser snsParser = new FacebookParser();
                 UserSession.FacebookProfile = snsParser.parseUserProfile(userJSON);
+            }
+        }
 
-                profile = UserSession.FacebookProfile;
+        private void loadTwitterProfile() {
 
-            } else if (UserSession.TwitterToken != null) {
+            if (UserSession.TwitterToken != null) {
                 final CountDownLatch countDownLatch = new CountDownLatch(1);
                 DataLoader loader = new TwitterLoader(mContext);
                 loader.LoadUserProfileData(new DataLoadCompleteCallback() {
@@ -389,7 +457,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                         if (isSuccess) {
                             try {
                                 TwitterParser parser = new TwitterParser();
-                                profile = parser.parseUserProfile(result);
+                                UserSession.TwitterProfile = parser.parseUserProfile(result);
 
                             } catch (JSONException e) {
                                 e.printStackTrace();
@@ -404,49 +472,20 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 } catch (InterruptedException ignored) {
                 }
             }
-            return null;
+
         }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            dialog.show();
-        }
+        private void loadInstagramProfile() {
 
-        @Override
-        protected void onPostExecute(Void avoid) {
-            super.onPostExecute(avoid);
+            if (UserSession.InstagramToekn != null) {
+                DataLoader loader = new InstagramLoader();
+                InstagramParser parser = new InstagramParser();
 
-            if (profile != null) {
-                repreName.setText(profile.getName());
-                repreEmail.setText(profile.getEmail());
-                Glide.with(MainActivity.this)
-                        .load(profile.getProfileImage())
-                        .apply(RequestOptions.circleCropTransform())
-                        .into(repreProfileImage);
+                UserSession.InstagramProfile  = parser.parseUserProfile(loader.LoadUserProfileData());
 
-                if (UserSession.FacebookToken == null)
-                    facebookStatus.setColorFilter(StaticAppData.Gray_filter);
-                else
-                    facebookStatus.clearColorFilter();
-
-                if (UserSession.TwitterToken == null)
-                    twitterStatus.setColorFilter(StaticAppData.Gray_filter);
-                else
-                    twitterStatus.clearColorFilter();
-
-                instagramStatus.setColorFilter(StaticAppData.Gray_filter);
-            } else {
-                repreName.setText("대표 SNS를 선택해주세요");
-                repreEmail.setText("");
-                facebookStatus.setColorFilter(StaticAppData.Gray_filter);
-                twitterStatus.setColorFilter(StaticAppData.Gray_filter);
-                instagramStatus.setColorFilter(StaticAppData.Gray_filter);
+                loader.LoadUserProfileData();
             }
 
-            dialog.dismiss();
-            dialog = null;
-            loadProfileAsync = null;
         }
     }
 

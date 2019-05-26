@@ -1,4 +1,4 @@
-package sysproj.seonjoon.twice.view;
+package sysproj.seonjoon.twice.view.custom;
 
 import android.content.Context;
 import androidx.annotation.NonNull;
@@ -46,8 +46,6 @@ public class TimelineRecyclerAdapter extends RecyclerView.Adapter<BaseViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull BaseViewHolder viewHolder, int position) {
-        //Log.e(TAG, (position+1) + " - " + items.get(position).getUser().getProfileImage());
-        //Log.e(TAG, (position + 1) + " - " + items.get(position).getType());
         viewHolder.bind(items.get(position));
     }
 

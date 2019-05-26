@@ -71,6 +71,7 @@ import sysproj.seonjoon.twice.loader.PreferenceLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
 import sysproj.seonjoon.twice.parser.FacebookParser;
 import sysproj.seonjoon.twice.parser.FacebookTokenParser;
+import sysproj.seonjoon.twice.parser.InstagramTokenParser;
 import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TokenParser;
 import sysproj.seonjoon.twice.parser.TwitterTokenParser;
@@ -416,7 +417,7 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 if (user == null)
                     login = false;
                 else {
-                    final CountDownLatch countDownLatch = new CountDownLatch(2);
+                    final CountDownLatch countDownLatch = new CountDownLatch(3);
 
                     LoginManager.getInstance().FacebookLogin(user.getUid(), new DBLoadSuccessCallback() {
                         @Override
@@ -445,9 +446,22 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                         }
                     });
 
+                    LoginManager.getInstance().InstagramLogin(user.getUid(), new DBLoadSuccessCallback() {
+                        @Override
+                        public void LoadDataCallback(boolean isSuccess, Map<String, Object> result) {
+                            if (isSuccess) {
+                                TokenParser tokenParser = new InstagramTokenParser();
+                                UserSession.InstagramToekn = (String) tokenParser.map2Token(result);
+                            }
+
+                            countDownLatch.countDown();
+                        }
+                    });
+
                     try {
                         countDownLatch.await();
-                    } catch (InterruptedException e) {
+                    } catch (
+                            InterruptedException e) {
                         e.printStackTrace();
                     }
                 }

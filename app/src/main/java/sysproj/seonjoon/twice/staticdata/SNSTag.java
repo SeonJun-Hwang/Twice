@@ -7,6 +7,7 @@ public class SNSTag {
     public static final int Image = 2;
     public static final int Video = 3;
     public static final int Link = 4;
+    public static final int Carousel = 5;
 
     public static final int Facebook = 0;
     public static final int Instagram = 1;
@@ -39,10 +40,7 @@ public class SNSTag {
     public static final String TwitterResultTag = "TwRes";
 
     // Instagram Tag
-    public static final String I_ID = "i_id";
-    public static final String I_Name = "i_name";
-    public static final String I_UID = "i_uid";
-
+    public static final String InstagramTokenTag = "ITk";
     // Twice Tag
     public static final String TWICE_EMAIL_TAIL= "@twice.com";
 

@@ -24,12 +24,15 @@ import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.loader.DataLoader;
 import sysproj.seonjoon.twice.loader.FacebookLoader;
+import sysproj.seonjoon.twice.loader.InstagramLoader;
 import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.parser.FacebookParser;
+import sysproj.seonjoon.twice.parser.InstagramParser;
 import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TwitterParser;
 import sysproj.seonjoon.twice.staticdata.LastUpdate;
 import sysproj.seonjoon.twice.staticdata.UserSession;
+import sysproj.seonjoon.twice.view.custom.TimelineRecyclerAdapter;
 
 public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -102,6 +105,7 @@ public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefre
 
         private ArrayList<Post> facebookTimeline;
         private ArrayList<Post> twitterTimeline;
+        private ArrayList<Post> instagramTimeline;
 
         @Override
         protected void onPreExecute() {
@@ -140,6 +144,18 @@ public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefre
             } else
                 Log.e(TAG, "Facebook Token is Null");
 
+            if (UserSession.InstagramToekn != null){
+                Log.e(TAG, "Start Instagram Async");
+
+                // TODO : Instagram Timeline Making
+                DataLoader loader = new InstagramLoader();
+                JSONObject jsonObject = loader.LoadTimeLineData();
+
+                SNSParser snsParser = new InstagramParser();
+                instagramTimeline = snsParser.parseTimeline(jsonObject);
+            } else
+                Log.e(TAG, "Instagram Token is Null");
+
             Log.e("Main", "Contents Size : " + contents.size());
             return null;
         }
@@ -156,7 +172,9 @@ public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefre
                 timelineAdapter.notifyDataSetChanged();
             }
 
-            contents.addAll(Post.mergePost(facebookTimeline, twitterTimeline));
+            ArrayList<Post> faceInsta = Post.mergePost(facebookTimeline, twitterTimeline);
+
+            contents.addAll(Post.mergePost(faceInsta, instagramTimeline));
 
             timelineAdapter.notifyDataSetChanged();
         }

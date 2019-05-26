@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
 
     <application
         android:allowBackup="true"
@@ -66,7 +67,7 @@
         <activity
             android:name=".view.SNSLinkingActivity"
             android:label="@string/app_linkage_title" />
-        <activity android:name=".view.InstagramActivity" />
+        <activity android:name=".view.custom.InstagramLogin.InstagramActivity" />
 
         <activity android:name=".view.custom.TwiceGallery.GalleryActivity"
             android:label="@string/gallery_label"/>

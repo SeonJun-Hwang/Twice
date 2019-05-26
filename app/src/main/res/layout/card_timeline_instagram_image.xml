@@ -36,8 +36,9 @@
             android:layout_width="0dp"
             android:layout_height="@dimen/timeline_image_size"
             android:gravity="center_vertical"
-            android:paddingLeft="3dp"
+            android:paddingStart="3dp"
             android:textSize="17dp"
+            android:singleLine="true"
             app:layout_constraintLeft_toRightOf="@id/card_profile_image"
             app:layout_constraintRight_toLeftOf="@id/card_title_logo"
             app:layout_constraintTop_toTopOf="parent" />
@@ -51,6 +52,58 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@id/card_title_text" />
 
+        <ImageView
+            android:id="@+id/card_content_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginVertical="5dp"
+            android:adjustViewBounds="true"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toBottomOf="@id/card_subtitle" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/timeline_status_linear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:padding="2dp"
+            app:layout_constraintLeft_toLeftOf="@id/card_profile_image"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_content_image">
+
+            <ImageView
+                android:id="@+id/card_like_image"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@null" />
+
+            <TextView
+                android:id="@+id/card_like_count"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/timeline_comment_text_size" />
+
+            <ImageView
+                android:id="@+id/card_comment_image"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginHorizontal="5dp"
+                android:background="@null" />
+
+            <TextView
+                android:id="@+id/card_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/timeline_comment_text_size" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
         <TextView
             android:id="@+id/card_content_text"
             android:layout_width="0dp"
@@ -60,72 +113,8 @@
             android:textSize="15dp"
             app:layout_constraintLeft_toLeftOf="@id/card_profile_image"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_subtitle" />
+            app:layout_constraintTop_toBottomOf="@id/timeline_status_linear" />
 
-        <ImageView
-            android:id="@+id/card_content_likes_image"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginHorizontal="10dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintLeft_toLeftOf="@id/card_profile_image"
-            app:layout_constraintTop_toBottomOf="@id/card_content_text" />
-
-        <TextView
-            android:id="@+id/card_content_likes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Likes Count"
-            app:layout_constraintBottom_toBottomOf="@id/card_content_likes_image"
-            app:layout_constraintLeft_toRightOf="@id/card_content_likes_image"
-            app:layout_constraintTop_toTopOf="@id/card_content_likes_image" />
-
-        <TextView
-            android:id="@+id/card_content_reple_share"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="Reple N Share Count"
-            app:layout_constraintBottom_toBottomOf="@id/card_content_likes_image"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@id/card_content_likes_image" />
-
-        <LinearLayout
-            android:id="@+id/timeline_comment_linear"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="horizontal"
-            android:padding="2dp"
-            android:weightSum="1"
-            app:layout_constraintLeft_toLeftOf="@id/card_profile_image"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_content_likes_image">
-
-            <Button
-                android:id="@+id/card_reply"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.33"
-                android:background="@null"
-                android:textSize="@dimen/timeline_comment_text_size" />
-
-            <Button
-                android:id="@+id/card_thumbs_up"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.33"
-                android:background="@null"
-                android:textSize="@dimen/timeline_comment_text_size" />
-
-            <Button
-                android:id="@+id/card_share"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.33"
-                android:background="@null"
-                android:textSize="@dimen/timeline_comment_text_size" />
-        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

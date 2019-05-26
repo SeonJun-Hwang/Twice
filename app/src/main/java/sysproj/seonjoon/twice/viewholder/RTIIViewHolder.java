@@ -1,6 +1,7 @@
 package sysproj.seonjoon.twice.viewholder;
 
 import androidx.viewpager.widget.ViewPager;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -12,9 +13,9 @@ import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostMedia;
 import sysproj.seonjoon.twice.entity.TwitterPost;
 import sysproj.seonjoon.twice.entity.UserProfile;
-import sysproj.seonjoon.twice.view.TimelinePageImageAdapter;
+import sysproj.seonjoon.twice.view.custom.TimelinePageImageAdapter;
 
-public class RTIIViewHolder extends BaseViewHolder {
+public class RTIIViewHolder extends TwitterViewHolder {
 
     private TextView retweetText;
     private ViewPager timelineImagePager;
@@ -32,12 +33,12 @@ public class RTIIViewHolder extends BaseViewHolder {
     public void bind(Post item) {
         super.bind(item);
 
-        UserProfile retweetUser = ((TwitterPost)item).getRetweetUser();
+        UserProfile retweetUser = ((TwitterPost) item).getRetweetUser();
 
         if (retweetUser == null)
             retweetText.setHeight(0);
         else {
-            Log.e(TAG, retweetUser.getName());
+            //Log.e(TAG, retweetUser.getName());
             retweetText.setText(retweetUser.getName() + " 님이 리트윗 하셨습니다.");
         }
     }
@@ -51,7 +52,7 @@ public class RTIIViewHolder extends BaseViewHolder {
         if (imageCount > 1)
             retweetText.setText("" + imageCount);
 
-        for (int i = 0; i < imageCount; i++){
+        for (int i = 0; i < imageCount; i++) {
             PostMedia media = imageList.get(i);
             String keyword = media.getKeyword();
 

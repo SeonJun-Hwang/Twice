@@ -1,4 +1,4 @@
-package sysproj.seonjoon.twice.view;
+package sysproj.seonjoon.twice.view.custom;
 
 import android.content.Context;
 import androidx.annotation.NonNull;

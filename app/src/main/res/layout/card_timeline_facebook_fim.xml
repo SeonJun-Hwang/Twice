@@ -43,7 +43,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/card_title_time"
+            android:id="@+id/card_subtitle"
             android:layout_width="0dp"
             android:layout_height="@dimen/timeline_time_text_size"
             android:paddingStart="3dp"
@@ -60,7 +60,7 @@
             android:textSize="15dp"
             app:layout_constraintLeft_toLeftOf="@id/card_profile_image"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/card_title_time" />
+            app:layout_constraintTop_toBottomOf="@id/card_subtitle" />
 
         <sysproj.seonjoon.twice.view.custom.TimelineImagePager
             android:id="@+id/card_content_image_view"

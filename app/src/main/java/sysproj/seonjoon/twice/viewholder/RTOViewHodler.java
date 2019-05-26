@@ -9,7 +9,7 @@ import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.TwitterPost;
 import sysproj.seonjoon.twice.entity.UserProfile;
 
-public class RTOViewHodler extends BaseViewHolder {
+public class RTOViewHodler extends TwitterViewHolder {
 
     private TextView retweetText;
     private static final String TAG = "RTOHolder";
@@ -29,7 +29,7 @@ public class RTOViewHodler extends BaseViewHolder {
         if (retweetUser == null)
             retweetText.setHeight(0);
         else {
-            Log.e(TAG, retweetUser.getName());
+            //Log.e(TAG, retweetUser.getName());
             retweetText.setText(retweetUser.getName() + " 님이 리트윗 하셨습니다.");
         }
     }

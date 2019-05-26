@@ -35,10 +35,8 @@ import com.facebook.login.widget.LoginButton;
 import com.google.firebase.auth.FirebaseUser;
 import com.twitter.sdk.android.core.Callback;
 import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterException;
 import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterAuthClient;
 import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
 import java.io.BufferedReader;
@@ -55,11 +53,13 @@ import sysproj.seonjoon.twice.manager.DBManager;
 import sysproj.seonjoon.twice.staticdata.SNSPermission;
 import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.UserSession;
+import sysproj.seonjoon.twice.view.custom.InstagramLogin.InstagramActivity;
+import sysproj.seonjoon.twice.view.custom.InstagramLogin.InstagramLoginButton;
+import sysproj.seonjoon.twice.view.custom.InstagramLogin.InstagramLoginCallBack;
 
 public class SNSLinkingActivity extends AppCompatActivity implements CompoundButton.OnClickListener {
 
     private static final String TAG = "SNSLinkingActivity";
-    private static final int userAddReq = 10001;
 
     private Context mContext;
 
@@ -67,8 +67,11 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
     private Switch twitterSwitch;
     private Switch instagramSwitch;
     private CallbackManager facebookCallback;
+    private InstagramLoginCallBack instagramCallback;
     private Button SNSLogin;
     private SNSDialog snsDialog;
+
+
     private FacebookAsync facebookAuth;
     private TwitterAsync twitterAuth;
     private InstagramAsync instagramAuth;
@@ -88,6 +91,8 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
             facebookSwitch.setChecked(true);
         if (UserSession.TwitterToken != null)
             twitterSwitch.setChecked(true);
+        if (UserSession.InstagramToekn != null)
+            instagramSwitch.setChecked(true);
 
         facebookSwitch.setOnClickListener(this);
         twitterSwitch.setOnClickListener(this);
@@ -298,13 +303,23 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
     }
 
     @Override
+    protected void onDestroy() {
+        AccessToken.setCurrentAccessToken(null);
+        setResult(RESULT_OK);
+        super.onDestroy();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (SNSLogin instanceof TwitterLoginButton) {
             ((TwitterLoginButton) SNSLogin).onActivityResult(requestCode, resultCode, data);
         } else if (SNSLogin instanceof LoginButton) {
             facebookCallback.onActivityResult(requestCode, resultCode, data);
+        } else if (SNSLogin instanceof InstagramLoginButton) {
+            ((InstagramLoginButton) SNSLogin).onActivityResult(requestCode, resultCode, data);
         }
+
     }
 
     private void setListener() {
@@ -475,11 +490,34 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
                     }
                 });
             } else if (snsTag == SNSTag.Instagram) {
+                Log.e(TAG, "Instagram Login Button Load");
                 SNSLogin = (InstagramLoginButton) view.findViewById(R.id.alert_instagram_login);
-                SNSLogin.setOnClickListener(new View.OnClickListener() {
+                ((InstagramLoginButton)SNSLogin).registerCallback(new InstagramLoginCallBack() {
                     @Override
-                    public void onClick(View view) {
-                        Toast.makeText(mContext, "Instagram Login", Toast.LENGTH_SHORT).show();
+                    public void onSuccess(String token) {
+                        UserSession.InstagramToekn = token;
+
+                        Log.e(TAG, token);
+
+                        DBManager.getInstance().saveInstagramToken(user.getUid(), new DBAccessResultCallback() {
+                            @Override
+                            public void AccessCallback(boolean isSuccess) {
+                                if (isSuccess) {
+                                    Toast.makeText(context, "저장되었습니다.", Toast.LENGTH_LONG).show();
+                                } else {
+                                    Toast.makeText(context, "잠시 후에 다시 시도해 주시기 바랍니다.", Toast.LENGTH_LONG).show();
+                                    UserSession.InstagramToekn = null;
+                                }
+
+                                snsDialog.dismiss();
+                                snsDialog = null;
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onCancel(String failMessage) {
+                        Log.e(TAG, failMessage);
                     }
                 });
             }
@@ -515,11 +553,4 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
         }
     }
 
-    @Override
-    protected void onDestroy() {
-
-        AccessToken.setCurrentAccessToken(null);
-
-        super.onDestroy();
-    }
 }

@@ -9,9 +9,9 @@ import java.util.ArrayList;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostMedia;
-import sysproj.seonjoon.twice.view.TimelinePageImageAdapter;
+import sysproj.seonjoon.twice.view.custom.TimelinePageImageAdapter;
 
-public class TIIViewHolder extends BaseViewHolder{
+public class TIIViewHolder extends TwitterViewHolder{
 
     private static final String TAG = "TIIViewHolder";
     private ViewPager contentImageList;
