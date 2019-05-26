@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,7 +14,9 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
+
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.manager.DBManager;
 
@@ -23,8 +24,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     private static final String TAG = "AccountActivity";
 
     private Context mContext;
-    private ImageButton updatePasswordBtn, signoutBtn;
-    private TextView IDText, emailText, passwordText, signoutTest;
+    private TextView IDText, passwordText, signoutTest;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,7 +32,6 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.account_activity);
 
         IDText = (TextView) findViewById(R.id.account_ID_text);
-        emailText = (TextView) findViewById(R.id.account_email_text);
         passwordText = (TextView) findViewById(R.id.account_password_text);
         signoutTest = (TextView) findViewById(R.id.account_signout_text);
 
@@ -41,10 +40,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         String ID = DBManager.getInstance().getUser().getEmail();
         int pos = ID.indexOf("@");
 
-        String tempEmail = DBManager.getInstance().getUser().getProviderData().get(0).getEmail();
-
-        IDText.setText(ID.substring(0, pos));
-        emailText.setText(tempEmail);
+        IDText.setText(": " + ID.substring(0, pos));
 
         setActionBar();
 
@@ -57,7 +53,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.account_password_text:
-
+                gotoChangePasswordActivity();
                 break;
             case R.id.account_signout_text:
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
@@ -105,6 +101,12 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setBackgroundDrawable(new ColorDrawable(getColor(R.color.timelineHeadBack)));// #464A4F
         }
+    }
+
+    private void gotoChangePasswordActivity()
+    {
+        Intent intent = new Intent(AccountActivity.this, ChangePasswordActivity.class);
+        startActivity(intent);
     }
 
     @Override

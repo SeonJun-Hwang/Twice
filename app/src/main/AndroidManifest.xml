@@ -74,7 +74,11 @@
         <activity android:name=".view.custom.TwiceGallery.GalleryActivity"
             android:label="@string/gallery_label"/>
         <activity android:name=".view.AccountActivity"
-            android:label="@string/app_account_title">
+            android:label="@string/app_account_title"/>
+
+        <activity android:name=".view.ChangePasswordActivity"
+            android:label="@string/update_password"
+            android:windowSoftInputMode="adjustResize">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
