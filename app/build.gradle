@@ -11,13 +11,17 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
         buildConfigField "String", 'TwitterAPI', '"H3qNM38a3TzDXpWz6yY1hknFy"'
-        buildConfigField "String", 'TwitterAPISecret', "\"GU4uxItEP3ZM926o1NcUP2gGbBoivm4cWge9dzxsvpJFLHLzRe\""
-        buildConfigField "String", "IDPreferenceKey", "\"load_id_key\""
-        buildConfigField "String", "PwdPreferenceKey", "\"load_pwd_key\""
-        buildConfigField "String", "FacebookDocTag", "\"Facebook\""
-        buildConfigField "String", "TwitterDocTag", "\"Twitter\""
-        buildConfigField "String", "ServerIP", "\"100.24.24.64:8090/\""
-        buildConfigField "String", "ServerArgumentIP", "\"http://100.24.24.64:3366/\""
+        buildConfigField "String", 'TwitterAPISecret', '"GU4uxItEP3ZM926o1NcUP2gGbBoivm4cWge9dzxsvpJFLHLzRe"'
+        buildConfigField "String", "InstagramClient", '"0193edda4dd44b14876ef8440b2fc38a"'
+        buildConfigField "String", "InstagramClientSecret", '"1daa69a83fbb410a85edd338043caf30"'
+        buildConfigField "String", "InstagramRedirectionURL", '"https://girlfriend-yerin.tistory.com"'
+        buildConfigField "String", "IDPreferenceKey", '"load_id_key"'
+        buildConfigField "String", "PwdPreferenceKey", '"load_pwd_key"'
+        buildConfigField "String", "FacebookDocTag", '"Facebook"'
+        buildConfigField "String", "TwitterDocTag", '"Twitter"'
+        buildConfigField "String", "InstagramDocTag", '"Instagram"'
+        buildConfigField "String", "ServerIP", '"100.24.24.64:8090/"'
+        buildConfigField "String", "ServerArgumentIP", '"http://100.24.24.64:3366/"'
     }
     buildTypes {
         release {
@@ -28,11 +32,15 @@ android {
     dataBinding {
         enabled = true
     }
+
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.0.0'
+    implementation 'androidx.appcompat:appcompat:1.0.2'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
@@ -58,15 +66,12 @@ dependencies {
     implementation 'com.facebook.stetho:stetho:1.4.1'
     implementation 'com.facebook.stetho:stetho-js-rhino:1.4.2'
 
-    // Github Video Player
-    implementation 'com.github.tcking:giraffeplayer2:0.1.25'
-    implementation 'com.github.tcking:ijkplayer-arm64:0.8.8' //support arm64
-    implementation 'com.github.tcking:ijkplayer-armv5:0.8.8' //support armv5
-    implementation 'com.github.tcking:ijkplayer-x86:0.8.8' //support x86
-    implementation 'com.github.tcking:ijkplayer-x86_64:0.8.8' //support x86_64
-
-    // TdePermission
-    implementation 'gun0912.ted:tedpermission:2.0.0'
+    // Exo Player
+    implementation 'com.google.android.exoplayer:exoplayer:2.10.1'
+    implementation 'com.google.android.exoplayer:exoplayer-core:2.10.1'
+    implementation 'com.google.android.exoplayer:exoplayer-dash:2.10.1'
+    implementation 'com.google.android.exoplayer:exoplayer-ui:2.10.1'
+    implementation 'com.google.android.exoplayer:exoplayer-hls:2.10.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
