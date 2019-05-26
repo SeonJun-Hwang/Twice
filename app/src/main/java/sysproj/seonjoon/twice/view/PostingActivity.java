@@ -10,12 +10,14 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.RadioButton;
@@ -32,6 +34,8 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
@@ -39,6 +43,7 @@ import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.FacebookPageVO;
 import sysproj.seonjoon.twice.loader.FacebookLoader;
 import sysproj.seonjoon.twice.parser.FacebookParser;
+import sysproj.seonjoon.twice.staticdata.UserSession;
 import sysproj.seonjoon.twice.view.custom.PostImageAdapter;
 import sysproj.seonjoon.twice.view.custom.TwiceGallery.GalleryActivity;
 
@@ -46,10 +51,14 @@ public class PostingActivity extends AppCompatActivity {
 
     private static final int IMAGE_SELECT = 1000;
     private static final String TAG = "PostingActivity";
+    private static final String USER_AGENT = "Mozilla/5.0";
 
     private EditText postMessage;
     private ImageButton loadImage;
-    private RadioButton postReserveRadio;
+    private CheckBox postReserveRadio;
+    private CheckBox postFacebookCheck;
+    private CheckBox postTwitterCheck;
+    private CheckBox postInstagramCheck;
     private Context mContext;
     private ArrayList<String> selectedImage;
     private ViewPager postImagePager;
@@ -70,12 +79,11 @@ public class PostingActivity extends AppCompatActivity {
         loader.LoadPagelist(new DataLoadCompleteCallback() {
             @Override
             public void Complete(boolean isSuccess, JSONObject result) {
-                Log.e(TAG, isSuccess + "result");
                 if (isSuccess) {
                     FacebookParser parser = new FacebookParser();
                     pages = parser.parsePageList(result);
 
-                    for (int i = 0; i < pages.size(); i++){
+                    for (int i = 0; i < pages.size(); i++) {
                         Log.e(TAG, pages.get(i).getName() + " / " + pages.get(i).getPageId());
                     }
                 } else
@@ -90,9 +98,13 @@ public class PostingActivity extends AppCompatActivity {
     private void initLayout() {
         postMessage = (EditText) findViewById(R.id.create_post_edit_text);
         loadImage = (ImageButton) findViewById(R.id.post_include_image);
-        postReserveRadio = (RadioButton) findViewById(R.id.post_reserve_radio);
+        postReserveRadio = (CheckBox) findViewById(R.id.post_reserve_radio);
         postImagePager = (ViewPager) findViewById(R.id.create_post_image_pager);
         postImageAdapter = new PostImageAdapter(mContext, selectedImage);
+
+        postFacebookCheck = (CheckBox) findViewById(R.id.create_facebook_check);
+        postTwitterCheck = (CheckBox) findViewById(R.id.create_twitter_check);
+        postInstagramCheck = (CheckBox) findViewById(R.id.create_instagram_check);
 
         postImagePager.setAdapter(postImageAdapter);
         postImagePager.setPageMargin(20);
@@ -185,7 +197,7 @@ public class PostingActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... voids) {
 
             boolean res = true;
-            String urls = BuildConfig.ServerIP + "facebook_post";
+            String urls = BuildConfig.ServerIP + "facebook_page";
 
             Log.e(TAG, urls);
 
@@ -194,11 +206,17 @@ public class PostingActivity extends AppCompatActivity {
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
                 connection.setRequestMethod("POST");
+                connection.setRequestProperty("User-Agent", USER_AGENT);
                 connection.setConnectTimeout(3000);
                 connection.setDoOutput(true);
+                connection.setDoInput(true);
 
                 OutputStreamWriter osw = new OutputStreamWriter(connection.getOutputStream());
-                osw.write(makeJSON());
+                String object = makeJSON();
+
+                Log.e(TAG, object);
+
+                osw.write(object);
                 osw.flush();
                 osw.close();
 
@@ -233,34 +251,59 @@ public class PostingActivity extends AppCompatActivity {
 
         private String makeJSON() {
             JSONObject sendObject = new JSONObject();
-            JSONObject facebookObject = new JSONObject();
             JSONArray facebookData = new JSONArray();
 
             try {
-                // Each Page
-                if (pages != null) {
-                    for (int pageNum = 0; pageNum < pages.size(); pageNum++) {
-                        FacebookPageVO pageVO = pages.get(pageNum);
+                // Time
+                sendObject.put("time", postReserveRadio.isChecked() ? (new Date()).toString() : null);
 
-                        JSONObject item = new JSONObject();
-                        JSONArray imageArray = new JSONArray();
-
-                        item.put("token", pageVO.getAccessToken());
-                        item.put("message", postMessage.getText().toString());
-                        item.put("page_id", pageVO.getPageId());
-
-                        for (int i = 0; i < selectedImage.size(); i++) {
-                            String filePath = selectedImage.get(i);
-                            String endcoded = Base64.encodeToString(readFile(filePath), Base64.NO_WRAP | Base64.URL_SAFE);
-                            imageArray.put(endcoded);
-                        }
-
-                        item.put("images", imageArray);
-                        facebookData.put(item);
-                    }
+                // Image
+                JSONArray imageArray = new JSONArray();
+                for (int i = 0; i < selectedImage.size(); i++) {
+                    String filePath = selectedImage.get(i);
+                    String endcoded = Base64.encodeToString(readFile(filePath), Base64.NO_WRAP | Base64.URL_SAFE);
+                    imageArray.put(endcoded);
                 }
-                facebookObject.put("data", facebookData);
-                sendObject.put("facebook", facebookObject);
+
+                sendObject.put("images", imageArray);
+                sendObject.put("message", postMessage.getText().toString());
+
+                // Facebook
+                if (postFacebookCheck.isChecked()) {
+                    if (pages != null) {
+                        for (int pageNum = 0; pageNum < pages.size(); pageNum++) {
+                            FacebookPageVO pageVO = pages.get(pageNum);
+
+                            JSONObject item = new JSONObject();
+
+                            item.put("token", pageVO.getAccessToken());
+                            item.put("page_id", pageVO.getPageId());
+
+                            facebookData.put(item);
+                        }
+                    }
+                    sendObject.put("facebook", facebookData);
+
+                } else
+                    sendObject.put("facebook", null);
+
+                // Twitter
+                if (postTwitterCheck.isChecked()) {
+                    JSONObject twitterData = new JSONObject();
+                    twitterData.put("tvn", UserSession.TwitterToken.getAuthToken().secret);
+                    twitterData.put("cgv", UserSession.TwitterToken.getAuthToken().token);
+                    sendObject.put("twitter", twitterData);
+                } else
+                    sendObject.put("twitter", null);
+
+                // Instagram
+                if (postInstagramCheck.isChecked()) {
+                    JSONObject instagramData = new JSONObject();
+                    instagramData.put("mbc", UserSession.InstagramToekn);
+                    sendObject.put("instagram", instagramData);
+                } else
+                    sendObject.put("instagram", null);
+
 
                 Log.e(TAG, sendObject.toString(2));
             } catch (JSONException e) {

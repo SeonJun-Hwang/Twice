@@ -206,7 +206,7 @@ public class TwitterLoader implements DataLoader {
 
         try {
             String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_TIMELINE
-                    + "?count=" + PreferenceLoader.loadPreference(context, PreferenceLoader.KEY_TWITTER);
+                    + "?count=" + PreferenceLoader.loadPreferenceFromDefault(context, PreferenceLoader.KEY_TWITTER);
 
             String nonce = generateNonce();
             String timestamp = Long.toString(System.currentTimeMillis() / 1000);

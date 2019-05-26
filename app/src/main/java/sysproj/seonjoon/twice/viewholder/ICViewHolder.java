@@ -11,7 +11,6 @@ import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostMedia;
 import sysproj.seonjoon.twice.view.custom.CarouselAdapter;
-import sysproj.seonjoon.twice.view.custom.TimelinePageImageAdapter;
 
 public class ICViewHolder extends InstagramViewHolder {
 
@@ -27,10 +26,11 @@ public class ICViewHolder extends InstagramViewHolder {
 
     @Override
     protected void setImageContent(Post post) {
-
         final ArrayList<PostMedia> mediaList = post.getImageList();
         CarouselAdapter adapter = new CarouselAdapter(context, mediaList);
         carouselPager.setAdapter(adapter);
+
+        imageCountText.setText("1 / " + mediaList.size());
 
         carouselPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

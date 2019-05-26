@@ -34,6 +34,8 @@ public class FIMViewHolder extends FacebookViewHolder {
 
             if (imageList.size() == 1) imageCountText.setVisibility(View.GONE);
 
+            imageCountText.setText("1 / " + imageList.size());
+
             TimelinePageImageAdapter adapter = new TimelinePageImageAdapter(context, imageList);
             contentImageList.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                 @Override

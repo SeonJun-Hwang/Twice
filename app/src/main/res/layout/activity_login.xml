@@ -18,6 +18,7 @@
         android:clipToPadding="false"
         android:outlineProvider="bounds"
         android:paddingHorizontal="20dp"
+        android:scrollbars="none"
         android:paddingTop="90dp">
 
 

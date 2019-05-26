@@ -39,4 +39,6 @@
 
     <!-- Register -->
     <dimen name="register_padding">20dp</dimen>
+    <dimen name="instagram_like_comment_size">24dp</dimen>
+    <dimen name="instagram_like_comment_text_size">15sp</dimen>
 </resources>

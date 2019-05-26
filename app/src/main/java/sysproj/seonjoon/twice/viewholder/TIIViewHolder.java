@@ -1,6 +1,7 @@
 package sysproj.seonjoon.twice.viewholder;
 
 import androidx.viewpager.widget.ViewPager;
+
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,7 +12,7 @@ import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostMedia;
 import sysproj.seonjoon.twice.view.custom.TimelinePageImageAdapter;
 
-public class TIIViewHolder extends TwitterViewHolder{
+public class TIIViewHolder extends TwitterViewHolder {
 
     private static final String TAG = "TIIViewHolder";
     private ViewPager contentImageList;
@@ -31,12 +32,12 @@ public class TIIViewHolder extends TwitterViewHolder{
 
     @Override
     protected void setImageContent(Post post) {
-        ArrayList<PostMedia> imageList = post.getImageList();
+        final ArrayList<PostMedia> imageList = post.getImageList();
 
         if (imageList != null && imageList.size() > 0) {
 
             if (imageList.size() > 1)
-                imageCountText.setText("+" + (imageList.size() - 1));
+                imageCountText.setText("1 / " + imageList.size());
             else
                 imageCountText.setVisibility(View.GONE);
 
@@ -47,10 +48,26 @@ public class TIIViewHolder extends TwitterViewHolder{
                 String contextText = contentText.getText().toString().replaceAll(keyword, "");
                 contentText.setText(contextText);
 
-               //Log.e(TAG, imageList.get(i).getMediaURL());
+                //Log.e(TAG, imageList.get(i).getMediaURL());
             }
 
             TimelinePageImageAdapter adapter = new TimelinePageImageAdapter(context, imageList);
+            contentImageList.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                    imageCountText.setText((position + 1) + " / " + imageList.size());
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            });
             contentImageList.setAdapter(adapter);
         } else
             imageCountText.setHeight(0); // Non - Images

@@ -37,8 +37,8 @@
             android:layout_height="@dimen/timeline_image_size"
             android:gravity="center_vertical"
             android:paddingStart="3dp"
-            android:textSize="17dp"
             android:singleLine="true"
+            android:textSize="17dp"
             app:layout_constraintLeft_toRightOf="@id/card_profile_image"
             app:layout_constraintRight_toLeftOf="@id/card_title_logo"
             app:layout_constraintTop_toTopOf="parent" />
@@ -84,10 +84,12 @@
 
             <ImageView
                 android:id="@+id/card_like_image"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/instagram_like_comment_size"
+                android:layout_height="@dimen/instagram_like_comment_size"
                 android:layout_marginHorizontal="5dp"
-                android:background="@null" />
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/instagram_like" />
 
             <TextView
                 android:id="@+id/card_like_count"
@@ -95,14 +97,17 @@
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="5dp"
                 android:gravity="center_vertical"
-                android:textSize="@dimen/timeline_comment_text_size" />
+                android:textSize="@dimen/instagram_like_comment_text_size"
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/card_comment_image"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="@dimen/instagram_like_comment_size"
+                android:layout_height="@dimen/instagram_like_comment_size"
                 android:layout_marginHorizontal="5dp"
-                android:background="@null" />
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/instagram_comment" />
 
             <TextView
                 android:id="@+id/card_comment_count"
@@ -110,7 +115,8 @@
                 android:layout_height="match_parent"
                 android:layout_marginHorizontal="5dp"
                 android:gravity="center_vertical"
-                android:textSize="@dimen/timeline_comment_text_size" />
+                android:textSize="@dimen/instagram_like_comment_text_size"
+                android:textStyle="bold" />
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

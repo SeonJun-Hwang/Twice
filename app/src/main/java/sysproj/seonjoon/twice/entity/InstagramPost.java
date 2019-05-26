@@ -1,5 +1,7 @@
 package sysproj.seonjoon.twice.entity;
 
+import android.util.Log;
+
 import java.util.Date;
 
 public class InstagramPost extends Post {
@@ -33,8 +35,7 @@ public class InstagramPost extends Post {
         @Override
         protected Date convertDate(String str) {
             long time = Long.parseLong(str);
-            time += 70 * 365 * 24 * 60 * 60;
-            time *= 1000;
+            time *= 1000L;
 
             return new Date(time);
         }

@@ -40,10 +40,10 @@ public class TwitterParser extends SNSParser {
                 long id = parseID(item);
                 UserProfile userProfile = parseUserProfile(parserUserObject(item));
                 ArrayList<PostExtendInfo> urls = parseExtendUrls(parseEntities(item));
+                String createDate = parseCreatedDate(item);
 
                 // Different Content about retweet Status
                 String text = retweetItem != null ? parseContextText(retweetItem) : parseContextText(item);
-                String createDate = retweetItem != null ? parseCreatedDate(retweetItem) : parseCreatedDate(item);
                 int retweetCount = retweetItem != null ? parseRetweetCount(retweetItem) : parseRetweetCount(item);
                 int favoriteCount = retweetItem != null ? parseFavoriteCount(retweetItem) : parseFavoriteCount(item);
                 UserProfile retweetUserProfile = retweetItem != null ? parseUserProfile(parserUserObject(retweetItem)) : null;
@@ -224,7 +224,7 @@ public class TwitterParser extends SNSParser {
         try {
             JSONArray urlArray = entities.getJSONArray("urls");
 
-            urls = new ArrayList<PostExtendInfo>();
+            urls = new ArrayList<>();
 
             for (int i = 0; i < urlArray.length(); i++) {
                 JSONObject object = urlArray.getJSONObject(i);

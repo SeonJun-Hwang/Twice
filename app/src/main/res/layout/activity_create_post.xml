@@ -89,7 +89,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/gallery" />
 
-        <RadioButton
+        <CheckBox
             android:id="@+id/post_reserve_radio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

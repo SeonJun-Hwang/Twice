@@ -72,7 +72,8 @@ public class FragmentSearch extends Fragment {
 
     @Override
     public void onStop() {
-        searchAsync.cancel(false);
+        if (searchAsync != null)
+            searchAsync.cancel(false);
         searchAsync = null;
 
         super.onStop();

@@ -19,6 +19,7 @@ public class RTIIViewHolder extends TwitterViewHolder {
 
     private TextView retweetText;
     private ViewPager timelineImagePager;
+    private TextView imageCountText;
 
     private static final String TAG = "RTIIHolder";
 
@@ -27,6 +28,7 @@ public class RTIIViewHolder extends TwitterViewHolder {
 
         timelineImagePager = (ViewPager) itemView.findViewById(R.id.card_content_image_view);
         retweetText = (TextView) itemView.findViewById(R.id.card_retweet_status);
+        imageCountText = (TextView) itemView.findViewById(R.id.card_content_image_count_text);
     }
 
     @Override
@@ -45,12 +47,12 @@ public class RTIIViewHolder extends TwitterViewHolder {
 
     @Override
     protected void setImageContent(Post post) {
-        ArrayList<PostMedia> imageList = post.getImageList();
+        final ArrayList<PostMedia> imageList = post.getImageList();
 
         int imageCount = imageList.size();
 
         if (imageCount > 1)
-            retweetText.setText("" + imageCount);
+            imageCountText.setText("1 / " + imageCount);
 
         for (int i = 0; i < imageCount; i++) {
             PostMedia media = imageList.get(i);
@@ -62,6 +64,23 @@ public class RTIIViewHolder extends TwitterViewHolder {
 
         TimelinePageImageAdapter adapter = new TimelinePageImageAdapter(context, imageList);
         timelineImagePager.setAdapter(adapter);
+
+        timelineImagePager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                imageCountText.setText((position + 1) + " / " + imageList.size());
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
         adapter.notifyDataSetChanged();
     }
 

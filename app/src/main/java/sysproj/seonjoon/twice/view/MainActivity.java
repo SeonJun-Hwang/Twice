@@ -109,8 +109,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_main);
 
         mContext = this;
@@ -486,44 +484,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 loader.LoadUserProfileData();
             }
 
-        }
-    }
-
-    private class LoadAccounts extends AsyncTask<Void, Void, Void> {
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-            String urls = "https://graph.facebook.com/me/accounts?access_token=" + UserSession.FacebookToken.getToken();
-
-            try {
-                URL url = new URL(urls);
-
-                HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
-
-                conn.setRequestMethod("GET");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                conn.setConnectTimeout(3000);
-                conn.setReadTimeout(3000);
-
-                String line = null;
-                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
-                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK)
-                    br = new BufferedReader(new InputStreamReader(conn.getErrorStream()));
-
-                Log.e(TAG, "Account Result : " + conn.getResponseCode());
-
-                while ((line = br.readLine()) != null)
-                    Log.e(TAG, line);
-
-                br.close();
-                conn.disconnect();
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return null;
         }
     }
 }

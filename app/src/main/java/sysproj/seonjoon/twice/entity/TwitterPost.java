@@ -1,8 +1,12 @@
 package sysproj.seonjoon.twice.entity;
 
+import android.util.Log;
+
 import java.util.Date;
 
 public class TwitterPost extends Post {
+
+    private static final String TAG = "TwitterPost";
 
     private UserProfile retweetUser;
     private PostExtendInfo relatedThread;

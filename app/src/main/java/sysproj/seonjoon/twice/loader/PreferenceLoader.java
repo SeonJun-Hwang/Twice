@@ -2,9 +2,9 @@ package sysproj.seonjoon.twice.loader;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import sysproj.seonjoon.twice.BuildConfig;
-import sysproj.seonjoon.twice.manager.PreferenceManager;
 
 public class PreferenceLoader {
     public static final String KEY_TWITTER = "load_item_twitter";
@@ -15,6 +15,12 @@ public class PreferenceLoader {
 
     }
 
+    public static String loadPreferenceFromDefault(Context context, String key)
+    {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        return preferences.getString(key, "");
+    }
     public static String loadPreference(Context context, String key){
 
         SharedPreferences preferences = context.getSharedPreferences(key, Context.MODE_PRIVATE);
