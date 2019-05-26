@@ -31,7 +31,6 @@ public class RegisterActivity extends Activity {
     private TextView headText;
     private AutoCompleteTextView idEdit;
     private EditText passwordEdit;
-    private AutoCompleteTextView emailEdit;
     private Button duplicateButton;
     private Button nextButton;
 
@@ -47,7 +46,6 @@ public class RegisterActivity extends Activity {
         headText = (TextView) findViewById(R.id.twice_form_head_text);
         idEdit = (AutoCompleteTextView) findViewById(R.id.twice_id);
         passwordEdit = (EditText) findViewById(R.id.twice_password);
-        emailEdit = (AutoCompleteTextView) findViewById(R.id.twice_email);
         duplicateButton = (Button) findViewById(R.id.twice_duplicate);
         nextButton = (Button) findViewById(R.id.twice_next);
 
@@ -193,7 +191,6 @@ public class RegisterActivity extends Activity {
         public void onClick(DialogInterface dialogInterface, int i) {
             idEdit.setEnabled(!result);
             passwordEdit.setEnabled(result);
-            emailEdit.setEnabled(result);
             nextButton.setEnabled(result);
         }
     }
