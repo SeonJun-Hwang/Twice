@@ -28,7 +28,7 @@ public class FIMViewHolder extends FacebookViewHolder {
     @Override
     protected void setImageContent(Post post) {
 
-        ArrayList<PostMedia> imageList = post.getImageList();
+        final ArrayList<PostMedia> imageList = post.getImageList();
 
         if (imageList != null && imageList.size() > 0) {
 

@@ -45,7 +45,7 @@ public class InstagramParser extends SNSParser {
                 String location = parseLocation(data);
                 ArrayList<PostMedia> postMedia = new ArrayList<>();
 
-                Log.e(TAG, (i + 1) + " : " + type);
+                //Log.e(TAG, (i + 1) + " : " + type);
 
                 switch (type) {
                     case "video":

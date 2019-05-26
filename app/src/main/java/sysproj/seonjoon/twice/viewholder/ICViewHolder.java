@@ -28,7 +28,7 @@ public class ICViewHolder extends InstagramViewHolder {
     @Override
     protected void setImageContent(Post post) {
 
-        ArrayList<PostMedia> mediaList = post.getImageList();
+        final ArrayList<PostMedia> mediaList = post.getImageList();
         CarouselAdapter adapter = new CarouselAdapter(context, mediaList);
         carouselPager.setAdapter(adapter);
 

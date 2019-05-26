@@ -38,7 +38,7 @@ public class RTIIViewHolder extends TwitterViewHolder {
         if (retweetUser == null)
             retweetText.setHeight(0);
         else {
-            Log.e(TAG, retweetUser.getName());
+            //Log.e(TAG, retweetUser.getName());
             retweetText.setText(retweetUser.getName() + " 님이 리트윗 하셨습니다.");
         }
     }
