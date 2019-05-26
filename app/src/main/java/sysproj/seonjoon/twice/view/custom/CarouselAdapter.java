@@ -13,9 +13,11 @@ import androidx.viewpager.widget.PagerAdapter;
 
 import com.bumptech.glide.Glide;
 import com.google.android.exoplayer2.ExoPlayerFactory;
+import com.google.android.exoplayer2.Player;
 import com.google.android.exoplayer2.SimpleExoPlayer;
 import com.google.android.exoplayer2.source.MediaSource;
 import com.google.android.exoplayer2.source.ProgressiveMediaSource;
+import com.google.android.exoplayer2.ui.PlayerControlView;
 import com.google.android.exoplayer2.ui.PlayerView;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory;
 import com.google.android.exoplayer2.util.Util;
@@ -66,19 +68,20 @@ public class CarouselAdapter extends PagerAdapter {
 
             PostMedia media = mediaList.get(position);
 
-            ImageView imageView = (ImageView) view.findViewById(R.id.carousel_view_image);
-            PlayerView videoView = (PlayerView) view.findViewById(R.id.carousel_view_video);
-
             if (media.getMediaTag() == PostMedia.PHOTO) {
-                videoView.setVisibility(View.INVISIBLE);
+                ImageView imageView = (ImageView) view.findViewById(R.id.carousel_view_image);
+                imageView.setVisibility(View.VISIBLE);
 
                 Glide.with(context).load(media.getMediaURL()).centerCrop().into(imageView);
             } else if (media.getMediaTag() == PostMedia.VIDEO) {
-                imageView.setVisibility(View.GONE);
+                final PlayerView videoView = (PlayerView) view.findViewById(R.id.carousel_view_video);
+                videoView.setVisibility(View.VISIBLE);
 
                 SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context);
 
                 videoView.setPlayer(player);
+
+                player.addListener(new ExoPlayerEventListener(videoView));
 
                 String userAgent = Util.getUserAgent(context, "Twice");
 

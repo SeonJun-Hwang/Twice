@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostMedia;
+import sysproj.seonjoon.twice.view.custom.ExoPlayerEventListener;
 
 public class IVViewHolder extends InstagramViewHolder {
 
@@ -32,6 +33,8 @@ public class IVViewHolder extends InstagramViewHolder {
         SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context);
 
         videoView.setPlayer(player);
+
+        player.addListener(new ExoPlayerEventListener(videoView));
 
         MediaSource source = buildMediaSource(Uri.parse(video.getMediaURL()));
 
