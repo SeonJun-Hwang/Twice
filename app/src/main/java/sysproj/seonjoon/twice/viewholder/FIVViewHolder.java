@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostMedia;
+import sysproj.seonjoon.twice.view.custom.ExoPlayerEventListener;
 
 public class FIVViewHolder extends FacebookViewHolder {
 
@@ -39,6 +40,8 @@ public class FIVViewHolder extends FacebookViewHolder {
             SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context);
 
             videoPlayer.setPlayer(player);
+
+            player.addListener(new ExoPlayerEventListener(videoPlayer));
 
             MediaSource source = buildMediaSource(Uri.parse(imageList.get(1).getMediaURL()));
 
