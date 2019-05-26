@@ -1,7 +1,6 @@
 package sysproj.seonjoon.twice.viewholder;
 
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.exoplayer2.ExoPlayerFactory;
@@ -13,7 +12,6 @@ import java.util.ArrayList;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.entity.PostMedia;
-import sysproj.seonjoon.twice.view.custom.ExoPlayerEventListener;
 
 public class FIVViewHolder extends FacebookViewHolder {
 
@@ -33,15 +31,9 @@ public class FIVViewHolder extends FacebookViewHolder {
 
         if (imageList != null && imageList.size() > 0) {
 
-            Log.e(TAG, "SIZE - " + imageList.size());
-            Log.e(TAG, "Thumbnail " + imageList.get(0).getMediaURL());
-            Log.e(TAG, "Video " + imageList.get(1).getMediaURL());
-
             SimpleExoPlayer player = ExoPlayerFactory.newSimpleInstance(context);
 
             videoPlayer.setPlayer(player);
-
-            player.addListener(new ExoPlayerEventListener(videoPlayer));
 
             MediaSource source = buildMediaSource(Uri.parse(imageList.get(1).getMediaURL()));
 
