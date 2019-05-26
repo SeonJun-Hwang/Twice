@@ -52,6 +52,7 @@
     <string name="title_activity_settings">Settings</string>
 
     <!-- Strings related to Settings -->
+    <string name="app_account_title">계정</string>
     <string name="app_linkage_title">SNS 계정 연동</string>
     <string name="app_logout_title">로그아웃</string>
     <string name="app_setting_title">설정</string>
@@ -62,6 +63,11 @@
     <string name="link_sns_instagram_title">Instagram</string>
     <string name="link_sns_instagram_login_text">Instagram으로 로그인</string>
 
+    <!--String related to Account-->
+    <string name="account_ID">아이디</string>
+    <string name="account_email">이메일</string>
+    <string name="account_password">비밀번호</string>
+    <string name="account_signout">회원탈퇴</string>
     <!-- Strings related to Posting -->
     <string name="posting_done">완료</string>
 

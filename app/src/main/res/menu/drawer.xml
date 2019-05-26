@@ -5,6 +5,9 @@
         android:id="@+id/drawer_menu_related_user"
         android:checkableBehavior="single">
         <item
+            android:id="@+id/drawer_account"
+            android:title="@string/app_account_title"/>
+        <item
             android:id="@+id/drawer_link"
             android:title="@string/app_linkage_title" />
 

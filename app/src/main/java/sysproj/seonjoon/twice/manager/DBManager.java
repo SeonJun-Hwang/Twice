@@ -347,4 +347,8 @@ public class DBManager {
             result += item + '\t';
         return result;
     }
+
+    public void DeleteUser(){
+        user.delete();
+    }
 }

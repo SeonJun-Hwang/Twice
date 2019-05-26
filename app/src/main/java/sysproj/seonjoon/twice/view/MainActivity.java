@@ -150,9 +150,11 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             case R.id.drawer_logout:
                 askLogout();
                 break;
-
             case R.id.drawer_app_setting:
                 gotoSettingActivity();
+                break;
+            case R.id.drawer_account:
+                gotoAccountActivity();
                 break;
         }
         return false;
@@ -317,6 +319,11 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     private void gotoLinkingActivity() {
         Intent intent = new Intent(MainActivity.this, SNSLinkingActivity.class);
         startActivityForResult(intent, LINK_SNS_CODE);
+    }
+
+    private void gotoAccountActivity() {
+        Intent intent = new Intent(MainActivity.this, AccountActivity.class);
+        startActivity(intent);
     }
 
     private void showHomeFragment() {
