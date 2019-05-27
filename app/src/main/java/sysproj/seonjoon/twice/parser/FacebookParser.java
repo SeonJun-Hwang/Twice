@@ -272,8 +272,12 @@ public class FacebookParser extends SNSParser {
         return jsonObject.getString("access_token");
     }
 
-    private String parseDescription(JSONObject jsonObject) throws JSONException {
-        return jsonObject.getString("description");
+    private String parseDescription(JSONObject jsonObject) {
+        try {
+            return jsonObject.getString("description");
+        } catch (JSONException ignored) {
+        }
+        return "";
     }
 
     private String parseTitle(JSONObject jsonObject) throws JSONException {
