@@ -1,8 +1,6 @@
 package sysproj.seonjoon.twice.view;
 
 import android.app.AlertDialog;
-import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -17,10 +15,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-
+import androidx.fragment.app.FragmentManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -31,32 +30,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
 import com.google.firebase.auth.FirebaseAuth;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
-
-import javax.net.ssl.HttpsURLConnection;
-
 import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.OnHashtagClickListener;
 import sysproj.seonjoon.twice.R;
-import sysproj.seonjoon.twice.entity.FacebookPageVO;
 import sysproj.seonjoon.twice.entity.UserProfile;
 import sysproj.seonjoon.twice.loader.DataLoader;
 import sysproj.seonjoon.twice.loader.FacebookLoader;
@@ -114,7 +97,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         loadProfileAsync = new LoadProfileAsync();
         loadProfileAsync.execute();
 
-        fm = getFragmentManager();
+        fm = getSupportFragmentManager();
 
         setLayout();
         setListener();
@@ -194,7 +177,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     @Override
     public void onClickHashTag(String hashTag) {
         showSearchFragment();
-        ((FragmentSearch) getFragmentManager().findFragmentByTag(fragmentsTags[SEARCH])).startSearch(hashTag);
+        ((FragmentSearch) getSupportFragmentManager().findFragmentByTag(fragmentsTags[SEARCH])).startSearch(hashTag);
     }
 
     private void setLayout() {
@@ -258,7 +241,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     String searchTag = textView.getText().toString();
-                    ((FragmentSearch) getFragmentManager().findFragmentByTag(fragmentsTags[1])).startSearch(searchTag);
+                    ((FragmentSearch) getSupportFragmentManager().findFragmentByTag(fragmentsTags[1])).startSearch(searchTag);
                 }
 
                 return false;
@@ -327,6 +310,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         Intent intent = new Intent(MainActivity.this, AccountActivity.class);
         startActivity(intent);
     }
+
     private void gotoInquiryBookActivity() {
         Intent intent = new Intent(MainActivity.this, InquiryBookActivity.class);
         startActivity(intent);
@@ -389,13 +373,11 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             loadTwitterProfile();
             loadFacebookPageProfile();
 
-            if (UserSession.FacebookProfile != null){
+            if (UserSession.FacebookProfile != null) {
                 profile = UserSession.FacebookProfile;
-            }
-            else if (UserSession.TwitterProfile != null){
+            } else if (UserSession.TwitterProfile != null) {
                 profile = UserSession.TwitterProfile;
-            }
-            else if (UserSession.InstagramProfile != null){
+            } else if (UserSession.InstagramProfile != null) {
                 profile = UserSession.InstagramProfile;
             }
 
@@ -482,18 +464,18 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
         private void loadInstagramProfile() {
 
             if (UserSession.InstagramToken != null) {
-                DataLoader loader = new InstagramLoader();
+                DataLoader loader = new InstagramLoader(mContext);
                 InstagramParser parser = new InstagramParser();
 
-                UserSession.InstagramProfile  = parser.parseUserProfile(loader.LoadUserProfileData());
+                UserSession.InstagramProfile = parser.parseUserProfile(loader.LoadUserProfileData());
 
                 loader.LoadUserProfileData();
             }
 
         }
 
-        private void loadFacebookPageProfile(){
-            if (UserSession.FacebookToken != null){
+        private void loadFacebookPageProfile() {
+            if (UserSession.FacebookToken != null) {
 
                 FacebookLoader dataLoader = new FacebookLoader(mContext);
                 JSONObject userJSON = dataLoader.LoadPageList();

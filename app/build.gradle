@@ -75,6 +75,7 @@ dependencies {
 
     // Time Picker
     implementation 'com.wdullaer:materialdatetimepicker:4.2.0'
+    implementation 'androidx.fragment:fragment:1.0.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

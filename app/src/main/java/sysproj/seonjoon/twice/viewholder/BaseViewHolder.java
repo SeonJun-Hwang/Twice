@@ -142,7 +142,6 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
                             int startPos = content.indexOf('#' + item.getKeyword(), lastTagPos);
                             int endPos = startPos + item.getKeyword().length() + 1;
                             addHashTags(contentSpannable, startPos, endPos, item.getKeyword());
-                            lastTagPos = endPos;
                         } catch (Exception e) {
                             Log.e(TAG, e.getMessage() + " / " + item.getKeyword());
                         }

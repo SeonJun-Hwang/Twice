@@ -1,11 +1,11 @@
 package sysproj.seonjoon.twice.view;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -163,7 +163,7 @@ public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefre
                 Log.e(TAG, "Start Instagram Async");
 
                 // TODO : Instagram Timeline Making
-                DataLoader loader = new InstagramLoader();
+                DataLoader loader = new InstagramLoader(mContext);
                 JSONObject jsonObject = loader.LoadTimeLineData();
 
                 SNSParser snsParser = new InstagramParser();

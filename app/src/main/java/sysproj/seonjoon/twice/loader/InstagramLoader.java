@@ -1,5 +1,6 @@
 package sysproj.seonjoon.twice.loader;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -13,11 +14,17 @@ import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
+import sysproj.seonjoon.twice.entity.PostExtendInfo;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
 public class InstagramLoader implements DataLoader {
 
     private static final String TAG = "InstagramLoader";
+    private Context context;
+
+    public InstagramLoader(Context context) {
+        this.context = context;
+    }
 
     @Override
     public void LoadUserProfileData(DataLoadCompleteCallback callback) {
@@ -66,7 +73,9 @@ public class InstagramLoader implements DataLoader {
 
         JSONObject res = null;
 
-        String urls = "https://api.instagram.com/v1/users/self/media/recent/?access_token=" + UserSession.InstagramToken;
+        String urls = "https://api.instagram.com/v1/users/self/media/recent/?" +
+                "count=" + PreferenceLoader.loadPreferenceFromDefault(context, PreferenceLoader.KEY_INSTAGRAM) +
+                "&access_token=" + UserSession.InstagramToken;
 
         try {
             URL url = new URL(urls);

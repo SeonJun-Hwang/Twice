@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import sysproj.seonjoon.twice.entity.InstagramPost;
 import sysproj.seonjoon.twice.entity.Post;
+import sysproj.seonjoon.twice.entity.PostExtendInfo;
 import sysproj.seonjoon.twice.entity.PostMedia;
 import sysproj.seonjoon.twice.entity.PostRFS;
 import sysproj.seonjoon.twice.entity.UserProfile;
@@ -63,9 +64,11 @@ public class InstagramParser extends SNSParser {
                 }
 
                 PostRFS rfs = new PostRFS(commentCount, likesCount, 0);
+                ArrayList<PostExtendInfo> hashtags = parseHashTags(data);
 
                 result.add(new InstagramPost.Builder(id, snsType, UserSession.InstagramProfile, contents, Long.toString(createdTime), rfs)
                         .location(location)
+                        .extendInfo(hashtags)
                         .imageList(postMedia)
                         .build());
             }
@@ -178,6 +181,19 @@ public class InstagramParser extends SNSParser {
         }
 
         return resultList;
+    }
+
+    private ArrayList<PostExtendInfo> parseHashTags(JSONObject jsonObject) throws JSONException {
+
+        JSONArray tagArray = jsonObject.getJSONArray("tags");
+        ArrayList<PostExtendInfo> res = new ArrayList<>();
+
+        for (int i = 0; i < tagArray.length(); i++) {
+            String tag = tagArray.getString(i);
+
+            res.add(new PostExtendInfo(PostExtendInfo.HASH_TAG, 0, 0, tag, ""));
+        }
+        return res;
     }
 
     private String parseLocation(JSONObject jsonObject) throws JSONException {
