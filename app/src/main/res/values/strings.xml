@@ -64,7 +64,8 @@
     <string name="link_sns_instagram_login_text">Instagram으로 로그인</string>
 
     <!--String related to Account-->
-    <string name="account_ID">아이디</string>
+    <string name="account_TITLE">개인정보</string>
+    <string name="account_ID">사용자 아이디</string>
     <string name="account_email">이메일</string>
     <string name="account_password">비밀번호 변경</string>
     <string name="account_signout">회원탈퇴</string>
