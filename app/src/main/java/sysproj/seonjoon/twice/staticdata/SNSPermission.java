@@ -22,7 +22,6 @@ public class SNSPermission {
         permissions.add("user_posts");
         permissions.add("user_tagged_places");
         permissions.add("user_videos");
-        //permissions.add("read_stream");
         permissions.add("public_profile");
 
         return permissions;
@@ -36,12 +35,15 @@ public class SNSPermission {
 
     public static String getFacebookField(){
 
-        return "name" + ',' +
+        //name,id,created_time,message,type,attachments,likes.summary(true),comments.summary(true)
+
+        return "likes.summary(true)" + ',' +
+                "comments.summary(true)" + ',' +
+                "name" + ',' +
                 "message" + ','+
                 "type" + ',' +
                 "created_time" + ',' +
                 "attachments";
-
     }
 
 }

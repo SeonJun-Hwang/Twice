@@ -216,20 +216,20 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         long diff = (curTime.getTime() - time.getTime()) / 1000;
 
         if (diff < 10) // Before 10 Second
-            return "a Moment ago";
+            return "방금 전";
         else if (diff < 60) // Before 1 Minute
-            return diff + " seconds";
+            return diff + "초";
         else if (diff < (60 * 60)) // Before 1 Hour
-            return (diff / 60) + " Minutes";
+            return (diff / 60) + "분";
         else if (diff < (60 * 60 * 24)) // Before 1 Day
-            return (diff / (60 * 60)) + " Hours";
+            return (diff / (60 * 60)) + " 시간";
         else if (diff < (60 * 60 * 24 * 2)) // Yesterday
-            return "Yesterday";
+            return "어제";
 
         if (curTime.getYear() == time.getYear())
-            return (new SimpleDateFormat("MMM dd 'at' k:mm a", Locale.US)).format(time);
+            return (new SimpleDateFormat("MMM dd 'at' k:mm a", Locale.KOREA)).format(time);
 
-        return (new SimpleDateFormat("MMM dd yyyy', at' k:mm a", Locale.US)).format(time);
+        return (new SimpleDateFormat("MMM dd yyyy', at' k:mm a", Locale.KOREA)).format(time);
     }
 
     final MediaSource buildMediaSource(Uri uri) {

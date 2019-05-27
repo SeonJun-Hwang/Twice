@@ -1,22 +1,12 @@
 package sysproj.seonjoon.twice.parser;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.AsyncTask;
 import android.util.Log;
-
-import com.facebook.GraphRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 
 import sysproj.seonjoon.twice.entity.FacebookLinkVO;
 import sysproj.seonjoon.twice.entity.FacebookPageVO;
@@ -83,7 +73,7 @@ public class FacebookParser extends SNSParser {
                         link = parseLink(jsonObject);
                 }
 
-                Post post = new FacebookPost.Builder(id, snsType, userProfile, message, createdTime, new PostRFS())
+                Post post = new FacebookPost.Builder(id, snsType, userProfile, message, createdTime, parseRFSField(jsonObject))
                         .shareLink(link)
                         .imageList(mediaList)
                         .build();
@@ -98,6 +88,71 @@ public class FacebookParser extends SNSParser {
         }
 
         return resultList;
+    }
+
+    public ArrayList<Post> parseTimeline(JSONObject object, FacebookPageVO vo) {
+
+        if (object == null)
+            return null;
+
+        ArrayList<Post> resultList = new ArrayList<>();
+
+        try {
+            JSONArray dataArray = object.getJSONArray("data");
+
+            for (int i = 0; i < dataArray.length(); i++) {
+                int snsType = SNSTag.Facebook * SNSTag.Platform;
+
+                ArrayList<PostMedia> mediaList = null;
+                FacebookLinkVO link = null;
+                JSONObject jsonObject = dataArray.getJSONObject(i);
+
+                String message = null;
+                String createdTime = parseCreatedDate(jsonObject);
+                String type = parseType(jsonObject);
+
+                UserProfile userProfile = new UserProfile.Builder(vo.getName()).profileImage(vo.getPageImage()).build();
+                long id = parseIDPost(jsonObject);
+
+                if (!jsonObject.isNull("message"))
+                    message = jsonObject.getString("message");
+
+                if (userProfile.getName() == null || userProfile.getName().isEmpty())
+                    userProfile = new UserProfile.Builder("Unknown").build();
+
+                switch (type) {
+                    case "status":
+                        snsType += SNSTag.Origin;
+                        break;
+                    case "photo":
+                        snsType += SNSTag.Image;
+                        mediaList = parseImageList(jsonObject);
+                        break;
+                    case "video":
+                        snsType += SNSTag.Video;
+                        mediaList = parseVideoList(jsonObject);
+                        break;
+                    case "link":
+                        snsType += SNSTag.Link;
+                        link = parseLink(jsonObject);
+                }
+
+                Post post = new FacebookPost.Builder(id, snsType, userProfile, message, createdTime, parseRFSField(jsonObject))
+                        .shareLink(link)
+                        .imageList(mediaList)
+                        .build();
+
+                resultList.add(post);
+            }
+
+        } catch (JSONException e) {
+            Log.e(TAG, "Data Array Checker JSON Exception");
+
+            e.printStackTrace();
+        }
+
+        return resultList;
+
     }
 
     @Override
@@ -140,8 +195,6 @@ public class FacebookParser extends SNSParser {
         ArrayList<FacebookPageVO> returnList = new ArrayList<>();
 
         try {
-            Log.e(TAG, object.toString(2));
-
             JSONArray dataArray = object.getJSONArray("data");
 
             for (int i = 0; i < dataArray.length(); i++) {
@@ -149,9 +202,10 @@ public class FacebookParser extends SNSParser {
 
                 String token = parseToken(data);
                 String name = parseName(data);
+                String pageImage = parseUrl(parsePicture(data));
                 long id = parseID(data);
 
-                returnList.add(new FacebookPageVO(token, name, id));
+                returnList.add(new FacebookPageVO(token, name, pageImage, id));
             }
 
         } catch (JSONException e) {
@@ -204,6 +258,10 @@ public class FacebookParser extends SNSParser {
 
     private JSONObject parseImage(JSONObject jsonObject) throws JSONException {
         return jsonObject.getJSONObject("image");
+    }
+
+    private JSONObject parsePicture(JSONObject jsonObject) throws JSONException {
+        return jsonObject.getJSONObject("picture").getJSONObject("data");
     }
 
     private String parseType(JSONObject jsonObject) throws JSONException {
@@ -303,5 +361,28 @@ public class FacebookParser extends SNSParser {
         }
 
         return link;
+    }
+
+    private int parseSummaryCount(JSONObject jsonObject) throws JSONException {
+        return jsonObject.getJSONObject("summary").getInt("total_count");
+    }
+
+    private PostRFS parseRFSField(JSONObject jsonObject) {
+        int like = 0;
+        int comment = 0;
+
+        try {
+            JSONObject likeObject = jsonObject.getJSONObject("likes");
+            like = parseSummaryCount(likeObject);
+        } catch (JSONException ignored) {
+        }
+
+        try {
+            JSONObject commentObject = jsonObject.getJSONObject("comments");
+            comment = parseSummaryCount(commentObject);
+        } catch (JSONException ignored) {
+        }
+
+        return new PostRFS(comment, like, 0);
     }
 }

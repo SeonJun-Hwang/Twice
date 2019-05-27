@@ -5,13 +5,18 @@ public class FacebookPageVO {
     private String accessToken;
     private long pageId;
     private String name;
+    private String pageImage;
 
-    public FacebookPageVO(String accessToken, String name, long pageId) {
+    public FacebookPageVO(String accessToken, String name, String pageImage, long pageId) {
         this.accessToken = accessToken;
         this.name = name;
+        this.pageImage = pageImage;
         this.pageId = pageId;
     }
 
+    public String getPageImage() {
+        return pageImage;
+    }
 
     public String getAccessToken() {
         return accessToken;

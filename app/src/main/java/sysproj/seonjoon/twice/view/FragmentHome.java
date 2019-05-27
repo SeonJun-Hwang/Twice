@@ -21,6 +21,7 @@ import java.util.ArrayList;
 
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.R;
+import sysproj.seonjoon.twice.entity.FacebookPageVO;
 import sysproj.seonjoon.twice.entity.Post;
 import sysproj.seonjoon.twice.loader.DataLoader;
 import sysproj.seonjoon.twice.loader.FacebookLoader;
@@ -136,11 +137,25 @@ public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefre
                 Log.e(TAG, "Start Facebook Async");
 
                 // TODO : Make Time Line Loader
-                DataLoader loader = new FacebookLoader(mContext);
+                FacebookLoader loader = new FacebookLoader(mContext);
                 JSONObject jsonObject = loader.LoadTimeLineData();
 
-                SNSParser snsParser = new FacebookParser();
+                FacebookParser snsParser = new FacebookParser();
                 facebookTimeline = snsParser.parseTimeline(jsonObject);
+
+                Log.e(TAG, "Page Size : " + UserSession.FacebookPageProfile.size());
+
+                if (UserSession.FacebookPageProfile.size() > 0){
+                    for (int i = 0; i < UserSession.FacebookPageProfile.size(); i++){
+                        FacebookPageVO curVO = UserSession.FacebookPageProfile.get(i);
+                        JSONObject object = loader.LoadPageTimeLineData(curVO);
+
+                        ArrayList<Post> parsedTimeLine = snsParser.parseTimeline(object, curVO);
+
+                        if (parsedTimeLine != null)
+                            facebookTimeline.addAll(parsedTimeLine);
+                    }
+                }
             } else
                 Log.e(TAG, "Facebook Token is Null");
 

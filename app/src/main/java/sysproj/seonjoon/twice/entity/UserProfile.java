@@ -32,7 +32,7 @@ public class UserProfile {
         return "UserProfile{" +
                 "name=\'" + name + '\'' +
                 "email=\'" + email + "\'" +
-                ", profileImage='" + profileImage + '\'' +
+                ",profileImage='" + profileImage + '\'' +
                 '}';
     }
 
@@ -51,7 +51,8 @@ public class UserProfile {
             return this;
         }
 
-        public Builder userEmail(String email){
+
+        public Builder userEmail(String email) {
             this.email = email;
             return this;
         }

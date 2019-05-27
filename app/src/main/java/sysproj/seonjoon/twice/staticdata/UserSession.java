@@ -3,12 +3,16 @@ package sysproj.seonjoon.twice.staticdata;
 import com.facebook.AccessToken;
 import com.twitter.sdk.android.core.TwitterSession;
 
+import java.util.ArrayList;
+
+import sysproj.seonjoon.twice.entity.FacebookPageVO;
 import sysproj.seonjoon.twice.entity.UserProfile;
 
 public class UserSession {
 
     public static AccessToken FacebookToken = null;
     public static UserProfile FacebookProfile = null;
+    public static ArrayList<FacebookPageVO> FacebookPageProfile = null;
     public static TwitterSession TwitterToken = null;
     public static UserProfile TwitterProfile = null;
     public static String InstagramToekn = null;

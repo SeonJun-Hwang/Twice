@@ -35,7 +35,9 @@
             android:id="@+id/card_title_text"
             android:layout_width="0dp"
             android:layout_height="@dimen/timeline_image_size"
+            android:ellipsize="end"
             android:gravity="center_vertical"
+            android:maxLines="1"
             android:paddingLeft="3dp"
             android:textSize="17dp"
             app:layout_constraintLeft_toRightOf="@id/card_profile_image"
@@ -105,11 +107,14 @@
 
         <ImageView
             android:id="@+id/card_content_likes_image"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="@dimen/facebook_like_image_size"
+            android:layout_height="@dimen/facebook_like_image_size"
             android:layout_marginHorizontal="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/facebook_like"
             app:layout_constraintLeft_toLeftOf="@id/card_profile_image"
             app:layout_constraintTop_toBottomOf="@id/card_extend_background" />
 
@@ -117,7 +122,7 @@
             android:id="@+id/card_content_likes"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Likes Count"
+            android:layout_marginStart="10dp"
             app:layout_constraintBottom_toBottomOf="@id/card_content_likes_image"
             app:layout_constraintLeft_toRightOf="@id/card_content_likes_image"
             app:layout_constraintTop_toTopOf="@id/card_content_likes_image" />
@@ -127,7 +132,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
-            android:text="Reple N Share Count"
             app:layout_constraintBottom_toBottomOf="@id/card_content_likes_image"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="@id/card_content_likes_image" />

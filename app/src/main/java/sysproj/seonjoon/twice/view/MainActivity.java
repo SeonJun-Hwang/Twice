@@ -50,6 +50,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.concurrent.CountDownLatch;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -58,6 +59,7 @@ import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.OnHashtagClickListener;
 import sysproj.seonjoon.twice.R;
+import sysproj.seonjoon.twice.entity.FacebookPageVO;
 import sysproj.seonjoon.twice.entity.UserProfile;
 import sysproj.seonjoon.twice.loader.DataLoader;
 import sysproj.seonjoon.twice.loader.FacebookLoader;
@@ -382,6 +384,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             loadFacebookProfile();
             loadInstagramProfile();
             loadTwitterProfile();
+            loadFacebookPageProfile();
 
             if (UserSession.FacebookProfile != null){
                 profile = UserSession.FacebookProfile;
@@ -484,6 +487,23 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 loader.LoadUserProfileData();
             }
 
+        }
+
+        private void loadFacebookPageProfile(){
+            if (UserSession.FacebookToken != null){
+
+                FacebookLoader dataLoader = new FacebookLoader(mContext);
+                JSONObject userJSON = dataLoader.LoadPageList();
+
+                try {
+                    Log.e(TAG, userJSON.toString(2));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                FacebookParser snsParser = new FacebookParser();
+                UserSession.FacebookPageProfile = snsParser.parsePageList(userJSON);
+            }
         }
     }
 }
