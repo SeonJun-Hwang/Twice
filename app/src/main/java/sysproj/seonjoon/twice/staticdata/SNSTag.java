@@ -33,6 +33,10 @@ public class SNSTag {
     public static final String TWITTER_URL_TIMELINE = "/statuses/home_timeline.json";
     public static final String TWITTER_URL_SEARCH = "/search/tweets.json";
     public static final String TWITTER_URL_USER_INFO= "/account/verify_credentials.json";
+    public static final String TWITTER_URL_FOLLOWSHIP= "/friendships/create.json";
+    public static final String TWITTER_URL_BLOCK = "/blocks/create.json";
+    public static final String TWITTER_URL_MUTE = "/mutes/users/create.json";
+    public static final String TWITTER_URL_DESTORY_TWEET = "/statuses/destroy/";
     public static final String TwitterTokenTag = "TwTk";
     public static final String TwitterTokenSecretTag = "TwTkScrt";
     public static final String TwitterUIDTag = "TwUID";

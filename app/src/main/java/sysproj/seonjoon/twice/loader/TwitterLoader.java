@@ -317,8 +317,8 @@ public class TwitterLoader implements DataLoader {
         try {
             String restURL = SNSTag.TWITTER_BASE_URL
                     + SNSTag.TWITTER_URL_SEARCH
-                    + "?count=" + PreferenceLoader.loadPreference(context, PreferenceLoader.KEY_TWITTER)
-                    + " &q=" + searchTag;
+                    + "?count=" + PreferenceLoader.loadPreferenceFromDefault(context, PreferenceLoader.KEY_TWITTER)
+                    + "&q=" + searchTag;
 
             String nonce = generateNonce();
             String timestamp = Long.toString(System.currentTimeMillis() / 1000);
@@ -361,4 +361,192 @@ public class TwitterLoader implements DataLoader {
             Log.e(TAG, e.toString());
         }
     }
+
+    public void CreateFollowship(final long userId, final  DataLoadCompleteCallback callback){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_FOLLOWSHIP +
+                            "?user_id=" + userId + "&follow=true";
+
+                    String nonce = generateNonce();
+                    String timestamp = Long.toString(System.currentTimeMillis() / 1000);
+                    String signatureBase = constructSignatureBase(restURL, nonce, timestamp);
+                    String signature = generateSignature(signatureBase);
+
+                    // Make Oauth Token
+                    String Oauth = constructAuthorizationHeader(nonce, timestamp, signature);
+
+                    Log.e(TAG, "Oauth : " + Oauth);
+
+                    // TODO : Make Resizable MaxItemRequest
+                    URL url = new URL(restURL);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setDoInput(true);
+                    conn.setDoInput(true);
+                    conn.setConnectTimeout(3000);
+                    conn.setRequestProperty("User-Agent", USER_AGENT);
+                    conn.setRequestProperty("Authorization", Oauth);
+
+                    Log.e(TAG, "Create Follow Ship ResponseCode " + conn.getResponseCode());
+
+                    if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+                        Log.e(TAG, "Create Follow ship Success ");
+                        callback.Complete(true, null);
+                    } else {
+                        Log.e(TAG, "Create Follow ship Fail");
+                        callback.Complete(false, null);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString());
+                }
+            }
+        });
+        thread.start();
+    }
+
+    public void CreateBlock(final long userId, final  DataLoadCompleteCallback callback){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_BLOCK +
+                            "?user_id=" + userId + "&skip_status=true";
+
+                    String nonce = generateNonce();
+                    String timestamp = Long.toString(System.currentTimeMillis() / 1000);
+                    String signatureBase = constructSignatureBase(restURL, nonce, timestamp);
+                    String signature = generateSignature(signatureBase);
+
+                    // Make Oauth Token
+                    String Oauth = constructAuthorizationHeader(nonce, timestamp, signature);
+
+                    Log.e(TAG, "Oauth : " + Oauth);
+
+                    // TODO : Make Resizable MaxItemRequest
+                    URL url = null;
+
+                    url = new URL(restURL);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setDoInput(true);
+                    conn.setDoInput(true);
+                    conn.setConnectTimeout(3000);
+                    conn.setRequestProperty("User-Agent", USER_AGENT);
+                    conn.setRequestProperty("Authorization", Oauth);
+
+                    Log.e(TAG, "Create Block ResponseCode " + conn.getResponseCode());
+
+                    if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+                        Log.e(TAG, "Create Block Success ");
+                        callback.Complete(true, null);
+                    } else {
+                        Log.e(TAG, "Create Block Fail");
+                        callback.Complete(false, null);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString());
+                }
+            }
+        });
+        thread.start();
+    }
+
+    public void CreateMute(final long userId, final  DataLoadCompleteCallback callback){
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_MUTE+
+                            "?user_id=" + userId ;
+
+                    String nonce = generateNonce();
+                    String timestamp = Long.toString(System.currentTimeMillis() / 1000);
+                    String signatureBase = constructSignatureBase(restURL, nonce, timestamp);
+                    String signature = generateSignature(signatureBase);
+
+                    // Make Oauth Token
+                    String Oauth = constructAuthorizationHeader(nonce, timestamp, signature);
+
+                    Log.e(TAG, "Oauth : " + Oauth);
+
+                    // TODO : Make Resizable MaxItemRequest
+                    URL url = new URL(restURL);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setDoInput(true);
+                    conn.setDoInput(true);
+                    conn.setConnectTimeout(3000);
+                    conn.setRequestProperty("User-Agent", USER_AGENT);
+                    conn.setRequestProperty("Authorization", Oauth);
+
+                    Log.e(TAG, "Create Mute ResponseCode " + conn.getResponseCode());
+
+                    if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+                        Log.e(TAG, "Create Mute Success ");
+                        callback.Complete(true, null);
+                    } else {
+                        Log.e(TAG, "Create Mute Fail");
+                        callback.Complete(false, null);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString());
+                }
+            }
+        });
+        thread.start();
+    }
+
+    public void DestoryTweet(final long post_id, final DataLoadCompleteCallback callback)
+    {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_DESTORY_TWEET
+                            + post_id + ".json" ;
+
+                    String nonce = generateNonce();
+                    String timestamp = Long.toString(System.currentTimeMillis() / 1000);
+                    String signatureBase = constructSignatureBase(restURL, nonce, timestamp);
+                    String signature = generateSignature(signatureBase);
+
+                    // Make Oauth Token
+                    String Oauth = constructAuthorizationHeader(nonce, timestamp, signature);
+
+                    Log.e(TAG, "Oauth : " + Oauth);
+
+                    // TODO : Make Resizable MaxItemRequest
+                    URL url = new URL(restURL);
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setDoInput(true);
+                    conn.setDoInput(true);
+                    conn.setConnectTimeout(3000);
+                    conn.setRequestProperty("User-Agent", USER_AGENT);
+                    conn.setRequestProperty("Authorization", Oauth);
+
+                    Log.e(TAG, "Destroy ResponseCode " + conn.getResponseCode());
+
+                    if (conn.getResponseCode() == HttpURLConnection.HTTP_OK) {
+
+                        Log.e(TAG, "Destroy Success ");
+                        callback.Complete(true, null);
+                    } else {
+                        Log.e(TAG, "Destroy Fail");
+                        callback.Complete(false, null);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, e.toString());
+                }
+            }
+        });
+        thread.start();
+    }
+
 }
