@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/book_date_layer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/facebook_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/facebook"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageView
+            android:id="@+id/instargram_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/instagram"
+            app:layout_constraintLeft_toLeftOf="@+id/facebook_icon"
+            app:layout_constraintStart_toEndOf="@+id/facebook_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/twitter_icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="8dp"
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@drawable/twitter"
+            app:layout_constraintStart_toEndOf="@+id/instargram_icon"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/date_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:padding="5dp"
+            android:text="Parent TextView"
+            android:textColor="#AA000000"
+            app:layout_constraintEnd_toStartOf="@+id/post_delete_button"
+            app:layout_constraintStart_toStartOf="@+id/twitter_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <Button
+            android:id="@+id/post_delete_button"
+            android:layout_width="51dp"
+            android:layout_height="27dp"
+            android:text="삭제"
+            android:textSize="7dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <TextView
+        android:id="@+id/post_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/book_date_layer"
+        tools:layout_editor_absoluteX="16dp"
+        android:visibility="gone"/>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <group>
+        <item
+            android:id="@+id/drawer_inquiry_book_post"
+            android:title="@string/app_booking_tile"/>
+    </group>
     <group
         android:id="@+id/drawer_menu_related_user"
         android:checkableBehavior="single">
@@ -17,7 +22,6 @@
     </group>
 
     <group android:id="@+id/drawer_menu_related_app">
-
         <item
             android:id="@+id/drawer_app_setting"
             android:title="@string/app_setting_title" />

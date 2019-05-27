@@ -156,6 +156,8 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             case R.id.drawer_account:
                 gotoAccountActivity();
                 break;
+            case R.id.drawer_inquiry_book_post:
+                gotoInquiryBookActivity();
         }
         return false;
     }
@@ -323,6 +325,10 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     private void gotoAccountActivity() {
         Intent intent = new Intent(MainActivity.this, AccountActivity.class);
+        startActivity(intent);
+    }
+    private void gotoInquiryBookActivity() {
+        Intent intent = new Intent(MainActivity.this, InquiryBookActivity.class);
         startActivity(intent);
     }
 

@@ -78,7 +78,10 @@
 
         <activity android:name=".view.ChangePasswordActivity"
             android:label="@string/update_password"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"/>
+
+        <activity android:name=".view.InquiryBookActivity"
+            android:label="@string/Inquiry_book_title">
 
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
