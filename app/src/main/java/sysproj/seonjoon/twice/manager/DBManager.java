@@ -171,7 +171,7 @@ public class DBManager {
         Log.e(TAG, "End Create User");
     }
 
-    public void loginUser(Activity activity, String id, String password,final DBAccessResultCallback callback) {
+    public void loginUser(Activity activity, String id, String password, final DBAccessResultCallback callback) {
 
         FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
@@ -297,7 +297,7 @@ public class DBManager {
 
     }
 
-    public void saveInstagramToken(final String collection, final DBAccessResultCallback callback){
+    public void saveInstagramToken(final String collection, final DBAccessResultCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         if (UserSession.InstagramToekn != null) {
@@ -357,7 +357,7 @@ public class DBManager {
                 });
     }
 
-    public void removeInstagramToken(final String collection, final DBAccessResultCallback callback){
+    public void removeInstagramToken(final String collection, final DBAccessResultCallback callback) {
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -390,7 +390,35 @@ public class DBManager {
         return result;
     }
 
-    public void DeleteUser(){
-        user.delete();
+    public void DeleteUser(final DBAccessResultCallback callback) {
+        user.delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        callback.AccessCallback(true);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.AccessCallback(false);
+                    }
+                });
+    }
+
+    public void ChangeUserPassword(String password, final DBAccessResultCallback callback) {
+        user.updatePassword(password)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        callback.AccessCallback(true);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        callback.AccessCallback(false);
+                    }
+                });
     }
 }

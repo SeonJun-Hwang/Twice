@@ -67,6 +67,7 @@
             android:layout_height="wrap_content"
             android:enabled="false"
             android:hint="@string/share_password_tag"
+            android:inputType="textPassword"
             android:maxLines="1"
             android:singleLine="true" />
 

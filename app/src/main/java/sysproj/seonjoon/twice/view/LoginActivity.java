@@ -277,8 +277,12 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             if (seconds > 2000) {
                 Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
                 parsedTime = 0;
-            } else
+            } else {
                 super.onBackPressed();
+                System.runFinalization();
+                finishAffinity();
+            }
+
         }
     }
 

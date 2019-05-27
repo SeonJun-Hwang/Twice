@@ -15,8 +15,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.firebase.auth.FirebaseAuth;
-
+import sysproj.seonjoon.twice.DBAccessResultCallback;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.manager.DBManager;
 
@@ -24,29 +23,28 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
     private static final String TAG = "AccountActivity";
 
     private Context mContext;
-    private TextView IDText, passwordText, signoutTest;
+    
+    private TextView IDText, passwordText, signoutText;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.account_activity);
 
-        IDText = (TextView) findViewById(R.id.account_ID_text);
+        IDText = (TextView) findViewById(R.id.account_ID);
         passwordText = (TextView) findViewById(R.id.account_password_text);
-        signoutTest = (TextView) findViewById(R.id.account_signout_text);
+        signoutText = (TextView) findViewById(R.id.account_signout_text);
 
         mContext = this;
-
+        
         String ID = DBManager.getInstance().getUser().getEmail();
         int pos = ID.indexOf("@");
-
-        IDText.setText(": " + ID.substring(0, pos));
+        IDText.setText("아이디 : " + ID.substring(0, pos));
 
         setActionBar();
 
         passwordText.setOnClickListener(this);
-        signoutTest.setOnClickListener(this);
-
+        signoutText.setOnClickListener(this);
     }
 
     @Override
@@ -56,43 +54,40 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
                 gotoChangePasswordActivity();
                 break;
             case R.id.account_signout_text:
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
-                        v.getContext());
-
-                // 제목셋팅
-                alertDialogBuilder.setTitle("회원탈퇴");
-
-                // AlertDialog 셋팅
-                alertDialogBuilder
-                        .setMessage("회원탈퇴 하시겠습니까?")
-                        .setCancelable(false)
-                        .setPositiveButton("예",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(
-                                            DialogInterface dialog, int id) {
-                                        DBManager.getInstance().DeleteUser();
-                                        Toast.makeText(getApplicationContext(), "회원탈퇴가 완료 되었습니다.", Toast.LENGTH_LONG).show();
-                                        FirebaseAuth.getInstance().signOut();
-                                        Intent intent = new Intent(AccountActivity.this, LoginActivity.class);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                })
-                        .setNegativeButton("아니오",
-                                new DialogInterface.OnClickListener() {
-                                    public void onClick(
-                                            DialogInterface dialog, int id) {
-                                        // 다이얼로그를 취소한다
-                                        dialog.cancel();
-                                    }
-                                });
-                // 다이얼로그 생성
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                // 다이얼로그 보여주기
-                alertDialog.show();
+                createAskingDialog(signoutText).show();
                 break;
 
         }
+    }
+
+    private AlertDialog createAskingDialog(final TextView textView) {
+        return new AlertDialog.Builder(this)
+                .setMessage("정말로 회원탈퇴 하시겠습니까?")
+                .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialogInterface, int i) {
+                        DBManager.getInstance().DeleteUser(new DBAccessResultCallback() {
+                            @Override
+                            public void AccessCallback(boolean isSuccess) {
+                                if (isSuccess) {
+                                    Toast.makeText(mContext, "회원 탈퇴가 완료 되었습니다.", Toast.LENGTH_LONG).show();
+                                    dialogInterface.dismiss();
+                                    Intent intent = new Intent(AccountActivity.this, LoginActivity.class);
+                                    startActivity(intent);
+                                    finish();
+                                }
+                                else
+                                    Toast.makeText(mContext, "오류가 발생하였습니다.\n 잠시후에 다시 시도해 주세요", Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                })
+                .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                }).create();
     }
 
     private void setActionBar() {
@@ -103,8 +98,7 @@ public class AccountActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void gotoChangePasswordActivity()
-    {
+    private void gotoChangePasswordActivity() {
         Intent intent = new Intent(AccountActivity.this, ChangePasswordActivity.class);
         startActivity(intent);
     }
