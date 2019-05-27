@@ -256,10 +256,10 @@ public class PostingActivity extends AppCompatActivity implements DatePickerDial
 
     @Override
     public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
-
         view.dismiss();
 
         bookTime = bookBuilder.Hour(hourOfDay).Minute(minute).build();
+
         postReservieTime.setText(bookTime.toString());
     }
 
@@ -387,8 +387,6 @@ public class PostingActivity extends AppCompatActivity implements DatePickerDial
                 } else
                     sendObject.put("instagram", null);
 
-
-                Log.e(TAG, sendObject.toString(2));
             } catch (JSONException e) {
                 e.printStackTrace();
             }

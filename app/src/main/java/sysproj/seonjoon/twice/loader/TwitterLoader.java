@@ -362,7 +362,7 @@ public class TwitterLoader implements DataLoader {
         }
     }
 
-    public void CreateFollowship(final long userId, final  DataLoadCompleteCallback callback){
+    public void CreateFollowship(final long userId, final DataLoadCompleteCallback callback) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -387,6 +387,7 @@ public class TwitterLoader implements DataLoader {
                     conn.setDoInput(true);
                     conn.setDoInput(true);
                     conn.setConnectTimeout(3000);
+                    conn.setRequestProperty("Content-Type", "text/html");
                     conn.setRequestProperty("User-Agent", USER_AGENT);
                     conn.setRequestProperty("Authorization", Oauth);
 
@@ -408,7 +409,7 @@ public class TwitterLoader implements DataLoader {
         thread.start();
     }
 
-    public void CreateBlock(final long userId, final  DataLoadCompleteCallback callback){
+    public void CreateBlock(final long userId, final DataLoadCompleteCallback callback) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -436,6 +437,7 @@ public class TwitterLoader implements DataLoader {
                     conn.setDoInput(true);
                     conn.setConnectTimeout(3000);
                     conn.setRequestProperty("User-Agent", USER_AGENT);
+                    conn.setRequestProperty("Content-Type", "text/html");
                     conn.setRequestProperty("Authorization", Oauth);
 
                     Log.e(TAG, "Create Block ResponseCode " + conn.getResponseCode());
@@ -456,13 +458,13 @@ public class TwitterLoader implements DataLoader {
         thread.start();
     }
 
-    public void CreateMute(final long userId, final  DataLoadCompleteCallback callback){
+    public void CreateMute(final long userId, final DataLoadCompleteCallback callback) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_MUTE+
-                            "?user_id=" + userId ;
+                    String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_MUTE +
+                            "?user_id=" + userId;
 
                     String nonce = generateNonce();
                     String timestamp = Long.toString(System.currentTimeMillis() / 1000);
@@ -502,14 +504,13 @@ public class TwitterLoader implements DataLoader {
         thread.start();
     }
 
-    public void DestoryTweet(final long post_id, final DataLoadCompleteCallback callback)
-    {
+    public void DestoryTweet(final long post_id, final DataLoadCompleteCallback callback) {
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     String restURL = SNSTag.TWITTER_BASE_URL + SNSTag.TWITTER_URL_DESTORY_TWEET
-                            + post_id + ".json" ;
+                            + post_id + ".json";
 
                     String nonce = generateNonce();
                     String timestamp = Long.toString(System.currentTimeMillis() / 1000);

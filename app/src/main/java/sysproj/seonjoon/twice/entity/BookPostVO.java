@@ -1,40 +1,45 @@
 package sysproj.seonjoon.twice.entity;
 
 public class BookPostVO {
-    private boolean chekFacebook, chekInstargram, chekTwitter;
-    private String date, message;
-    private boolean extend;
 
-    public String getDate() {
+    private long id;
+    private boolean checkFacebook, checkInstargram, checkTwitter;
+    private long date;
+    private String message;
+
+    public BookPostVO(long id, boolean cf, boolean ci, boolean ct, long date, String message) {
+        this.id = id;
+        this.checkFacebook = cf;
+        this.checkInstargram = ci;
+        this.checkTwitter = ct;
+        this.date = date;
+        this.message = message;
+    }
+
+    public long getDate() {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public String getDateToString() {
+        String min = "" + date % 100;
+        String hour = "" + (date % 10000) / 100;
+        String day = "" + (date % 1000000) / 10000;
+        String month = "" + (date % 100000000) / 1000000;
+        String year = "" + (date / 100000000);
+
+        return year + "-" + month + "-" + day + " " + hour + ":" + min;
     }
 
-    public boolean isChekFacebook() {
-        return chekFacebook;
+    public boolean isCheckFacebook() {
+        return checkFacebook;
     }
 
-    public void setChekFacebook(boolean chekFacebook) {
-        this.chekFacebook = chekFacebook;
+    public boolean isCheckInstargram() {
+        return checkInstargram;
     }
 
-    public boolean isChekInstargram() {
-        return chekInstargram;
-    }
-
-    public void setChekInstargram(boolean chekInstargram) {
-        this.chekInstargram = chekInstargram;
-    }
-
-    public boolean isChekTwitter() {
-        return chekTwitter;
-    }
-
-    public void setChekTwitter(boolean chekTwitter) {
-        this.chekTwitter = chekTwitter;
+    public boolean isCheckTwitter() {
+        return checkTwitter;
     }
 
     public String getMessage() {
@@ -45,11 +50,7 @@ public class BookPostVO {
         this.message = message;
     }
 
-    public boolean isExtend() {
-        return extend;
-    }
-
-    public void setExtend(boolean extend) {
-        this.extend = extend;
+    public long getId() {
+        return id;
     }
 }

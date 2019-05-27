@@ -5,6 +5,7 @@ import android.app.Activity;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -21,6 +22,17 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +42,8 @@ import java.util.concurrent.CountDownLatch;
 import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DBAccessResultCallback;
 import sysproj.seonjoon.twice.DBLoadSuccessCallback;
+import sysproj.seonjoon.twice.DataLoadCompleteCallback;
+import sysproj.seonjoon.twice.entity.BookPostVO;
 import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
@@ -420,5 +434,106 @@ public class DBManager {
                         callback.AccessCallback(false);
                     }
                 });
+    }
+
+    public JSONObject LoadBookInquiryList() {
+        String urls = BuildConfig.ServerIP + "check_post"
+                + "?uid=" + getUser().getUid();
+
+        Log.e(TAG, urls);
+
+        JSONObject res = null;
+
+        try {
+            URL url = new URL(urls);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+            conn.setRequestProperty("Content-Type", "text/html");
+            conn.setReadTimeout(3000);
+            conn.setConnectTimeout(3500);
+            conn.setDoInput(true);
+            conn.setDoOutput(true);
+
+            conn.connect();
+
+            Log.e(TAG, "Response : " + conn.getResponseCode());
+
+            if (conn.getResponseCode() != HttpURLConnection.HTTP_OK)
+                Log.e(TAG, "Response : " + conn.getResponseCode());
+            else {
+                BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+                String line = br.readLine();
+
+                res = new JSONObject(line);
+                br.close();
+            }
+            conn.disconnect();
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
+        return res;
+    }
+
+    public void DeleteBookInquiry(long pid, DataLoadCompleteCallback callback) {
+
+        DeleteBookInquiryAsync deleteBookInquiryAsync = new DeleteBookInquiryAsync(pid, callback);
+        deleteBookInquiryAsync.execute();
+    }
+
+    private class DeleteBookInquiryAsync extends AsyncTask<Void, Void, Boolean> {
+
+        private long pid;
+        private DataLoadCompleteCallback callback;
+
+        public DeleteBookInquiryAsync(long pid, DataLoadCompleteCallback callback) {
+            this.pid = pid;
+
+            this.callback = callback;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+
+            callback.Complete(aBoolean, null);
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+
+            boolean res = false;
+
+            String urls = BuildConfig.ServerIP + "delete?"
+                    + "uid=" + user.getUid() + "&post_id=" + pid;
+
+            Log.e(TAG, urls);
+
+            try {
+                URL url = new URL(urls);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+                conn.setReadTimeout(3000);
+                conn.setConnectTimeout(3500);
+                conn.setDoInput(true);
+                conn.setDoOutput(true);
+                conn.connect();
+
+                if (conn.getResponseCode() != HttpURLConnection.HTTP_OK) {
+                    Log.e(TAG, "Response : " + conn.getResponseCode());
+                    res = false;
+                } else
+                    res = true;
+                conn.disconnect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return res;
+        }
     }
 }

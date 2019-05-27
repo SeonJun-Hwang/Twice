@@ -65,7 +65,7 @@
     <string name="link_sns_instagram_login_text">Instagram으로 로그인</string>
 
     <!--String related to InquiryBookPost-->
-    <string name="Inquiry_book_title"></string>
+    <string name="Inquiry_book_title">예약 게시물</string>
 
     <!--String related to Account-->
     <string name="account_TITLE">개인정보</string>
