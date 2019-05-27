@@ -2,6 +2,7 @@ package sysproj.seonjoon.twice.entity;
 
 public class UserProfile {
 
+    private long id;
     private String name;
     private String profileImage;
     private String email;
@@ -10,6 +11,7 @@ public class UserProfile {
     }
 
     private UserProfile(Builder b) {
+        id = b.id;
         name = b.name;
         profileImage = b.profileImage;
         email = b.email;
@@ -36,21 +38,25 @@ public class UserProfile {
                 '}';
     }
 
+    public long getId() {
+        return id;
+    }
+
     public static class Builder {
 
+        private long id;
         private String name;
         private String profileImage = null;
         private String email = null;
 
-        public Builder(String name) {
-            this.name = name;
+        public Builder(long id, String name) {
+            this.id = id; this.name = name;
         }
 
         public Builder profileImage(String profileImage) {
             this.profileImage = profileImage;
             return this;
         }
-
 
         public Builder userEmail(String email) {
             this.email = email;

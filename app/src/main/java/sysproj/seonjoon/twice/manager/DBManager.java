@@ -300,10 +300,10 @@ public class DBManager {
     public void saveInstagramToken(final String collection, final DBAccessResultCallback callback) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        if (UserSession.InstagramToekn != null) {
+        if (UserSession.InstagramToken != null) {
             Map<String, Object> data = new HashMap<>();
 
-            data.put(SNSTag.InstagramTokenTag, UserSession.InstagramToekn);
+            data.put(SNSTag.InstagramTokenTag, UserSession.InstagramToken);
 
             Log.e(TAG, "Instagram Save");
 

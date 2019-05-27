@@ -20,8 +20,11 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import com.wdullaer.materialdatetimepicker.date.DatePickerDialog;
+import com.wdullaer.materialdatetimepicker.time.TimePickerDialog;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,16 +41,15 @@ import java.util.Calendar;
 import java.util.Date;
 
 import sysproj.seonjoon.twice.BuildConfig;
-import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.R;
 import sysproj.seonjoon.twice.entity.FacebookPageVO;
-import sysproj.seonjoon.twice.loader.FacebookLoader;
-import sysproj.seonjoon.twice.parser.FacebookParser;
+import sysproj.seonjoon.twice.entity.TwiceTime;
+import sysproj.seonjoon.twice.manager.DBManager;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 import sysproj.seonjoon.twice.view.custom.PostImageAdapter;
 import sysproj.seonjoon.twice.view.custom.TwiceGallery.GalleryActivity;
 
-public class PostingActivity extends AppCompatActivity {
+public class PostingActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, TimePickerDialog.OnTimeSetListener {
 
     private static final int IMAGE_SELECT = 1000;
     private static final String TAG = "PostingActivity";
@@ -55,17 +57,21 @@ public class PostingActivity extends AppCompatActivity {
 
     private EditText postMessage;
     private ImageButton loadImage;
-    private CheckBox postReserveRadio;
+    private CheckBox postReserveCheckBox;
     private CheckBox postFacebookCheck;
     private CheckBox postTwitterCheck;
     private CheckBox postInstagramCheck;
+    private TextView postReservieTime;
     private Context mContext;
     private ArrayList<String> selectedImage;
     private ViewPager postImagePager;
     private PostImageAdapter postImageAdapter;
     private SendQueryAsync async;
 
-    private ArrayList<FacebookPageVO> pages;
+    private DatePickerDialog pickerDialog;
+
+    private TwiceTime bookTime;
+    private TwiceTime.Builder bookBuilder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,22 +81,6 @@ public class PostingActivity extends AppCompatActivity {
         mContext = this;
         selectedImage = new ArrayList<>();
 
-        FacebookLoader loader = new FacebookLoader(mContext);
-        loader.LoadPagelist(new DataLoadCompleteCallback() {
-            @Override
-            public void Complete(boolean isSuccess, JSONObject result) {
-                if (isSuccess) {
-                    FacebookParser parser = new FacebookParser();
-                    pages = parser.parsePageList(result);
-
-                    for (int i = 0; i < pages.size(); i++) {
-                        Log.e(TAG, pages.get(i).getName() + " / " + pages.get(i).getPageId());
-                    }
-                } else
-                    pages = null;
-            }
-        });
-
         initLayout();
         initListener();
     }
@@ -98,13 +88,15 @@ public class PostingActivity extends AppCompatActivity {
     private void initLayout() {
         postMessage = (EditText) findViewById(R.id.create_post_edit_text);
         loadImage = (ImageButton) findViewById(R.id.post_include_image);
-        postReserveRadio = (CheckBox) findViewById(R.id.post_reserve_radio);
+        postReserveCheckBox = (CheckBox) findViewById(R.id.post_reserve_radio);
         postImagePager = (ViewPager) findViewById(R.id.create_post_image_pager);
         postImageAdapter = new PostImageAdapter(mContext, selectedImage);
 
         postFacebookCheck = (CheckBox) findViewById(R.id.create_facebook_check);
         postTwitterCheck = (CheckBox) findViewById(R.id.create_twitter_check);
         postInstagramCheck = (CheckBox) findViewById(R.id.create_instagram_check);
+
+        postReservieTime = (TextView) findViewById(R.id.post_reserve_time);
 
         postImagePager.setAdapter(postImageAdapter);
         postImagePager.setPageMargin(20);
@@ -135,6 +127,62 @@ public class PostingActivity extends AppCompatActivity {
                         .create();
 
                 imageCountDialog.show();
+            }
+        });
+
+        postReserveCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (postReserveCheckBox.isChecked()) {
+                    if (pickerDialog == null) {
+                        Calendar now = Calendar.getInstance();
+                        Calendar maxDay = Calendar.getInstance();
+                        maxDay.add(Calendar.DATE, 7);
+
+                        pickerDialog = DatePickerDialog.newInstance(PostingActivity.this,
+                                now.get(Calendar.YEAR),
+                                now.get(Calendar.MONTH),
+                                now.get(Calendar.DAY_OF_MONTH));
+
+                        pickerDialog.setCancelable(false);
+                        pickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                            @Override
+                            public void onCancel(DialogInterface dialogInterface) {
+                                pickerDialog = null;
+                            }
+                        });
+
+                        pickerDialog.setMinDate(now);
+                        pickerDialog.setMaxDate(maxDay);
+
+                        pickerDialog.show(getSupportFragmentManager(), "DatePickerDialog");
+
+                    }
+                } else {
+                    new AlertDialog.Builder(mContext)
+                            .setMessage("예약이 취소 됩니다.\n취소하시겠습니까?")
+                            .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    postReserveCheckBox.setChecked(false);
+                                    postReservieTime.setText("");
+                                    bookTime = null;
+                                    bookBuilder = null;
+                                    postReserveCheckBox.setChecked(false);
+                                    dialogInterface.dismiss();
+                                }
+                            })
+                            .setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    postReserveCheckBox.setChecked(true);
+
+                                }
+                            })
+                            .show();
+
+                }
+
             }
         });
     }
@@ -182,6 +230,39 @@ public class PostingActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onDateSet(DatePickerDialog view, int year, int monthOfYear, int dayOfMonth) {
+
+        view.dismiss();
+
+        bookBuilder = new TwiceTime.Builder(year, monthOfYear + 1, dayOfMonth);
+        pickerDialog = null;
+
+        Calendar now = Calendar.getInstance();
+
+        TimePickerDialog timePickerDialog = TimePickerDialog.newInstance(PostingActivity.this,
+                now.get(Calendar.HOUR_OF_DAY), now.get(Calendar.MINUTE), true);
+
+        timePickerDialog.setCancelable(false);
+        timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialogInterface) {
+                postReserveCheckBox.setChecked(false);
+            }
+        });
+        timePickerDialog.show(getSupportFragmentManager(), "TimePickerDialog");
+
+    }
+
+    @Override
+    public void onTimeSet(TimePickerDialog view, int hourOfDay, int minute, int second) {
+
+        view.dismiss();
+
+        bookTime = bookBuilder.Hour(hourOfDay).Minute(minute).build();
+        postReservieTime.setText(bookTime.toString());
+    }
+
     private class SendQueryAsync extends AsyncTask<Void, Void, Boolean> {
         private ProgressDialog dialog;
 
@@ -207,7 +288,7 @@ public class PostingActivity extends AppCompatActivity {
 
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("User-Agent", USER_AGENT);
-                connection.setRequestProperty("Content-Type","application/json");
+                connection.setRequestProperty("Content-Type", "application/json");
                 connection.setConnectTimeout(3000);
                 connection.setDoOutput(true);
                 connection.setDoInput(true);
@@ -256,7 +337,8 @@ public class PostingActivity extends AppCompatActivity {
 
             try {
                 // Time
-                sendObject.put("time", postReserveRadio.isChecked() ? (new Date()).toString() : null);
+                sendObject.put("time", postReserveCheckBox.isChecked() ? bookTime.toFormatString() : null);
+                sendObject.put("uid", DBManager.getInstance().getUser().getUid());
 
                 // Image
                 JSONArray imageArray = new JSONArray();
@@ -271,9 +353,9 @@ public class PostingActivity extends AppCompatActivity {
 
                 // Facebook
                 if (postFacebookCheck.isChecked()) {
-                    if (pages != null) {
-                        for (int pageNum = 0; pageNum < pages.size(); pageNum++) {
-                            FacebookPageVO pageVO = pages.get(pageNum);
+                    if (UserSession.FacebookPageProfile != null) {
+                        for (int pageNum = 0; pageNum < UserSession.FacebookPageProfile.size(); pageNum++) {
+                            FacebookPageVO pageVO = UserSession.FacebookPageProfile.get(pageNum);
 
                             JSONObject item = new JSONObject();
 

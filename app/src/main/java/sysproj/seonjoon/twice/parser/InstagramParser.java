@@ -90,17 +90,18 @@ public class InstagramParser extends SNSParser {
         JSONObject dataObject = null;
         String userName = "Unknown";
         String profileImage = null;
+        long id = 0;
         try {
             dataObject = jsonObject.getJSONObject("data");
-
             userName = dataObject.getString("username");
             profileImage = dataObject.getString("profile_picture");
+            id = parseID(dataObject);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        return new UserProfile.Builder(userName).profileImage(profileImage).build();
+        return new UserProfile.Builder(id, userName).profileImage(profileImage).build();
     }
 
     @Override

@@ -159,7 +159,7 @@ public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefre
             } else
                 Log.e(TAG, "Facebook Token is Null");
 
-            if (UserSession.InstagramToekn != null){
+            if (UserSession.InstagramToken != null){
                 Log.e(TAG, "Start Instagram Async");
 
                 // TODO : Instagram Timeline Making

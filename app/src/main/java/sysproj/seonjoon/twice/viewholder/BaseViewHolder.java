@@ -3,6 +3,7 @@ package sysproj.seonjoon.twice.viewholder;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,6 +42,7 @@ import sysproj.seonjoon.twice.entity.PostExtendInfo;
 import sysproj.seonjoon.twice.entity.TwitterPost;
 import sysproj.seonjoon.twice.staticdata.LastUpdate;
 import sysproj.seonjoon.twice.view.MainActivity;
+import sysproj.seonjoon.twice.view.custom.ItemOptionDialog;
 
 public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
@@ -68,13 +70,28 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     public void bind(Post item) {
 
         snsLogo.setImageDrawable(getLogo(item));
-        titleText.setText(item.getUser().getName());
+        titleText.setText(item.getUserProfile().getName());
 
         setSubTitle(item);
         setContent(item.getContentText(), item.getExtendInfo());
         setProfileImage(item);
         setImageContent(item);
         setExtendField(item);
+
+        initListener(item);
+    }
+
+    private void initListener(final Post item) {
+
+        if (item instanceof TwitterPost) {
+            snsLogo.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ItemOptionDialog itemOptionDialog = new ItemOptionDialog(context, (TwitterPost) item);
+                    itemOptionDialog.show();
+                }
+            });
+        }
     }
 
     private Drawable getLogo(Post post) {
@@ -99,7 +116,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
             contentText.setText(content);
         } else {
             contentText.setHeight(0);
-            return ;
+            return;
         }
 
         if (post != null) {
@@ -121,12 +138,12 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
 
                 switch (item.getPostTag()) {
                     case PostExtendInfo.HASH_TAG:
-                        try{
-                        int startPos = content.indexOf('#' + item.getKeyword(), lastTagPos);
-                        int endPos =  startPos + item.getKeyword().length() + 1;
-                        addHashTags(contentSpannable, startPos, endPos, item.getKeyword());
-                        lastTagPos = endPos;
-                        } catch (Exception e){
+                        try {
+                            int startPos = content.indexOf('#' + item.getKeyword(), lastTagPos);
+                            int endPos = startPos + item.getKeyword().length() + 1;
+                            addHashTags(contentSpannable, startPos, endPos, item.getKeyword());
+                            lastTagPos = endPos;
+                        } catch (Exception e) {
                             Log.e(TAG, e.getMessage() + " / " + item.getKeyword());
                         }
                         break;
@@ -145,8 +162,8 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
     }
 
     private void setProfileImage(Post post) {
-        if (post.getUser().getProfileImage() != null)
-            Glide.with(context).applyDefaultRequestOptions(RequestOptions.circleCropTransform()).load(post.getUser().getProfileImage()).into(profileImage);
+        if (post.getUserProfile().getProfileImage() != null)
+            Glide.with(context).applyDefaultRequestOptions(RequestOptions.circleCropTransform()).load(post.getUserProfile().getProfileImage()).into(profileImage);
         else
             Glide.with(context).applyDefaultRequestOptions(RequestOptions.circleCropTransform()).load(R.drawable.default_user).into(profileImage);
     }
@@ -171,7 +188,7 @@ public abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         spannableString.setSpan(hashtagSpan, strPos, endPos, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
     }
 
-    private void convertSpannedText(TextView textView, SpannableString spannableString){
+    private void convertSpannedText(TextView textView, SpannableString spannableString) {
         textView.setText(spannableString);
         textView.setMovementMethod(LinkMovementMethod.getInstance());
     }

@@ -64,10 +64,6 @@ public abstract class Post {
         return extendPost;
     }
 
-    public UserProfile getUser() {
-        return user;
-    }
-
     private void convertSpecialCharacter() {
         contentText = contentText
                 .replaceAll("&amp;", "&")
@@ -126,6 +122,10 @@ public abstract class Post {
         }
 
         return result;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public abstract static class Builder {

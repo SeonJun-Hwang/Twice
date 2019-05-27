@@ -72,6 +72,9 @@ dependencies {
     implementation 'com.google.android.exoplayer:exoplayer-dash:2.10.1'
     implementation 'com.google.android.exoplayer:exoplayer-ui:2.10.1'
     implementation 'com.google.android.exoplayer:exoplayer-hls:2.10.1'
+
+    // Time Picker
+    implementation 'com.wdullaer:materialdatetimepicker:4.2.0'
 }
 
 apply plugin: 'com.google.gms.google-services'

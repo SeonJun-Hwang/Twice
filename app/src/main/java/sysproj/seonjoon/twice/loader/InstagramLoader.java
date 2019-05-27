@@ -27,7 +27,7 @@ public class InstagramLoader implements DataLoader {
     public JSONObject LoadUserProfileData() {
         JSONObject res = null;
 
-        String urls = "https://api.instagram.com/v1/users/self/?access_token=" + UserSession.InstagramToekn;
+        String urls = "https://api.instagram.com/v1/users/self/?access_token=" + UserSession.InstagramToken;
 
         try {
             URL url = new URL(urls);
@@ -66,7 +66,7 @@ public class InstagramLoader implements DataLoader {
 
         JSONObject res = null;
 
-        String urls = "https://api.instagram.com/v1/users/self/media/recent/?access_token=" + UserSession.InstagramToekn;
+        String urls = "https://api.instagram.com/v1/users/self/media/recent/?access_token=" + UserSession.InstagramToken;
 
         try {
             URL url = new URL(urls);

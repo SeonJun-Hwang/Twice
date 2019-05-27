@@ -101,9 +101,14 @@
         <TextView
             android:id="@+id/post_reserve_time"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
+            android:layout_alignTop="@id/post_reserve_radio"
+            android:layout_alignBottom="@id/post_reserve_radio"
             android:layout_alignParentEnd="true"
-            android:layout_marginStart="5dp" />
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
+            />
 
     </RelativeLayout>
 

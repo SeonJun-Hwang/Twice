@@ -317,9 +317,12 @@ public class TwitterParser extends SNSParser {
 
     @Override
     public UserProfile parseUserProfile(JSONObject jsonObject) throws JSONException {
+
+        long id = parseID(jsonObject);
+
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
-            return new UserProfile.Builder(jsonObject.getString("name")).profileImage(jsonObject.getString("profile_image_url")).build();
-        return new UserProfile.Builder(jsonObject.getString("name")).profileImage(jsonObject.getString("profile_image_url_https")).build();
+            return new UserProfile.Builder(id, jsonObject.getString( "name")).profileImage(jsonObject.getString("profile_image_url")).build();
+        return new UserProfile.Builder(id, jsonObject.getString("name")).profileImage(jsonObject.getString("profile_image_url_https")).build();
     }
 
     @Override

@@ -77,8 +77,8 @@ public class LoginManager {
             UserSession.FacebookToken = null;
             AccessToken.setCurrentAccessToken(null);
         }
-        if(UserSession.InstagramToekn != null){
-            UserSession.InstagramToekn = null;
+        if(UserSession.InstagramToken != null){
+            UserSession.InstagramToken = null;
         }
 
     }

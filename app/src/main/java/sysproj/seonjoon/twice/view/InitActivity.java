@@ -213,7 +213,7 @@ public class InitActivity extends AppCompatActivity {
                         public void LoadDataCallback(boolean isSuccess, Map<String, Object> result) {
                             if (isSuccess) {
                                 TokenParser tokenParser = new InstagramTokenParser();
-                                UserSession.InstagramToekn = (String) tokenParser.map2Token(result);
+                                UserSession.InstagramToken = (String) tokenParser.map2Token(result);
                             }
 
                             countDownLatch.countDown();

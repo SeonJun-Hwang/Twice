@@ -53,9 +53,6 @@ public class FacebookParser extends SNSParser {
                 if (!jsonObject.isNull("message"))
                     message = jsonObject.getString("message");
 
-                if (userProfile.getName() == null || userProfile.getName().isEmpty())
-                    userProfile = new UserProfile.Builder("Unknown").build();
-
                 switch (type) {
                     case "status":
                         snsType += SNSTag.Origin;
@@ -111,14 +108,11 @@ public class FacebookParser extends SNSParser {
                 String createdTime = parseCreatedDate(jsonObject);
                 String type = parseType(jsonObject);
 
-                UserProfile userProfile = new UserProfile.Builder(vo.getName()).profileImage(vo.getPageImage()).build();
+                UserProfile userProfile = UserSession.FacebookProfile == null ? parseUserProfile(jsonObject) : UserSession.FacebookProfile;
                 long id = parseIDPost(jsonObject);
 
                 if (!jsonObject.isNull("message"))
                     message = jsonObject.getString("message");
-
-                if (userProfile.getName() == null || userProfile.getName().isEmpty())
-                    userProfile = new UserProfile.Builder("Unknown").build();
 
                 switch (type) {
                     case "status":
@@ -176,9 +170,6 @@ public class FacebookParser extends SNSParser {
                 if (!jsonObject.isNull("message"))
                     message = jsonObject.getString("message");
 
-                if (userProfile.getName() == null || userProfile.getName().isEmpty())
-                    userProfile = new UserProfile.Builder("Unknown").build();
-
                 Post post = new FacebookPost.Builder(id, SNSTag.Facebook * SNSTag.Platform + SNSTag.Origin, userProfile, message, createdTime, new PostRFS()).build();
 
                 resultList.add(post);
@@ -220,18 +211,20 @@ public class FacebookParser extends SNSParser {
     @Override
     public UserProfile parseUserProfile(JSONObject jsonObject) {
 
+        long id = 0;
         String name = "Unknown";
         String email = "Unknown@nwonknU.com";
         String profileImage = null;
 
         try {
+            id = parseID(jsonObject);
             name = parseName(jsonObject);
             email = jsonObject.getString("email");
             profileImage = jsonObject.getJSONObject("picture").getJSONObject("data").getString("url");
         } catch (JSONException ignored) {
         }
 
-        return new UserProfile.Builder(name).userEmail(email).profileImage(profileImage).build();
+        return new UserProfile.Builder(id, name).userEmail(email).profileImage(profileImage).build();
     }
 
     @Override
