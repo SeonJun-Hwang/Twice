@@ -108,7 +108,7 @@ public class FacebookParser extends SNSParser {
                 String createdTime = parseCreatedDate(jsonObject);
                 String type = parseType(jsonObject);
 
-                UserProfile userProfile = UserSession.FacebookProfile == null ? parseUserProfile(jsonObject) : UserSession.FacebookProfile;
+                UserProfile userProfile = new UserProfile.Builder(vo.getPageId(), vo.getName()).profileImage(vo.getPageImage()).build();
                 long id = parseIDPost(jsonObject);
 
                 if (!jsonObject.isNull("message"))
