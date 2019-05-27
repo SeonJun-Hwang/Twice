@@ -300,7 +300,7 @@ public class PostingActivity extends AppCompatActivity {
                 // Instagram
                 if (postInstagramCheck.isChecked()) {
                     JSONObject instagramData = new JSONObject();
-                    instagramData.put("mbc", UserSession.InstagramToekn);
+                    instagramData.put("mbc", UserSession.InstagramToken);
                     sendObject.put("instagram", instagramData);
                 } else
                     sendObject.put("instagram", null);

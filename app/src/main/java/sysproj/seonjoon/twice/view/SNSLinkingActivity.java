@@ -91,7 +91,7 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
             facebookSwitch.setChecked(true);
         if (UserSession.TwitterToken != null)
             twitterSwitch.setChecked(true);
-        if (UserSession.InstagramToekn != null)
+        if (UserSession.InstagramToken != null)
             instagramSwitch.setChecked(true);
 
         facebookSwitch.setOnClickListener(this);
@@ -355,7 +355,8 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
                                 UserSession.TwitterToken = null;
                                 break;
                             case R.id.link_instagram_switch:
-                                //DBManager.getInstance().removeInstagramToken(uid, callBack);
+                                DBManager.getInstance().removeInstagramToken(uid, callback);
+                                UserSession.InstagramToken = null;
                                 break;
                         }
                     }
@@ -495,7 +496,7 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
                 ((InstagramLoginButton)SNSLogin).registerCallback(new InstagramLoginCallBack() {
                     @Override
                     public void onSuccess(String token) {
-                        UserSession.InstagramToekn = token;
+                        UserSession.InstagramToken = token;
 
                         Log.e(TAG, token);
 
@@ -506,7 +507,7 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
                                     Toast.makeText(context, "저장되었습니다.", Toast.LENGTH_LONG).show();
                                 } else {
                                     Toast.makeText(context, "잠시 후에 다시 시도해 주시기 바랍니다.", Toast.LENGTH_LONG).show();
-                                    UserSession.InstagramToekn = null;
+                                    UserSession.InstagramToken = null;
                                 }
 
                                 snsDialog.dismiss();

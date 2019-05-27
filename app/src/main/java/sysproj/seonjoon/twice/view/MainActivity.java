@@ -304,7 +304,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         FirebaseAuth.getInstance().signOut();
-                        UserSession.FacebookProfile = null;
+                        UserSession.sessionClear();
                         PreferenceLoader.removePreference(mContext, BuildConfig.IDPreferenceKey);
                         PreferenceLoader.removePreference(mContext, BuildConfig.PwdPreferenceKey);
                         Intent intent = new Intent(MainActivity.this, LoginActivity.class);
@@ -424,7 +424,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
             else
                 twitterStatus.clearColorFilter();
 
-            if (UserSession.InstagramToekn == null)
+            if (UserSession.InstagramToken == null)
                 instagramStatus.setColorFilter(StaticAppData.Gray_filter);
             else
                 instagramStatus.clearColorFilter();
@@ -478,7 +478,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
         private void loadInstagramProfile() {
 
-            if (UserSession.InstagramToekn != null) {
+            if (UserSession.InstagramToken != null) {
                 DataLoader loader = new InstagramLoader();
                 InstagramParser parser = new InstagramParser();
 
@@ -494,12 +494,6 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
                 FacebookLoader dataLoader = new FacebookLoader(mContext);
                 JSONObject userJSON = dataLoader.LoadPageList();
-
-                try {
-                    Log.e(TAG, userJSON.toString(2));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
                 FacebookParser snsParser = new FacebookParser();
                 UserSession.FacebookPageProfile = snsParser.parsePageList(userJSON);
