@@ -349,14 +349,17 @@ public class SNSLinkingActivity extends AppCompatActivity implements CompoundBut
                             case R.id.link_facebook_switch:
                                 DBManager.getInstance().removeFacebookToken(uid, callback);
                                 UserSession.FacebookToken = null;
+                                UserSession.FacebookProfile = null;
                                 break;
                             case R.id.link_twitter_switch:
                                 DBManager.getInstance().removeTwitterToken(uid, callback);
                                 UserSession.TwitterToken = null;
+                                UserSession.TwitterProfile = null;
                                 break;
                             case R.id.link_instagram_switch:
                                 DBManager.getInstance().removeInstagramToken(uid, callback);
                                 UserSession.InstagramToken = null;
+                                UserSession.InstagramProfile = null;
                                 break;
                         }
                     }

@@ -146,8 +146,10 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 break;
             case R.id.drawer_inquiry_book_post:
                 gotoInquiryBookActivity();
+                break;
             case R.id.drawer_app_developers:
                 gotoAboutActivity();
+                break;
         }
         return false;
     }
@@ -489,13 +491,14 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
         private void loadFacebookPageProfile() {
             if (UserSession.FacebookToken != null) {
-
                 FacebookLoader dataLoader = new FacebookLoader(mContext);
                 JSONObject userJSON = dataLoader.LoadPageList();
 
                 FacebookParser snsParser = new FacebookParser();
                 UserSession.FacebookPageProfile = snsParser.parsePageList(userJSON);
             }
+            else
+                UserSession.FacebookPageProfile = null;
         }
     }
 }

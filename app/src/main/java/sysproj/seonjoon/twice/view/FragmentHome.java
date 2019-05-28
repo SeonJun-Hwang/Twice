@@ -153,7 +153,8 @@ public class FragmentHome extends Fragment implements SwipeRefreshLayout.OnRefre
                         ArrayList<Post> parsedTimeLine = snsParser.parseTimeline(object, curVO);
 
                         if (parsedTimeLine != null)
-                            facebookTimeline.addAll(parsedTimeLine);
+                            facebookTimeline = Post.mergePost(facebookTimeline, parsedTimeLine);
+                            //facebookTimeline.addAll(parsedTimeLine);
                     }
                 }
             } else

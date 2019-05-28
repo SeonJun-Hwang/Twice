@@ -10,10 +10,10 @@
         android:id="@+id/twice_form_head_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
         android:layout_marginBottom="10dp"
         android:background="@color/registFragmentHeadBack"
         android:gravity="center"
+        android:padding="5dp"
         android:textColor="@color/HeadTextColor"
         android:textSize="@dimen/regist_font_size"
         android:textStyle="bold" />
@@ -25,9 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/twice_form_head_text"
         android:orientation="horizontal"
-        android:weightSum="1"
         android:paddingHorizontal="@dimen/register_padding"
-        >
+        android:weightSum="1">
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
@@ -50,15 +49,25 @@
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
             android:layout_weight="0.75"
-            android:text="@string/register_id_check" />
+            android:background="@color/white"
+            android:text="@string/register_id_check"
+            android:textColor="@color/colorPrimary" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/twice_id_notice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/twice_linear_id"
+        android:layout_marginHorizontal="@dimen/register_padding"
+        android:text="ID는 알파벳 대,소문자, 숫자만 가능합니다." />
 
     <!-- Password -->
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/twice_password_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/twice_linear_id"
+        android:layout_below="@id/twice_id_notice"
         android:paddingHorizontal="@dimen/register_padding">
 
         <EditText
@@ -68,10 +77,19 @@
             android:enabled="false"
             android:hint="@string/share_password_tag"
             android:inputType="textPassword"
+            android:maxLength="15"
             android:maxLines="1"
             android:singleLine="true" />
 
     </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:id="@+id/twice_password_notice"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/twice_password_edit"
+        android:layout_marginHorizontal="@dimen/register_padding"
+        android:text="Password는 8자리 이상 알파벳 대,소문자,숫자만 가능합니다." />
 
     <!-- Recover Email -->
 
@@ -82,7 +100,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentBottom="true"
         android:background="@color/registFragmentHeadBack"
-        android:textColor="@color/white"
-        android:padding="3dp" />
+        android:padding="3dp"
+        android:textColor="@color/white" />
 
 </RelativeLayout>

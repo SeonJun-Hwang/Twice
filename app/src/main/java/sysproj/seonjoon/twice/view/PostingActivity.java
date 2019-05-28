@@ -296,7 +296,7 @@ public class PostingActivity extends AppCompatActivity implements DatePickerDial
                 connection.setRequestMethod("POST");
                 connection.setRequestProperty("User-Agent", USER_AGENT);
                 connection.setRequestProperty("Content-Type", "application/json");
-                connection.setConnectTimeout(3000);
+                connection.setConnectTimeout(5000);
                 connection.setDoOutput(true);
                 connection.setDoInput(true);
 

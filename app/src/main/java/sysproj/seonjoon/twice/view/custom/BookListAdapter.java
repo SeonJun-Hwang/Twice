@@ -55,7 +55,7 @@ public class BookListAdapter extends BaseAdapter {
         ImageView Ticon = (ImageView) convertView.findViewById(R.id.twitter_icon);
         TextView dateText = (TextView) convertView.findViewById(R.id.date_text);
         final TextView postText = (TextView) convertView.findViewById(R.id.post_text);
-        Button removeBtn = (Button) convertView.findViewById(R.id.post_delete_button);
+        ImageView removeBtn = (ImageView) convertView.findViewById(R.id.post_delete_button);
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
         final BookPostVO listViewItem = listViewItemList.get(position);
