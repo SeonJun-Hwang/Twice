@@ -31,13 +31,6 @@ public abstract class InstagramViewHolder extends BaseViewHolder {
         super.bind(item);
 
         setLikeComment(item);
-
-        ArrayList<PostExtendInfo> temp = item.getExtendInfo();
-        if (temp != null)
-            for (int i = 0; i < temp.size(); i++) {
-                PostExtendInfo pei = temp.get(i);
-                Log.e(TAG, pei.getKeyword());
-            }
     }
 
     @Override

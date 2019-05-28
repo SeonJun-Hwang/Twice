@@ -78,5 +78,8 @@ public class FLViewHolder extends FacebookViewHolder {
         if (linkVO.getDescription() != null && !linkVO.getDescription().isEmpty())
             linkDescription.setText(linkVO.getDescription());
 
+        if (linkVO.getName() != null && !linkVO.getName().isEmpty()){
+            titleText.setText(linkVO.getName());
+        }
     }
 }

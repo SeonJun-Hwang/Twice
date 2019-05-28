@@ -2,6 +2,7 @@ package sysproj.seonjoon.twice.entity;
 
 public class FacebookLinkVO {
 
+    private String name;
     private String description;
     private String imageSrc;
     private String title;
@@ -11,6 +12,7 @@ public class FacebookLinkVO {
     }
 
     public FacebookLinkVO(Builder b) {
+        this.name = b.name;
         this.description = b.description;
         this.imageSrc = b.imageSrc;
         this.title = b.title;
@@ -33,13 +35,23 @@ public class FacebookLinkVO {
         return linkSrc;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public static class Builder {
+        private String name;
         private String description;
         private String imageSrc;
         private String title;
         private String linkSrc;
 
         public Builder() {
+        }
+
+        public Builder name(String name){
+            this.name = name;
+            return this;
         }
 
         public Builder description(String description) {

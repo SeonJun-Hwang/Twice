@@ -67,7 +67,8 @@ public class FacebookParser extends SNSParser {
                         break;
                     case "link":
                         snsType += SNSTag.Link;
-                        link = parseLink(jsonObject);
+                        String name = parseName(jsonObject);
+                        link = parseLink(jsonObject, name);
                 }
 
                 Post post = new FacebookPost.Builder(id, snsType, userProfile, message, createdTime, parseRFSField(jsonObject))
@@ -128,7 +129,8 @@ public class FacebookParser extends SNSParser {
                         break;
                     case "link":
                         snsType += SNSTag.Link;
-                        link = parseLink(jsonObject);
+                        String name = parseName(jsonObject);
+                        link = parseLink(jsonObject, name);
                 }
 
                 Post post = new FacebookPost.Builder(id, snsType, userProfile, message, createdTime, parseRFSField(jsonObject))
@@ -241,8 +243,16 @@ public class FacebookParser extends SNSParser {
         return Long.parseLong(jsonObject.getString("id").split("_")[1]);
     }
 
-    private String parseName(JSONObject jsonObject) throws JSONException {
-        return jsonObject.getString("name");
+    private String parseName(JSONObject jsonObject) {
+
+        String name = null;
+        try {
+            name = jsonObject.getString("name");
+            Log.e(TAG, name);
+        } catch (JSONException ignored) {
+        }
+
+        return name;
     }
 
     private JSONObject parseMedia(JSONObject jsonObject) throws JSONException {
@@ -339,7 +349,7 @@ public class FacebookParser extends SNSParser {
         return resultList;
     }
 
-    private FacebookLinkVO parseLink(JSONObject jsonObject) {
+    private FacebookLinkVO parseLink(JSONObject jsonObject, String name) {
         FacebookLinkVO link = null;
 
         try {
@@ -347,6 +357,7 @@ public class FacebookParser extends SNSParser {
             JSONObject linkData = data.getJSONObject(0);
 
             link = new FacebookLinkVO.Builder()
+                    .name(name)
                     .description(parseDescription(linkData))
                     .imageSrc(parseSrc(parseImage(parseMedia(linkData))))
                     .title(parseTitle(linkData))
