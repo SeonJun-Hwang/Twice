@@ -1,38 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
+    <!-- Top -->
     <RelativeLayout
+        android:id="@+id/main_top"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/time_line_height"
+        android:layout_height="@dimen/timeline_height"
         android:background="@color/timelineHeadBack"
-        android:padding="@dimen/time_line_padding">
+        android:elevation="10dp"
+        android:padding="@dimen/timeline_padding">
 
         <ImageView
             android:id="@+id/main_profile_setting"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/timeline_height"
             android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:src="@drawable/ic_menu_button" />
+            android:scaleType="fitXY"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="2dp"
+            android:src="@drawable/list" />
+
+        <TextView
+            android:id="@+id/main_top_home_text"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/main_profile_setting"
+            android:layout_toStartOf="@id/main_top_post_edit"
+            android:clickable="true"
+            android:gravity="center_vertical"
+            android:padding="2dp"
+            android:text="Home"
+            android:textColor="@color/HeadTextColor"
+            android:textSize="24sp" />
+
+        <EditText
+            android:id="@+id/main_top_search_edit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="5dp"
+            android:layout_toEndOf="@id/main_profile_setting"
+            android:background="@drawable/edittext_background"
+            android:hint="Search"
+            android:imeOptions="actionSearch"
+            android:paddingHorizontal="10sp"
+            android:singleLine="true"
+            android:visibility="gone" />
 
         <ImageView
-            android:id="@+id/main_setting"
+            android:id="@+id/main_top_post_edit"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/ic_setting_button" />
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:paddingHorizontal="5dp"
+            android:paddingVertical="2dp"
+            android:src ="@drawable/edit"/>
 
     </RelativeLayout>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/main_time_line_recycler"
+    <!-- Content Fragment -->
+    <FrameLayout
+        android:id="@+id/main_frame_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/timelineCardUnderBack">
+        android:layout_above="@id/main_bottom"
+        android:layout_below="@id/main_top" />
 
-    </android.support.v7.widget.RecyclerView>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/main_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/main_bottom">
 
-</LinearLayout>
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+</RelativeLayout>

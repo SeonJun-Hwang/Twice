@@ -4,11 +4,15 @@
     <item android:drawable="@color/cardview_light_background"/>
 
     <!-- Logo -->
-    <item>
+    <item
+        android:gravity="center"
+        android:height="280dp"
+        android:width="310dp"
+        >
         <bitmap
-            android:gravity="center"
-            android:src="@drawable/logo"/>
-
+            android:gravity="fill_vertical|fill_horizontal"
+            android:src="@drawable/logo2"
+            />
     </item>
 
 </layer-list>

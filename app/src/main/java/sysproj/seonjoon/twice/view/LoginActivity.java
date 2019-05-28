@@ -1,14 +1,13 @@
 package sysproj.seonjoon.twice.view;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
+
+import androidx.annotation.NonNull;
+
 import android.app.LoaderManager.LoaderCallbacks;
 
 import android.content.CursorLoader;
@@ -17,7 +16,6 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
@@ -42,29 +40,41 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.twitter.sdk.android.core.Callback;
-import com.twitter.sdk.android.core.Result;
-import com.twitter.sdk.android.core.TwitterException;
+import com.twitter.sdk.android.core.TwitterCore;
 import com.twitter.sdk.android.core.TwitterSession;
-import com.twitter.sdk.android.core.identity.TwitterLoginButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
-import sysproj.seonjoon.twice.DBAccessResultCallback;
+import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.R;
-import sysproj.seonjoon.twice.manager.DBManager;
+import sysproj.seonjoon.twice.loader.DataLoader;
+import sysproj.seonjoon.twice.loader.FacebookLoader;
+import sysproj.seonjoon.twice.loader.PreferenceLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
-import sysproj.seonjoon.twice.manager.PreferenceManager;
+import sysproj.seonjoon.twice.parser.FacebookParser;
 import sysproj.seonjoon.twice.parser.FacebookTokenParser;
+import sysproj.seonjoon.twice.parser.InstagramTokenParser;
+import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TokenParser;
+import sysproj.seonjoon.twice.parser.TwitterTokenParser;
 import sysproj.seonjoon.twice.staticdata.SNSTag;
 import sysproj.seonjoon.twice.staticdata.StaticAppData;
 import sysproj.seonjoon.twice.staticdata.UserSession;
@@ -97,8 +107,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     // UI references.
     private AutoCompleteTextView mEmailView;
     private EditText mPasswordView;
-    private View mProgressView;
-    private View mLoginFormView;
 
     private Button mEmailSignInButton;
     private Button mRegisterButton;
@@ -118,8 +126,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mPasswordView = (EditText) findViewById(R.id.password);
         mEmailSignInButton = (Button) findViewById(R.id.email_sign_in_button);
         mRegisterButton = (Button) findViewById(R.id.login_register);
-        mLoginFormView = findViewById(R.id.login_form);
-        mProgressView = findViewById(R.id.login_progress);
         mSaveIDCheck = (CheckBox) findViewById(R.id.login_save_id_button);
         mAutoLoginCheck = (CheckBox) findViewById(R.id.login_auto_login_button);
         googleLoginButton = (SignInButton) findViewById(R.id.login_google_login_button);
@@ -194,8 +200,8 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         mAutoLoginCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean changedVal) {
-                    mSaveIDCheck.setChecked(changedVal);
-                    mSaveIDCheck.setEnabled(!changedVal);
+                mSaveIDCheck.setChecked(changedVal);
+                mSaveIDCheck.setEnabled(!changedVal);
             }
         });
     }
@@ -226,38 +232,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
     /**
      * Shows the progress UI and hides the login form.
      */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private void showProgress(final boolean show) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
-
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-                }
-            });
-
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mProgressView.animate().setDuration(shortAnimTime).alpha(
-                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-                }
-            });
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
-            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
-        }
-    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int i, Bundle bundle) {
@@ -303,15 +277,18 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             if (seconds > 2000) {
                 Toast.makeText(this, "한번 더 누르면 종료됩니다.", Toast.LENGTH_SHORT).show();
                 parsedTime = 0;
-            } else
+            } else {
                 super.onBackPressed();
+                System.runFinalization();
+                finishAffinity();
+            }
+
         }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        LoginManager.getInstance().SignOut();
     }
 
     /**
@@ -348,10 +325,6 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             mEmailView.setError(getString(R.string.error_field_required));
             focusView = mEmailView;
             cancel = true;
-        } else if (!isEmailValid(email)) {
-            mEmailView.setError(getString(R.string.error_invalid_email));
-            focusView = mEmailView;
-            cancel = true;
         }
 
         if (cancel) {
@@ -362,22 +335,16 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
 
-            showProgress(true);
-
-            mAuthTask = new UserLoginTask(email, password);
-            mAuthTask.execute((Void) null);
+            if (mAuthTask == null) {
+                mAuthTask = new UserLoginTask(email, password);
+                mAuthTask.execute();
+            }
         }
     }
 
     private void attemptRegister() {
         Intent loginToRegister = new Intent(LoginActivity.this, RegisterActivity.class);
         startActivity(loginToRegister);
-    }
-
-    private boolean isEmailValid(String email) {
-        //TODO: Replace this with your own logic
-        //return email.contains("@");
-        return true;
     }
 
     private boolean isPasswordValid(String password) {
@@ -423,16 +390,29 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         private final String mPassword;
         private final String TAG = "LOGIN_ASYNC";
         private FirebaseUser user = null;
+        private ProgressDialog progressDialog;
 
         UserLoginTask(String id, String password) {
             mID = id;
             mPassword = password;
+
+            progressDialog = new ProgressDialog(mContext);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.setMessage("로그인 중입니다.");
+            progressDialog.setCancelable(false);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+
+            progressDialog.show();
         }
 
         @Override
         protected Boolean doInBackground(final Void... params) {
             // TODO: attempt authentication against a network service.
-            boolean login = LoginManager.getInstance().TwiceLogin((LoginActivity) mContext, mID, mPassword);
+            boolean login = LoginManager.getInstance().TwiceLogin(LoginActivity.this, mID, mPassword);
 
             if (login) {
                 Log.e(TAG, "Login Success");
@@ -441,8 +421,53 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
                 if (user == null)
                     login = false;
                 else {
-                    LoginManager.getInstance().FacebookLogin(user.getUid());
-                    LoginManager.getInstance().TwitterLogin(user.getUid());
+                    final CountDownLatch countDownLatch = new CountDownLatch(3);
+
+                    LoginManager.getInstance().FacebookLogin(user.getUid(), new DBLoadSuccessCallback() {
+                        @Override
+                        public void LoadDataCallback(boolean isSuccess, Map<String, Object> result) {
+                            if (isSuccess) {
+                                TokenParser tokenParser = new FacebookTokenParser();
+                                UserSession.FacebookToken = (AccessToken) tokenParser.map2Token(result);
+
+                                Log.e(TAG, UserSession.FacebookToken.getUserId());
+
+                            }
+                            countDownLatch.countDown();
+                        }
+                    });
+
+                    LoginManager.getInstance().TwitterLogin(user.getUid(), new DBLoadSuccessCallback() {
+                        @Override
+                        public void LoadDataCallback(boolean isSuccess, Map<String, Object> result) {
+                            if (isSuccess) {
+                                TokenParser tokenParser = new TwitterTokenParser();
+                                UserSession.TwitterToken = (TwitterSession) tokenParser.map2Token(result);
+
+                                TwitterCore.getInstance().getSessionManager().setActiveSession(UserSession.TwitterToken);
+                            }
+                            countDownLatch.countDown();
+                        }
+                    });
+
+                    LoginManager.getInstance().InstagramLogin(user.getUid(), new DBLoadSuccessCallback() {
+                        @Override
+                        public void LoadDataCallback(boolean isSuccess, Map<String, Object> result) {
+                            if (isSuccess) {
+                                TokenParser tokenParser = new InstagramTokenParser();
+                                UserSession.InstagramToken = (String) tokenParser.map2Token(result);
+                            }
+
+                            countDownLatch.countDown();
+                        }
+                    });
+
+                    try {
+                        countDownLatch.await();
+                    } catch (
+                            InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             } else
                 Log.e(TAG, "Failure Login");
@@ -453,15 +478,21 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
+
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+                progressDialog = null;
+            }
 
             if (success) {
                 user = FirebaseAuth.getInstance().getCurrentUser();
 
-                if (mSaveIDCheck.isChecked())
-                    PreferenceManager.getInstance().saveString(mContext, UserSession.UserFileName, UserSession.UserIDTag, mID);
-                if (mAutoLoginCheck.isChecked())
-                    PreferenceManager.getInstance().saveString(mContext, UserSession.UserFileName, UserSession.UserPasswordTag, mPassword);
+                if (mSaveIDCheck.isChecked()) {
+                    PreferenceLoader.savePreference(mContext, BuildConfig.IDPreferenceKey, mID);
+                }
+                if (mAutoLoginCheck.isChecked()) {
+                    PreferenceLoader.savePreference(mContext, BuildConfig.PwdPreferenceKey, mPassword);
+                }
 
                 Intent loginToMain = new Intent(LoginActivity.this, MainActivity.class);
                 startActivity(loginToMain);
@@ -475,7 +506,9 @@ public class LoginActivity extends Activity implements LoaderCallbacks<Cursor> {
         @Override
         protected void onCancelled() {
             mAuthTask = null;
-            showProgress(false);
+
+            progressDialog.dismiss();
+            progressDialog = null;
         }
     }
 

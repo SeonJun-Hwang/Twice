@@ -3,18 +3,39 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="registFragmentHeadBack">#dea0c6</color>
-    <color name="registFragmentHeadFore">#3e0f2d</color>
-    <color name="timelineHeadBack">#f59fcd</color>
-    <color name="timelineThemaBackWhite">#ffffff</color>
+    <color name="registFragmentHeadBack">#464A4F</color>
+    <color name="registFragmentHeadFore">#464A4F</color>
+    <color name="timelineHeadBack">#302F2F</color>
+    <color name="timelineSearchBack">#E67FB4</color>
+    <color name="timelineThemeBackWhite">#ffffff</color>
     <color name="timelineSeparatorBlack">#000000</color>
-    <color name="timelineCardUnderBack">#c2c2c2</color>
+    <color name="timelineCardUnderBack">#E3E1E6</color>
+    <color name="timelineCardImageCountBack">#C4BBBBBB</color>
+    <color name="timelineCardImageCountFont">#C4000000</color>
+    <color name= "HeadTextColor">#FFFFFF</color>
 
+    <!-- Navigation Header Text Color -->
+    <color name="navigationHeaderBackground">#C5C5C5</color>
+    <color name="navigationHeaderNameColor">#5C5C5C</color>
+    <color name="navigationHeaderEmailColor">#8F8F8F</color>
 
     <!-- Content BackGround Color -->
-
     <color name="colorFacebook">#3860ff</color>
     <color name="colorTwitter">#66bdff</color>
     <color name="colorInstagram">#d3ff88ed</color>
+    <color name="colorFacebookShareBackground">#CACACA</color>
+
+
+    <!-- Appbar Theme Color -->
+    <color name="actionBarText">#03A9F4</color>
+    <color name="actionBarBackground">#FFFFFF</color>
+
+    <!-- Original Color -->
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+    <color name="whiteGray">#949494</color>
+
+    <!-- SNS register Color -->
+    <color name="SNSRegister">#ededff</color>
 
 </resources>

@@ -1,144 +1,157 @@
 package sysproj.seonjoon.twice.view;
 
-import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.navigation.NavigationView;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.facebook.AccessToken;
-import com.facebook.GraphRequest;
-import com.facebook.GraphResponse;
-import com.facebook.HttpMethod;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
+import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
-import sysproj.seonjoon.twice.Loader.DataLoader;
-import sysproj.seonjoon.twice.Loader.FacebookLoader;
-import sysproj.seonjoon.twice.Loader.TwitterLoader;
+import sysproj.seonjoon.twice.OnHashtagClickListener;
 import sysproj.seonjoon.twice.R;
-import sysproj.seonjoon.twice.entity.TimeLineItem;
+import sysproj.seonjoon.twice.entity.UserProfile;
+import sysproj.seonjoon.twice.loader.DataLoader;
+import sysproj.seonjoon.twice.loader.FacebookLoader;
+import sysproj.seonjoon.twice.loader.InstagramLoader;
+import sysproj.seonjoon.twice.loader.PreferenceLoader;
+import sysproj.seonjoon.twice.loader.TwitterLoader;
 import sysproj.seonjoon.twice.manager.LoginManager;
 import sysproj.seonjoon.twice.parser.FacebookParser;
+import sysproj.seonjoon.twice.parser.InstagramParser;
 import sysproj.seonjoon.twice.parser.SNSParser;
 import sysproj.seonjoon.twice.parser.TwitterParser;
+import sysproj.seonjoon.twice.staticdata.StaticAppData;
 import sysproj.seonjoon.twice.staticdata.UserSession;
 
-public class MainActivity extends Activity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends FragmentActivity implements NavigationView.OnNavigationItemSelectedListener, OnHashtagClickListener {
 
     private static final String TAG = "MAIN_ACTIVITY";
+    private static final int HOME = 0;
+    private static final int SEARCH = 1;
+    private static final int LINK_SNS_CODE = 1000;
 
     private Context mContext;
-    private RecyclerView recyclerView;
-    private RecyclerView.LayoutManager recyclerLayoutManager;
-    private TimelineRecyclerAdapter timelineAdapater;
-    private ArrayList<TimeLineItem> contents;
+    private FragmentManager fm;
 
     private DrawerLayout personDrawer;
     private NavigationView personNavigation;
-
     private ImageView openMenuButton;
-    private ImageView openSettingButton;
+    private TextView topHomeText;
+    private EditText topEditText;
+    private Fragment[] fragments = new Fragment[]{null, null};
+    private String[] fragmentsTags = new String[]{"Home", "Search"};
+    private BottomNavigationView bottomNavigationView;
+    private ImageView createPostImage;
+
+    private ImageView repreProfileImage;
+    private TextView repreName;
+    private TextView repreEmail;
+    private ImageView facebookStatus;
+    private ImageView instagramStatus;
+    private ImageView twitterStatus;
+
+    private UserProfile profile;
 
     private long parsedTime = 0;
+    private static int showingFragment;
+    private LoadProfileAsync loadProfileAsync;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         mContext = this;
-        contents = new ArrayList<>();
+        loadProfileAsync = new LoadProfileAsync();
+        loadProfileAsync.execute();
+
+        fm = getSupportFragmentManager();
 
         setLayout();
         setListener();
+        showHomeFragment();
 
-        MakeTimeLineAsync makeTimeLineAsync = new MakeTimeLineAsync();
-        makeTimeLineAsync.execute();
+        // (new LoadAccounts()).execute();
     }
 
-    private void setLayout() {
-        openMenuButton = (ImageView) findViewById(R.id.main_profile_setting);
-        openSettingButton = (ImageView) findViewById(R.id.main_setting);
-
-        // Recycler Set
-        recyclerView = (RecyclerView) findViewById(R.id.main_time_line_recycler);
-        recyclerView.setHasFixedSize(true);
-        recyclerLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(recyclerLayoutManager);
-        timelineAdapater = new TimelineRecyclerAdapter(mContext, contents);
-        recyclerView.setAdapter(timelineAdapater);
-
-        // User Drawer Layout Set
-        personDrawer = (DrawerLayout) findViewById(R.id.main_drawer_user);
-        personNavigation = (NavigationView) findViewById(R.id.drawer_user_navigation);
-        personDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-
-        // Setting Drawer Layout Sets
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
-    private void setListener() {
-        openMenuButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.e(TAG, "Click Open Menu Button");
-                if (!personDrawer.isDrawerOpen(GravityCompat.START))
-                    personDrawer.openDrawer(Gravity.LEFT);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        Log.e(TAG, requestCode + " / " + resultCode);
+
+        if (requestCode == LINK_SNS_CODE)
+            if (loadProfileAsync == null) {
+                loadProfileAsync = new LoadProfileAsync();
+                loadProfileAsync.execute();
             }
-        });
-
-        personNavigation.setNavigationItemSelectedListener(this);
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
         switch (item.getItemId()) {
+            case R.id.drawer_link:
+                gotoLinkingActivity();
+                break;
             case R.id.drawer_logout:
                 askLogout();
                 break;
+            case R.id.drawer_app_setting:
+                gotoSettingActivity();
+                break;
+            case R.id.drawer_account:
+                gotoAccountActivity();
+                break;
+            case R.id.drawer_inquiry_book_post:
+                gotoInquiryBookActivity();
+                break;
+            case R.id.drawer_app_developers:
+                gotoAboutActivity();
+                break;
         }
         return false;
-    }
-
-    private void askLogout() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage(R.string.main_dialog_logout_message)
-                .setPositiveButton(R.string.main_dialog_logout_positive, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        FirebaseAuth.getInstance().signOut();
-                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(intent);
-
-                        finish();
-                    }
-                }).create().show();
     }
 
     @Override
@@ -157,7 +170,8 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
                     parsedTime = 0;
                 } else {
                     super.onBackPressed();
-                    finish();
+                    System.runFinalization();
+                    finishAffinity();
                 }
             }
         }
@@ -167,62 +181,324 @@ public class MainActivity extends Activity implements NavigationView.OnNavigatio
     protected void onStop() {
         super.onStop();
 
+    }
+
+    @Override
+    public void onClickHashTag(String hashTag) {
+        showSearchFragment();
+        ((FragmentSearch) getSupportFragmentManager().findFragmentByTag(fragmentsTags[SEARCH])).startSearch(hashTag);
+        topEditText.setText(hashTag);
+    }
+
+    private void setLayout() {
+        topHomeText = (TextView) findViewById(R.id.main_top_home_text);
+        topEditText = (EditText) findViewById(R.id.main_top_search_edit);
+
+        createPostImage = (ImageView) findViewById(R.id.main_top_post_edit);
+
+        personDrawer = (DrawerLayout) findViewById(R.id.main_drawer_user);
+        personNavigation = (NavigationView) findViewById(R.id.drawer_user_navigation);
+        personDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+
+        openMenuButton = (ImageView) findViewById(R.id.main_profile_setting);
+
+        bottomNavigationView = (BottomNavigationView) findViewById(R.id.main_bottom);
+
+        View headerView = personNavigation.getHeaderView(0);
+
+        repreProfileImage = (ImageView) headerView.findViewById(R.id.drawer_profile_image);
+        repreName = (TextView) headerView.findViewById(R.id.drawer_user_head_name);
+        repreEmail = (TextView) headerView.findViewById(R.id.drawer_user_head_email);
+        facebookStatus = (ImageView) headerView.findViewById(R.id.drawer_status_facebook_image);
+        instagramStatus = (ImageView) headerView.findViewById(R.id.drawer_status_instagram_image);
+        twitterStatus = (ImageView) headerView.findViewById(R.id.drawer_status_twitter_image);
+
+    }
+
+    private void changeTopViewVisibility(int showPos) {
+        switch (showPos) {
+            case HOME:
+                topHomeText.setVisibility(View.VISIBLE);
+                topEditText.setVisibility(View.GONE);
+                break;
+            case SEARCH:
+                topHomeText.setVisibility(View.GONE);
+                topEditText.setVisibility(View.VISIBLE);
+                break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "OnDestory called");
         LoginManager.getInstance().SignOut();
     }
 
-    private class MakeTimeLineAsync extends AsyncTask<Void, Void, Void> {
+    private void setListener() {
+
+        createPostImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, PostingActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        topEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    String searchTag = textView.getText().toString();
+                    ((FragmentSearch) getSupportFragmentManager().findFragmentByTag(fragmentsTags[1])).startSearch(searchTag);
+                }
+
+                return false;
+            }
+        });
+
+        // Drawer Set
+        openMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.e(TAG, "Click Open Menu Button");
+                if (!personDrawer.isDrawerOpen(GravityCompat.START))
+                    personDrawer.openDrawer(GravityCompat.START);
+            }
+        });
+
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                switch (menuItem.getItemId()) {
+                    case R.id.main_bottom_home:
+                        Log.e(TAG, "Select Home Button");
+                        showHomeFragment();
+                        break;
+                    case R.id.main_bottom_search:
+                        Log.e(TAG, "Select Search Button");
+                        showSearchFragment();
+                        break;
+                }
+                return true;
+            }
+        });
+
+        personNavigation.setNavigationItemSelectedListener(this);
+    }
+
+    private void askLogout() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+        builder.setMessage(R.string.main_dialog_logout_message)
+                .setPositiveButton(R.string.main_dialog_logout_positive, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        FirebaseAuth.getInstance().signOut();
+                        UserSession.sessionClear();
+                        PreferenceLoader.removePreference(mContext, BuildConfig.IDPreferenceKey);
+                        PreferenceLoader.removePreference(mContext, BuildConfig.PwdPreferenceKey);
+                        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                }).create().show();
+    }
+
+    private void gotoSettingActivity() {
+        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(intent);
+    }
+
+    private void gotoLinkingActivity() {
+        Intent intent = new Intent(MainActivity.this, SNSLinkingActivity.class);
+        startActivityForResult(intent, LINK_SNS_CODE);
+    }
+
+    private void gotoAccountActivity() {
+        Intent intent = new Intent(MainActivity.this, AccountActivity.class);
+        startActivity(intent);
+    }
+
+    private void gotoInquiryBookActivity() {
+        Intent intent = new Intent(MainActivity.this, InquiryBookActivity.class);
+        startActivity(intent);
+    }
+
+    private void gotoAboutActivity() {
+        Intent intent = new Intent(MainActivity.this, AboutActivity.class);
+        startActivity(intent);
+    }
+
+    private void showHomeFragment() {
+        showingFragment = HOME;
+        changeTopViewVisibility(showingFragment);
+
+        if (fragments[HOME] == null) {
+            fragments[HOME] = new FragmentHome();
+
+            fm.beginTransaction().add(R.id.main_frame_layout, fragments[HOME], fragmentsTags[HOME]).commit();
+        }
+
+        fm.beginTransaction().show(fragments[HOME]).commit();
+        if (fragments[SEARCH] != null) fm.beginTransaction().hide(fragments[SEARCH]).commit();
+    }
+
+    private void showSearchFragment() {
+        showingFragment = SEARCH;
+        changeTopViewVisibility(showingFragment);
+
+        if (fragments[SEARCH] == null) {
+            fragments[SEARCH] = new FragmentSearch();
+
+            fm.beginTransaction().add(R.id.main_frame_layout, fragments[SEARCH], fragmentsTags[SEARCH]).commit();
+        }
+
+        fm.beginTransaction().hide(fragments[HOME]).commit();
+        fm.beginTransaction().show(fragments[SEARCH]).commit();
+    }
+
+    public static int getShowingFragmentNumber() {
+        return showingFragment;
+    }
+
+    private class LoadProfileAsync extends AsyncTask<Void, Void, Void> {
+
+        private ProgressDialog dialog;
+
+        LoadProfileAsync() {
+            dialog = new ProgressDialog(mContext);
+            dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            dialog.setMessage("프로필 갱신 중입니다.");
+            dialog.setCancelable(false);
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog.show();
+        }
+
+
         @Override
         protected Void doInBackground(Void... voids) {
+            loadFacebookProfile();
+            loadInstagramProfile();
+            loadTwitterProfile();
+            loadFacebookPageProfile();
 
-            // Data Load
-            if (UserSession.FacebookToken != null) {
-                Log.e(TAG, "Start Facebook Async");
+            if (UserSession.FacebookProfile != null) {
+                profile = UserSession.FacebookProfile;
+            } else if (UserSession.TwitterProfile != null) {
+                profile = UserSession.TwitterProfile;
+            } else if (UserSession.InstagramProfile != null) {
+                profile = UserSession.InstagramProfile;
+            }
 
-                // TODO : Make Time Line Loader
-                DataLoader loader = new FacebookLoader();
-                loader.LoadTimeLineData(new DataLoadCompleteCallback() {
-                    @Override
-                    public void Complete(boolean isSuccess, JSONObject result) {
-                        if (isSuccess) {
-                            SNSParser snsParser = new FacebookParser();
-                            List<TimeLineItem> facebookTimeline = snsParser.parseItem((JSONObject) result);
-
-                            if (!facebookTimeline.isEmpty())
-                                contents.addAll(facebookTimeline);
-                        }
-                    }
-                });
-            } else
-                Log.e(TAG, "Facebook Token is Null");
-
-            if (UserSession.TwitterToken != null) {
-                Log.e(TAG, "Start Twitter Async");
-
-                DataLoader loader = new TwitterLoader(mContext);
-                loader.LoadTimeLineData(new DataLoadCompleteCallback() {
-                    @Override
-                    public void Complete(boolean isSuccess, JSONObject result) {
-                        if (isSuccess) {
-                            SNSParser snsParser = new TwitterParser();
-                            List<TimeLineItem> twitterTimeline = snsParser.parseItem(result);
-
-                            if (!twitterTimeline.isEmpty())
-                                contents.addAll(twitterTimeline);
-                        }
-                    }
-                });
-            } else
-                Log.e(TAG, "Twitter Session is Null");
-
-            Log.e("Main", "Contents Size : " + contents.size());
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
+        protected void onPostExecute(Void avoid) {
+            super.onPostExecute(avoid);
 
-            timelineAdapater.notifyDataSetChanged();
+            if (profile != null) {
+                repreName.setText(profile.getName());
+                repreEmail.setText(profile.getEmail());
+                Glide.with(MainActivity.this)
+                        .load(profile.getProfileImage())
+                        .apply(RequestOptions.circleCropTransform())
+                        .into(repreProfileImage);
+            } else {
+                repreName.setText("연동이 되어 있지 않습니다.");
+                repreEmail.setText("");
+            }
+            if (UserSession.FacebookToken == null)
+                facebookStatus.setColorFilter(StaticAppData.Gray_filter);
+            else
+                facebookStatus.clearColorFilter();
+
+            if (UserSession.TwitterToken == null)
+                twitterStatus.setColorFilter(StaticAppData.Gray_filter);
+            else
+                twitterStatus.clearColorFilter();
+
+            if (UserSession.InstagramToken == null)
+                instagramStatus.setColorFilter(StaticAppData.Gray_filter);
+            else
+                instagramStatus.clearColorFilter();
+
+            dialog.dismiss();
+            dialog = null;
+            loadProfileAsync = null;
+        }
+
+        private void loadFacebookProfile() {
+
+            if (UserSession.FacebookToken != null) {
+                profile = UserSession.FacebookProfile;
+
+                DataLoader dataLoader = new FacebookLoader(mContext);
+                JSONObject userJSON = dataLoader.LoadUserProfileData();
+
+                FacebookParser snsParser = new FacebookParser();
+                UserSession.FacebookProfile = snsParser.parseUserProfile(userJSON);
+            }
+        }
+
+        private void loadTwitterProfile() {
+
+            if (UserSession.TwitterToken != null) {
+                final CountDownLatch countDownLatch = new CountDownLatch(1);
+                DataLoader loader = new TwitterLoader(mContext);
+                loader.LoadUserProfileData(new DataLoadCompleteCallback() {
+                    @Override
+                    public void Complete(boolean isSuccess, JSONObject result) {
+                        if (isSuccess) {
+                            try {
+                                TwitterParser parser = new TwitterParser();
+                                UserSession.TwitterProfile = parser.parseUserProfile(result);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        countDownLatch.countDown();
+                    }
+                });
+
+                try {
+                    countDownLatch.await();
+                } catch (InterruptedException ignored) {
+                }
+            }
+
+        }
+
+        private void loadInstagramProfile() {
+
+            if (UserSession.InstagramToken != null) {
+                DataLoader loader = new InstagramLoader(mContext);
+                InstagramParser parser = new InstagramParser();
+
+                UserSession.InstagramProfile = parser.parseUserProfile(loader.LoadUserProfileData());
+
+                loader.LoadUserProfileData();
+            }
+
+        }
+
+        private void loadFacebookPageProfile() {
+            if (UserSession.FacebookToken != null) {
+                FacebookLoader dataLoader = new FacebookLoader(mContext);
+                JSONObject userJSON = dataLoader.LoadPageList();
+
+                FacebookParser snsParser = new FacebookParser();
+                UserSession.FacebookPageProfile = snsParser.parsePageList(userJSON);
+            }
+            else
+                UserSession.FacebookPageProfile = null;
         }
     }
 }

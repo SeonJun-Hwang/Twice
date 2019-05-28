@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="3dp">
+
+    <sysproj.seonjoon.twice.view.custom.TimelineImagePager
+        android:id="@+id/card_content_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="2dp" />
+
+    <TextView
+        android:id="@+id/card_content_image_count_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/card_content_image_view"
+        android:layout_alignRight="@+id/card_content_image_view"
+        android:layout_margin="3dp"
+        android:background="@color/timelineCardImageCountBack"
+        android:foreground="@color/timelineCardImageCountFont"
+        android:padding="5dp" />
+
+</RelativeLayout>

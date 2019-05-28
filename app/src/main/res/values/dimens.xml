@@ -3,17 +3,45 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
-    <dimen name="regist_font_size">12pt</dimen>
+    <dimen name="regist_font_size">10pt</dimen>
 
     <!-- layout listview consent item -->
     <dimen name="consent_item_height">30dp</dimen>
     <dimen name="consent_text_padding">5dp</dimen>
 
     <!-- layout timeLine content item -->
-    <dimen name="time_line_height">40dp</dimen>
-    <dimen name="time_line_padding">5dp</dimen>
-    <dimen name="time_line_card_vertical_padding">7dp</dimen>
-    <dimen name="time_line_card_vertical_margin">15dp</dimen>
-    <dimen name="time_line_image_size">32dp</dimen>
+    <dimen name="timeline_height">46dp</dimen>
+    <dimen name="timeline_padding">5dp</dimen>
+    <dimen name="timeline_card_vertical_padding">7dp</dimen>
+    <dimen name="timeline_card_vertical_margin">15dp</dimen>
+    <dimen name="timeline_image_size">32dp</dimen>
+    <dimen name="timeline_profile_size">48dp</dimen>
+    <dimen name="timeline_time_text_size">16dp</dimen>
+    <dimen name="timeline_profile_item_padding">2dp</dimen>
+    <dimen name="timeline_comment_text_size">10sp</dimen>
+    <dimen name="timeline_margin_between_time_context">5dp</dimen>
 
+    <!-- main navigation drawer item -->
+    <dimen name="drawer_image_size">30dp</dimen>
+
+    <!-- Link SNS Activity item -->
+    <dimen name="link_sns_image_size">40dp</dimen>
+    <dimen name="link_sns_padding_between_image_text">10dp</dimen>
+    <dimen name="link_sns_margin_between_items">20dp</dimen>
+    <dimen name="link_sns_text_size">18sp</dimen>
+
+    <!-- facebook -->
+    <dimen name="facebook_like_image_size">20dp</dimen>
+
+    <!-- instagram login button -->
+    <dimen name="instagram_login_btn_drawable_padding">4dp</dimen>
+    <dimen name="instagram_login_btn_left_padding">8dp</dimen>
+    <dimen name="instagram_login_button_radius">5dp</dimen>
+    <dimen name="instagram_login_button_right_padding">12dp</dimen>
+    <dimen name="instagram_login_text_size">15sp</dimen>
+
+    <!-- Register -->
+    <dimen name="register_padding">20dp</dimen>
+    <dimen name="instagram_like_comment_size">24dp</dimen>
+    <dimen name="instagram_like_comment_text_size">15sp</dimen>
 </resources>

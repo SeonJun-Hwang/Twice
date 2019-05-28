@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/main_timeline_twitter_card"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/timeline_card_vertical_margin">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/card_profile_image"
+            android:layout_width="@dimen/timeline_profile_size"
+            android:layout_height="@dimen/timeline_profile_size"
+            android:adjustViewBounds="true"
+            android:background="@null"
+            android:padding="@dimen/timeline_profile_item_padding"
+            android:scaleType="fitXY"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/card_title_logo"
+            android:layout_width="@dimen/timeline_image_size"
+            android:layout_height="@dimen/timeline_image_size"
+            android:padding="2dp"
+            android:scaleType="centerInside"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/card_title_text"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/timeline_image_size"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:paddingStart="3dp"
+            android:singleLine="true"
+            android:textSize="17dp"
+            app:layout_constraintLeft_toRightOf="@id/card_profile_image"
+            app:layout_constraintRight_toLeftOf="@id/card_title_logo"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/card_subtitle"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/timeline_time_text_size"
+            android:paddingStart="3dp"
+            app:layout_constraintLeft_toRightOf="@id/card_profile_image"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_title_text" />
+
+        <ImageView
+            android:id="@+id/card_content_image"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginVertical="5dp"
+            android:adjustViewBounds="true"
+            app:layout_constraintDimensionRatio="1:1"
+            app:layout_constraintTop_toBottomOf="@id/card_subtitle" />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/timeline_status_linear"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:padding="2dp"
+            app:layout_constraintLeft_toLeftOf="@id/card_profile_image"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_content_image">
+
+            <ImageView
+                android:id="@+id/card_like_image"
+                android:layout_width="@dimen/instagram_like_comment_size"
+                android:layout_height="@dimen/instagram_like_comment_size"
+                android:layout_marginHorizontal="5dp"
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/instagram_like" />
+
+            <TextView
+                android:id="@+id/card_like_count"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/instagram_like_comment_text_size"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/card_comment_image"
+                android:layout_width="@dimen/instagram_like_comment_size"
+                android:layout_height="@dimen/instagram_like_comment_size"
+                android:layout_marginHorizontal="5dp"
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/instagram_comment" />
+
+            <TextView
+                android:id="@+id/card_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginHorizontal="5dp"
+                android:gravity="center_vertical"
+                android:textSize="@dimen/instagram_like_comment_text_size"
+                android:textStyle="bold" />
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <TextView
+            android:id="@+id/card_content_text"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/timeline_margin_between_time_context"
+            android:padding="2dp"
+            android:textSize="15dp"
+            app:layout_constraintLeft_toLeftOf="@id/card_profile_image"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/timeline_status_linear" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

@@ -1,6 +1,5 @@
 package sysproj.seonjoon.twice.parser;
 
-import com.twitter.sdk.android.core.AuthToken;
 import com.twitter.sdk.android.core.TwitterAuthToken;
 import com.twitter.sdk.android.core.TwitterSession;
 

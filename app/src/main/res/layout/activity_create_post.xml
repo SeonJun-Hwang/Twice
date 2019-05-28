@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.PostingActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <TextView
+                android:id="@+id/create_which_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="어디에 글을 올리실건가요?"
+                android:textColor="@color/black"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <CheckBox
+                android:id="@+id/create_facebook_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Facebook"
+                app:layout_constraintTop_toBottomOf="@id/create_which_title" />
+
+            <ExpandableListView
+                android:id="@+id/create_facebook_page_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/create_facebook_check" />
+
+            <CheckBox
+                android:id="@+id/create_twitter_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Twitter"
+                app:layout_constraintTop_toBottomOf="@id/create_facebook_page_list" />
+
+            <CheckBox
+                android:id="@+id/create_instagram_check"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Instagram"
+                app:layout_constraintTop_toBottomOf="@id/create_twitter_check" />
+
+            <EditText
+                android:id="@+id/create_post_edit_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:gravity="start"
+                android:hint="어떤 생각을 하고 계신가요?"
+                android:padding="10dp"
+                app:layout_constraintTop_toBottomOf="@id/create_instagram_check" />
+
+            <sysproj.seonjoon.twice.view.custom.PostImagePager
+                android:id="@+id/create_post_image_pager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/create_post_edit_text" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+    <RelativeLayout
+        style="@android:style/ButtonBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="5dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <ImageButton
+            android:id="@+id/post_include_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gallery" />
+
+        <CheckBox
+            android:id="@+id/post_reserve_radio"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toStartOf="@id/post_reserve_time"
+            android:background="@null"
+            android:button="@drawable/clock_selector"
+            android:checked="false" />
+
+        <TextView
+            android:id="@+id/post_reserve_time"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_alignTop="@id/post_reserve_radio"
+            android:layout_alignBottom="@id/post_reserve_radio"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:gravity="center_vertical"
+            android:textStyle="bold"
+            />
+
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

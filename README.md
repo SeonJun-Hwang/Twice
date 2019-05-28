@@ -1,14 +1,24 @@
-<<<<<<< HEAD
-# Last Update
- Date : 2019 03 30
-
 # Twice
 Integrated SNS - Facebook, Instagram, Twitter
 
 # Source
-Facbook - Facebook API
-Instagram - None
+Facbook - Graph QL of Facebook API
+Instagram - Insatgram API - Graph QL / Instagram 
 Twitter - Twitter REST API, Twitter
-=======
-# Twice
->>>>>>> e3fafe2e9d16f8c1a8565fbd05df70b6686851a8
+
+# Description
+This Project is Kit in Republic of Korea - Twice team's Project
+
+# Function
+- Post
+ > Create
+ > Search
+- Timeline
+ > Displaying Timeline about linked user's ( Realted all user's ) ( Twitter Only )   
+ > Displaying linked user's feed ( Share, Write by self ) ( Instagram Only )   
+ > Displaying user's page feed ( Facebook Only )   
+- Post Reservation
+ > All SNS able
+ 
+ # Notice
+  > For Studying Android, Firestore

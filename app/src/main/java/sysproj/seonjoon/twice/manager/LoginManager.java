@@ -11,6 +11,7 @@ import com.twitter.sdk.android.core.TwitterSession;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
+import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DBAccessResultCallback;
 import sysproj.seonjoon.twice.DBLoadSuccessCallback;
 import sysproj.seonjoon.twice.parser.FacebookTokenParser;
@@ -29,62 +30,27 @@ public class LoginManager {
     private LoginManager() {
     }
 
-    public boolean FacebookLogin(String uid) {
+    public void FacebookLogin(String uid, DBLoadSuccessCallback callback) {
         Log.e(TAG, "Facebook Login Start");
 
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
-
-        DBManager.getInstance().getDB(uid, SNSTag.FacebookDocTag, new DBLoadSuccessCallback() {
-            @Override
-            public void LoadDataCallback(boolean isSuccess, Map<String, Object> result) {
-                if (isSuccess) {
-                    TokenParser tokenParser = new FacebookTokenParser();
-                    UserSession.FacebookToken = (AccessToken) tokenParser.map2Token(result);
-                }
-                loginResult = isSuccess;
-                countDownLatch.countDown();
-            }
-        });
-
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        DBManager.getInstance().getDB(uid, BuildConfig.FacebookDocTag, callback);
 
         if (loginResult)
             Log.e(TAG, "Facebook Login Success");
         else
             Log.e(TAG, "Facebook Login Failure");
-        return true;
     }
 
-    public boolean TwitterLogin(String uid) {
+    public void TwitterLogin(String uid, DBLoadSuccessCallback callback) {
         Log.e(TAG, "Twitter Login Start");
 
-        final CountDownLatch countDownLatch = new CountDownLatch(1);
+        DBManager.getInstance().getDB(uid, BuildConfig.TwitterDocTag, callback);
+    }
 
-        DBManager.getInstance().getDB(uid, SNSTag.TwitterDocTag, new DBLoadSuccessCallback() {
-            @Override
-            public void LoadDataCallback(boolean isSuccess, Map<String, Object> result) {
-                if (isSuccess) {
-                    TokenParser tokenParser = new TwitterTokenParser();
-                    UserSession.TwitterToken = (TwitterSession) tokenParser.map2Token(result);
+    public void InstagramLogin(String uid, DBLoadSuccessCallback callback){
+        Log.e(TAG, "Instagram Login Start");
 
-                    TwitterCore.getInstance().getSessionManager().setActiveSession(UserSession.TwitterToken);
-                }
-                loginResult = isSuccess;
-                countDownLatch.countDown();
-            }
-        });
-
-        try {
-            countDownLatch.await();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        return true;
+        DBManager.getInstance().getDB(uid, BuildConfig.InstagramDocTag, callback);
     }
 
     public boolean TwiceLogin(Activity activity, String id, String password) {
@@ -100,10 +66,21 @@ public class LoginManager {
         return loginResult;
     }
 
-    public void SignOut(){
+    public void SignOut() {
         FirebaseAuth.getInstance().signOut();
-        TwitterCore.getInstance().getSessionManager().clearActiveSession();
-        AccessToken.setCurrentAccessToken(null);
+
+        if (UserSession.TwitterToken != null) {
+            UserSession.TwitterToken = null;
+            TwitterCore.getInstance().getSessionManager().clearActiveSession();
+        }
+        if (UserSession.FacebookToken != null) {
+            UserSession.FacebookToken = null;
+            AccessToken.setCurrentAccessToken(null);
+        }
+        if(UserSession.InstagramToken != null){
+            UserSession.InstagramToken = null;
+        }
+
     }
 
     public static LoginManager getInstance() {

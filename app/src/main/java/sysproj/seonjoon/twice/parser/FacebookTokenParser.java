@@ -1,6 +1,6 @@
 package sysproj.seonjoon.twice.parser;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.facebook.AccessToken;
 import com.facebook.AccessTokenSource;
@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Set;
 
 import sysproj.seonjoon.twice.staticdata.SNSTag;
-
 
 public class FacebookTokenParser implements TokenParser {
 
