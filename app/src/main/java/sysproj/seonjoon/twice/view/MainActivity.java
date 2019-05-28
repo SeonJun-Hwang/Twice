@@ -20,6 +20,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
+
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -30,12 +31,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.firebase.auth.FirebaseAuth;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.util.concurrent.CountDownLatch;
+
 import sysproj.seonjoon.twice.BuildConfig;
 import sysproj.seonjoon.twice.DataLoadCompleteCallback;
 import sysproj.seonjoon.twice.OnHashtagClickListener;
@@ -141,6 +146,8 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
                 break;
             case R.id.drawer_inquiry_book_post:
                 gotoInquiryBookActivity();
+            case R.id.drawer_app_developers:
+                gotoAboutActivity();
         }
         return false;
     }
@@ -178,6 +185,7 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
     public void onClickHashTag(String hashTag) {
         showSearchFragment();
         ((FragmentSearch) getSupportFragmentManager().findFragmentByTag(fragmentsTags[SEARCH])).startSearch(hashTag);
+        topEditText.setText(hashTag);
     }
 
     private void setLayout() {
@@ -313,6 +321,11 @@ public class MainActivity extends FragmentActivity implements NavigationView.OnN
 
     private void gotoInquiryBookActivity() {
         Intent intent = new Intent(MainActivity.this, InquiryBookActivity.class);
+        startActivity(intent);
+    }
+
+    private void gotoAboutActivity() {
+        Intent intent = new Intent(MainActivity.this, AboutActivity.class);
         startActivity(intent);
     }
 

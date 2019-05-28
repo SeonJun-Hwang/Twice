@@ -7,10 +7,10 @@
     <uses-permission android:name="android.permission.INTERNET" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:allowBackup="true"
@@ -20,18 +20,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".view.PostingActivity"
+        <activity android:name=".view.AboutActivity"></activity>
+        <activity
+            android:name=".view.PostingActivity"
             android:label="글 작성하기"
-            android:windowSoftInputMode="adjustResize"/>
-
-        <!-- androidpermission intentnet - usesCleartextTraffic -->
+            android:windowSoftInputMode="adjustResize" /> <!-- androidpermission intentnet - usesCleartextTraffic -->
         <activity
             android:name=".view.SettingsActivity"
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".view.InitActivity"
-            android:theme="@style/SplashTheme"
-            android:screenOrientation="portrait">
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,20 +49,19 @@
             android:label="@string/app_name" />
         <activity
             android:name="com.facebook.CustomTabActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".view.MainActivity"
             android:configChanges="screenSize|orientation|keyboardHidden|screenLayout"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity
             android:name=".view.LoginActivity"
             android:label="@string/title_activity_login"
             android:screenOrientation="portrait" />
         <activity
             android:name=".view.RegisterActivity"
-            android:windowSoftInputMode="adjustResize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".view.UserAddActivity"
             android:theme="@style/NoDisplay" />
@@ -70,19 +69,19 @@
             android:name=".view.SNSLinkingActivity"
             android:label="@string/app_linkage_title" />
         <activity android:name=".view.custom.InstagramLogin.InstagramActivity" />
-
-        <activity android:name=".view.custom.TwiceGallery.GalleryActivity"
-            android:label="@string/gallery_label"/>
-        <activity android:name=".view.AccountActivity"
-            android:label="@string/app_account_title"/>
-
-        <activity android:name=".view.ChangePasswordActivity"
+        <activity
+            android:name=".view.custom.TwiceGallery.GalleryActivity"
+            android:label="@string/gallery_label" />
+        <activity
+            android:name=".view.AccountActivity"
+            android:label="@string/app_account_title" />
+        <activity
+            android:name=".view.ChangePasswordActivity"
             android:label="@string/update_password"
-            android:windowSoftInputMode="adjustResize"/>
-
-        <activity android:name=".view.InquiryBookActivity"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name=".view.InquiryBookActivity"
             android:label="@string/Inquiry_book_title">
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

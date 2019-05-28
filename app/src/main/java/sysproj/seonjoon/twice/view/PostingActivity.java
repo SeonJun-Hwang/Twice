@@ -100,6 +100,13 @@ public class PostingActivity extends AppCompatActivity implements DatePickerDial
 
         postImagePager.setAdapter(postImageAdapter);
         postImagePager.setPageMargin(20);
+
+        if (UserSession.FacebookToken == null)
+            postFacebookCheck.setEnabled(false);
+        if (UserSession.TwitterToken == null)
+            postTwitterCheck.setEnabled(false);
+        if (UserSession.InstagramToken == null)
+            postInstagramCheck.setEnabled(false);
     }
 
     private void initListener() {
@@ -307,7 +314,9 @@ public class PostingActivity extends AppCompatActivity implements DatePickerDial
                 if (connection.getResponseCode() != HttpURLConnection.HTTP_OK)
                     res = false;
 
-            } catch (IOException e) {
+                Log.e(TAG, new JSONObject(object).toString(2));
+
+            } catch (IOException | JSONException e) {
                 e.printStackTrace();
             }
 
